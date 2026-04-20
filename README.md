@@ -17,6 +17,7 @@ Construir un LMS que tome como documento rector el manual de contenido y requisi
 - Estado actual: `docs/estado-actual.md`
 - Bitacora de desarrollo: `docs/bitacora-desarrollo.md`
 - Comandos locales: `docs/comandos-locales.md`
+- Despliegue local integrado: `docs/despliegue-local.md`
 - Requisitos funcionales: `docs/requisitos-funcionales.md`
 - Arquitectura del LMS: `docs/arquitectura-lms.md`
 - Modelo de datos inicial: `docs/modelo-de-datos.md`
@@ -67,5 +68,6 @@ El repositorio ya tiene:
 - frontend MVP Oleada 1 cerrada
 - frontend MVP Oleada 2 cerrada
 - frontend MVP Oleada 3 cerrada
+- base de despliegue local con contenedores para `postgres`, `api` y `web`
 
 El siguiente bloque ya no es abrir nuevas pantallas base del MVP, sino endurecer, pulir y preparar integraciones y despliegue.

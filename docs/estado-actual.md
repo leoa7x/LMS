@@ -653,6 +653,30 @@ Documentacion rectora del modulo:
 - `npm run build:api` correcto
 - `npm run build:web` correcto
 
+## Estado de despliegue local
+
+- `.env.example` actualizado con `WEB_ORIGIN`
+- `apps/api/Dockerfile` agregado
+- `apps/web/Dockerfile` agregado
+- `.dockerignore` agregado
+- `docker-compose.yml` ampliado para:
+  - `postgres`
+  - `api`
+  - `web`
+- documentacion operativa agregada en:
+  - `docs/despliegue-local.md`
+  - `infra/README.md`
+- validacion de empaquetado completada:
+  - `docker compose config` correcto
+  - `docker compose build api web` correcto
+
+## Estado de hardening frontend
+
+- sesion frontend centralizada en `apps/web/lib/session.ts`
+- `client-api` soporta `refresh token` automatico ante `401`
+- `logout` intenta revocar sesion en backend antes de limpiar estado local
+- `npm run build:web` correcto despues del endurecimiento
+
 ## Instruccion para retomarlo
 
 Si una sesion nueva necesita retomar el proyecto, la instruccion corta debe ser:

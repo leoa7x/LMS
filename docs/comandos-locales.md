@@ -48,6 +48,38 @@ npm run build:api
 npm run build:web
 ```
 
+## Stack completo con Docker Compose
+
+```bash
+cd ~/LMS
+docker compose up -d --build
+```
+
+## Produccion local con scripts
+
+### API
+
+```bash
+cd ~/LMS
+npm run start:api
+```
+
+### Web
+
+```bash
+cd ~/LMS
+npm run start:web
+```
+
+## Prisma para entorno integrado
+
+```bash
+cd ~/LMS
+npm run prisma:generate
+npm run prisma:deploy
+npm run prisma:seed
+```
+
 ## Nota actual
 
 La migracion SQL inicial ya fue generada en:
@@ -55,3 +87,7 @@ La migracion SQL inicial ya fue generada en:
 `prisma/migrations/20260418212000_init/migration.sql`
 
 Si Docker no esta corriendo, `migrate dev` y `seed` no podran aplicarse todavia sobre PostgreSQL.
+
+Para despliegue local integrado del LMS revisar tambien:
+
+`docs/despliegue-local.md`

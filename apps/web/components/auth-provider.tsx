@@ -8,28 +8,13 @@ import {
   useMemo,
   useState,
 } from "react";
-
-type SessionUser = {
-  id: string;
-  email: string;
-  roles: string[];
-  preferredLang?: string;
-  institutionId?: string;
-};
-
-type SessionState = {
-  accessToken: string | null;
-  refreshToken: string | null;
-  user: SessionUser | null;
-};
+import { AUTH_STORAGE_KEY, SessionState } from "../lib/session";
 
 type AuthContextValue = SessionState & {
   isReady: boolean;
   login: (session: SessionState) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 };
-
-const AUTH_STORAGE_KEY = "lms-session";
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
@@ -63,7 +48,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setState(session);
         window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
       },
-      logout() {
+      async logout() {
+        if (state.accessToken) {
+          try {
+            await fetch(
+              `${
+                process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1"
+              }/auth/logout`,
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${state.accessToken}`,
+                },
+              },
+            );
+          } catch {
+            // no-op: local logout still proceeds
+          }
+        }
+
         const emptyState = {
           accessToken: null,
           refreshToken: null,

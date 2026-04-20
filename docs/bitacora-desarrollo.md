@@ -1429,3 +1429,67 @@ Cerrar el MVP visual sobre los modulos del pliego que quedaban pendientes antes 
 El frontend MVP ya cubre las tres oleadas definidas en los prompts rectores.
 
 La interfaz ahora refleja la operacion institucional, academica, de soporte y de simuladores sobre endpoints reales del backend, manteniendo el tono sobrio y funcional exigido por el proyecto.
+
+## 2026-04-20 - Fase 7 inicial: despliegue local integrado
+
+### Objetivo
+
+Cerrar la base de despliegue local del LMS para poder levantar `postgres`, `api` y `web` como sistema integrado y no solo por procesos sueltos.
+
+### Cambios aplicados
+
+- se agrego `.dockerignore`
+- se agrego `apps/api/Dockerfile`
+- se agrego `apps/web/Dockerfile`
+- se amplio `docker-compose.yml` para incluir:
+  - `postgres`
+  - `api`
+  - `web`
+- se actualizaron scripts raiz para:
+  - `build`
+  - `compose:up`
+  - `compose:down`
+  - `start:api`
+  - `start:web`
+  - `prisma:deploy`
+- se actualizo `.env.example` con `WEB_ORIGIN`
+- se documento operacion en:
+  - `docs/despliegue-local.md`
+  - `docs/comandos-locales.md`
+  - `infra/README.md`
+
+### Validacion
+
+- `npm run build:api` correcto
+- `npm run build:web` correcto
+- `docker compose config` correcto
+- `docker compose build api web` correcto
+
+### Efecto practico
+
+El proyecto ya queda preparado para iniciar endurecimiento y despliegue local real sobre contenedores, alineado con la Fase 7 del backlog.
+
+## 2026-04-20 - Fase 7 inicial: hardening de sesion frontend
+
+### Objetivo
+
+Mejorar la estabilidad operativa del frontend para que el acceso al portal no dependa solo del `access token` inicial y pueda sostener sesion real con `refresh token`.
+
+### Cambios aplicados
+
+- se agrego `apps/web/lib/session.ts`
+- se centralizo el contrato de sesion para:
+  - `auth-provider`
+  - `login`
+  - `client-api`
+- `client-api` ahora intenta `refresh` automatico cuando una peticion devuelve `401`
+- se serializa la sesion refrescada en `localStorage`
+- `logout` ahora intenta revocar la sesion en backend antes de limpiar el estado local
+
+### Validacion
+
+- `npm run build:web` correcto
+
+### Efecto practico
+
+El frontend queda mas cercano a operacion real continua, alineado con el requisito de acceso sostenido y administracion formal del portal.

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Shell } from "../../components/shell";
 import { useAuth } from "../../components/auth-provider";
 import { defaultRouteByRole, getPrimaryRole } from "../../lib/role-navigation";
+import { SessionUser } from "../../lib/session";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -37,7 +38,7 @@ export default function LoginPage() {
       const data = (await response.json()) as {
         accessToken: string;
         refreshToken: string;
-        user: { id: string; email: string; roles: string[] };
+        user: SessionUser;
       };
 
       login({

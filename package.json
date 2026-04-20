@@ -12,11 +12,17 @@
     "dev:api": "npm run start:dev -w @lms/api",
     "build:web": "npm run build -w @lms/web",
     "build:api": "npm run build -w @lms/api",
+    "build": "npm run build:api && npm run build:web",
     "lint:web": "npm run lint -w @lms/web",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
+    "compose:up": "docker compose up -d",
+    "compose:down": "docker compose down",
+    "start:web": "npm run start -w @lms/web",
+    "start:api": "npm run start -w @lms/api",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
     "prisma:seed": "prisma db seed"
   },
   "devDependencies": {
