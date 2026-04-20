@@ -18,6 +18,14 @@ export class LessonsService {
             },
           },
         },
+        segments: {
+          include: {
+            resource: true,
+          },
+          orderBy: {
+            sortOrder: "asc",
+          },
+        },
         practices: true,
         resources: true,
       },

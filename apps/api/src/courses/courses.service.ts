@@ -31,6 +31,7 @@ export class CoursesService {
         technicalAreaId: dto.technicalAreaId,
         slug: dto.slug,
         code: dto.code,
+        courseKind: dto.courseKind ?? "STANDARD",
         titleEs: dto.titleEs,
         titleEn: dto.titleEn,
         descriptionEs: dto.descriptionEs,
@@ -44,7 +45,23 @@ export class CoursesService {
       },
       include: {
         technicalArea: true,
+        learningPaths: true,
+        certificationMap: true,
       },
+    }).then(async (course) => {
+      await this.prisma.auditLog.create({
+        data: {
+          action: "COURSE_CREATED",
+          entityType: "Course",
+          entityId: course.id,
+          meta: {
+            technicalAreaId: dto.technicalAreaId,
+            slug: dto.slug,
+          },
+        },
+      });
+
+      return course;
     });
   }
 }

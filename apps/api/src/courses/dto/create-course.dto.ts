@@ -1,5 +1,7 @@
+import { CourseKind } from "@prisma/client";
 import {
   IsBoolean,
+  IsEnum,
   IsInt,
   IsOptional,
   IsString,
@@ -19,6 +21,10 @@ export class CreateCourseDto {
   @IsOptional()
   @IsString()
   code?: string;
+
+  @IsOptional()
+  @IsEnum(CourseKind)
+  courseKind?: CourseKind;
 
   @IsString()
   @MinLength(3)

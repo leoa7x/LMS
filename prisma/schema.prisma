@@ -14,6 +14,58 @@ enum SystemRole {
   SUPPORT
 }
 
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  DISABLED
+}
+
+enum EntityStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum MembershipStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+  REVOKED
+}
+
+enum ScopeStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ScopeType {
+  GLOBAL
+  INSTITUTION
+  CAMPUS
+  LABORATORY
+  TECHNICAL_AREA
+  COURSE
+  LEARNING_PATH
+  LEVEL
+}
+
+enum AccessSessionStatus {
+  ACTIVE
+  REVOKED
+  EXPIRED
+}
+
+enum UserLifecycleEventType {
+  CREATED
+  UPDATED
+  ACTIVATED
+  DEACTIVATED
+  ROLE_ASSIGNED
+  ROLE_REMOVED
+  MEMBERSHIP_CHANGED
+  ACCESS_REVOKED
+}
+
 enum EnrollmentStatus {
   ACTIVE
   COMPLETED
@@ -53,6 +105,20 @@ enum QuizKind {
   PRACTICE_CHECK
 }
 
+enum CourseKind {
+  STANDARD
+  PRECONFIGURED
+}
+
+enum LessonSegmentType {
+  THEORY
+  RESOURCE
+  INTERACTIVE
+  GLOSSARY_LINK
+  DIAGRAM
+  SIMULATION_BRIDGE
+}
+
 enum SupportTicketStatus {
   OPEN
   IN_PROGRESS
@@ -60,62 +126,131 @@ enum SupportTicketStatus {
   CLOSED
 }
 
+enum PracticeAttemptStatus {
+  STARTED
+  SUBMITTED
+  PASSED
+  FAILED
+}
+
+enum QuizAttemptSource {
+  STANDARD
+  RETAKE_OVERRIDE
+}
+
 model User {
-  id             String              @id @default(cuid())
-  email          String              @unique
-  firstName      String
-  lastName       String
-  passwordHash   String
-  preferredLang  String              @default("es")
-  isActive       Boolean             @default(true)
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-  roles          UserRole[]
-  institutions   UserInstitution[]
-  enrollments    StudentEnrollment[]
-  quizAttempts   QuizAttempt[]
-  notifications  Notification[]
-  supportTickets SupportTicket[]     @relation("SupportTicketRequester")
-  auditLogs      AuditLog[]
-  simulatorRuns  SimulatorSession[]
-  skillEvidences SkillEvidence[]
+  id                 String                  @id @default(cuid())
+  email              String                  @unique
+  firstName          String
+  lastName           String
+  passwordHash       String
+  preferredLang      String                  @default("es")
+  status             UserStatus              @default(ACTIVE)
+  isActive           Boolean                 @default(true)
+  documentType       String?
+  documentNumber     String?
+  phone              String?
+  avatarUrl          String?
+  lastLoginAt        DateTime?
+  lastLoginIp        String?
+  deactivatedAt      DateTime?
+  deactivationReason String?
+  createdAt          DateTime                @default(now())
+  updatedAt          DateTime                @updatedAt
+  roles              UserRole[]
+  institutions       UserInstitution[]
+  enrollments        StudentEnrollment[]
+  quizAttempts       QuizAttempt[]
+  notifications      Notification[]
+  supportTickets     SupportTicket[]         @relation("SupportTicketRequester")
+  auditLogs          AuditLog[]
+  simulatorRuns      SimulatorSession[]
+  skillEvidences     SkillEvidence[]
+  practiceAttempts   PracticeAttempt[]
+  studentProfile     StudentAcademicProfile?
+  learningPathAssignments StudentLearningPathAssignment[]
+  visibilityAssignments StudentVisibilityAssignment[]
+  teacherScopes      TeacherScopeAssignment[]
+  accessSessions     AccessSession[]
+  lifecycleEvents    UserLifecycleAudit[]    @relation("UserLifecycleSubject")
+  lifecycleActors    UserLifecycleAudit[]    @relation("UserLifecycleActor")
+  retakeGrantsReceived QuizRetakeGrant[]     @relation("QuizRetakeStudent")
+  retakeGrantsIssued   QuizRetakeGrant[]     @relation("QuizRetakeTeacher")
 }
 
 model Role {
-  id        String     @id @default(cuid())
-  name      SystemRole @unique
-  createdAt DateTime   @default(now())
-  users     UserRole[]
+  id          String           @id @default(cuid())
+  name        SystemRole       @unique
+  createdAt   DateTime         @default(now())
+  users       UserRole[]
+  permissions RolePermission[]
 }
 
 model UserRole {
-  id     String @id @default(cuid())
-  userId String
-  roleId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  id                    String           @id @default(cuid())
+  userId                String
+  roleId                String
+  institutionMemberId   String?
+  scopeType             ScopeType        @default(INSTITUTION)
+  scopeStatus           ScopeStatus      @default(ACTIVE)
+  campusId              String?
+  laboratoryId          String?
+  technicalAreaId       String?
+  courseId              String?
+  learningPathId        String?
+  levelCode             String?
+  assignedAt            DateTime         @default(now())
+  assignedByUserId      String?
+  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role                  Role             @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  institutionMembership UserInstitution? @relation(fields: [institutionMemberId], references: [id], onDelete: SetNull)
+  campus                Campus?          @relation(fields: [campusId], references: [id], onDelete: SetNull)
+  laboratory            Laboratory?      @relation(fields: [laboratoryId], references: [id], onDelete: SetNull)
+  technicalArea         TechnicalArea?   @relation(fields: [technicalAreaId], references: [id], onDelete: SetNull)
+  course                Course?          @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  learningPath          LearningPath?    @relation(fields: [learningPathId], references: [id], onDelete: SetNull)
 
-  @@unique([userId, roleId])
+  @@index([userId, scopeStatus])
 }
 
 model Institution {
-  id          String            @id @default(cuid())
-  name        String
-  slug        String            @unique
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  users       UserInstitution[]
-  licenses    License[]
+  id            String            @id @default(cuid())
+  name          String
+  slug          String            @unique
+  status        EntityStatus      @default(ACTIVE)
+  officialCode  String?
+  contactEmail  String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  users         UserInstitution[]
+  campuses      Campus[]
+  licenses      License[]
   contractTerms ContractTerm[]
-  enrollments StudentEnrollment[]
+  enrollments   StudentEnrollment[]
+  learningPathAssignments StudentLearningPathAssignment[]
+  teacherScopes TeacherScopeAssignment[]
 }
 
 model UserInstitution {
-  id            String      @id @default(cuid())
-  userId        String
-  institutionId String
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  id                 String                  @id @default(cuid())
+  userId             String
+  institutionId      String
+  membershipStatus   MembershipStatus        @default(ACTIVE)
+  accessStartAt      DateTime                @default(now())
+  accessEndAt        DateTime?
+  campusId           String?
+  laboratoryId       String?
+  licenseId          String?
+  contractTermId     String?
+  user               User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institution        Institution             @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  campus             Campus?                 @relation(fields: [campusId], references: [id], onDelete: SetNull)
+  laboratory         Laboratory?             @relation(fields: [laboratoryId], references: [id], onDelete: SetNull)
+  license            License?                @relation(fields: [licenseId], references: [id], onDelete: SetNull)
+  contractTerm       ContractTerm?           @relation(fields: [contractTermId], references: [id], onDelete: SetNull)
+  roles              UserRole[]
+  studentProfile     StudentAcademicProfile?
+  accessSessions     AccessSession[]
 
   @@unique([userId, institutionId])
 }
@@ -130,28 +265,172 @@ model ContractTerm {
   updatedAt     DateTime    @updatedAt
   institution   Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   licenses      License[]
+  memberships   UserInstitution[]
 }
 
 model License {
-  id             String        @id @default(cuid())
+  id             String            @id @default(cuid())
   institutionId  String
   contractTermId String?
   name           String
-  durationMonths Int           @default(36)
+  durationMonths Int               @default(36)
   seats          Int?
-  createdAt      DateTime      @default(now())
-  institution    Institution   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  contractTerm   ContractTerm? @relation(fields: [contractTermId], references: [id], onDelete: SetNull)
+  createdAt      DateTime          @default(now())
+  institution    Institution       @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  contractTerm   ContractTerm?     @relation(fields: [contractTermId], references: [id], onDelete: SetNull)
+  memberships    UserInstitution[]
+}
+
+model Campus {
+  id            String            @id @default(cuid())
+  institutionId String
+  name          String
+  code          String?
+  address       String?
+  status        EntityStatus      @default(ACTIVE)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  institution   Institution       @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  laboratories  Laboratory[]
+  memberships   UserInstitution[]
+  roleScopes    UserRole[]
+  teacherScopes TeacherScopeAssignment[]
+
+  @@unique([institutionId, name])
+}
+
+model Laboratory {
+  id              String                   @id @default(cuid())
+  campusId        String
+  technicalAreaId String?
+  name            String
+  description     String?
+  status          EntityStatus             @default(ACTIVE)
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  campus          Campus                   @relation(fields: [campusId], references: [id], onDelete: Cascade)
+  technicalArea   TechnicalArea?           @relation(fields: [technicalAreaId], references: [id], onDelete: SetNull)
+  memberships     UserInstitution[]
+  roleScopes      UserRole[]
+  teacherScopes   TeacherScopeAssignment[]
+
+  @@unique([campusId, name])
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  code        String           @unique
+  description String?
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+}
+
+model StudentAcademicProfile {
+  id                  String           @id @default(cuid())
+  userId              String           @unique
+  institutionMemberId String           @unique
+  currentLevel        String
+  academicStatus      EnrollmentStatus @default(ACTIVE)
+  cohort              String?
+  entryDate           DateTime?
+  expectedEndDate     DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institutionMember   UserInstitution  @relation(fields: [institutionMemberId], references: [id], onDelete: Cascade)
+  visibilityRules     StudentVisibilityAssignment[]
+}
+
+model StudentVisibilityAssignment {
+  id                 String                 @id @default(cuid())
+  studentProfileId   String
+  assignmentType     ScopeType
+  levelCode          String?
+  learningPathId     String?
+  courseId           String?
+  moduleId           String?
+  assignedByUserId   String
+  effectiveFrom      DateTime               @default(now())
+  effectiveUntil     DateTime?
+  studentProfile     StudentAcademicProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  assignedByUser     User                   @relation(fields: [assignedByUserId], references: [id], onDelete: Restrict)
+  learningPath       LearningPath?          @relation(fields: [learningPathId], references: [id], onDelete: SetNull)
+  course             Course?                @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  module             Module?                @relation(fields: [moduleId], references: [id], onDelete: SetNull)
+}
+
+model TeacherScopeAssignment {
+  id             String      @id @default(cuid())
+  teacherUserId  String
+  scopeType      ScopeType
+  institutionId  String?
+  campusId       String?
+  laboratoryId   String?
+  technicalAreaId String?
+  courseId       String?
+  learningPathId String?
+  levelCode      String?
+  effectiveFrom  DateTime    @default(now())
+  effectiveUntil DateTime?
+  teacher        User        @relation(fields: [teacherUserId], references: [id], onDelete: Cascade)
+  institution    Institution? @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  campus         Campus?      @relation(fields: [campusId], references: [id], onDelete: SetNull)
+  laboratory     Laboratory?  @relation(fields: [laboratoryId], references: [id], onDelete: SetNull)
+  technicalArea  TechnicalArea? @relation(fields: [technicalAreaId], references: [id], onDelete: SetNull)
+  course         Course?      @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  learningPath   LearningPath? @relation(fields: [learningPathId], references: [id], onDelete: SetNull)
+}
+
+model AccessSession {
+  id                  String              @id @default(cuid())
+  userId              String
+  institutionMemberId String
+  refreshTokenHash    String?
+  ipAddress           String?
+  userAgent           String?
+  status              AccessSessionStatus @default(ACTIVE)
+  issuedAt            DateTime            @default(now())
+  expiresAt           DateTime
+  lastSeenAt          DateTime?
+  revokedAt           DateTime?
+  revokedReason       String?
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institutionMember   UserInstitution     @relation(fields: [institutionMemberId], references: [id], onDelete: Cascade)
+}
+
+model UserLifecycleAudit {
+  id               String                 @id @default(cuid())
+  userId           String
+  eventType        UserLifecycleEventType
+  performedByUserId String
+  reason           String?
+  beforeState      Json?
+  afterState       Json?
+  occurredAt       DateTime               @default(now())
+  user             User                   @relation("UserLifecycleSubject", fields: [userId], references: [id], onDelete: Cascade)
+  performedByUser  User                   @relation("UserLifecycleActor", fields: [performedByUserId], references: [id], onDelete: Restrict)
 }
 
 model TechnicalArea {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  nameEs      String
-  nameEn      String?
-  description String?
-  createdAt   DateTime @default(now())
-  courses     Course[]
+  id            String                   @id @default(cuid())
+  slug          String                   @unique
+  nameEs        String
+  nameEn        String?
+  description   String?
+  createdAt     DateTime                 @default(now())
+  courses       Course[]
+  laboratories  Laboratory[]
+  roleScopes    UserRole[]
+  teacherScopes TeacherScopeAssignment[]
 }
 
 model Course {
@@ -159,6 +438,7 @@ model Course {
   technicalAreaId  String
   slug             String                  @unique
   code             String?
+  courseKind       CourseKind              @default(STANDARD)
   titleEs          String
   titleEn          String?
   descriptionEs    String?
@@ -177,16 +457,25 @@ model Course {
   enrollments      StudentEnrollment[]
   learningPaths    LearningPathCourse[]
   certificationMap CertificationTrackCourse[]
+  roleScopes       UserRole[]
+  teacherScopes    TeacherScopeAssignment[]
+  visibilityRules  StudentVisibilityAssignment[]
+  retakeGrants     QuizRetakeGrant[]
 }
 
 model LearningPath {
-  id          String             @id @default(cuid())
-  slug        String             @unique
-  titleEs     String
-  titleEn     String?
-  description String?
-  createdAt   DateTime           @default(now())
-  courses     LearningPathCourse[]
+  id              String                       @id @default(cuid())
+  slug            String                       @unique
+  titleEs         String
+  titleEn         String?
+  description     String?
+  levelCode       String?
+  createdAt       DateTime                     @default(now())
+  courses         LearningPathCourse[]
+  assignments     StudentLearningPathAssignment[]
+  roleScopes      UserRole[]
+  teacherScopes   TeacherScopeAssignment[]
+  visibilityRules StudentVisibilityAssignment[]
 }
 
 model LearningPathCourse {
@@ -232,6 +521,8 @@ model Module {
   course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   lessons     Lesson[]
   quizzes     Quiz[]
+  visibilityRules StudentVisibilityAssignment[]
+  retakeGrants QuizRetakeGrant[]
 
   @@unique([courseId, slug])
 }
@@ -246,11 +537,28 @@ model Lesson {
   summaryEn   String?
   sortOrder   Int
   module      Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  segments    LessonSegment[]
   practices   Practice[]
   resources   ContentResource[]
   progress    LessonProgress[]
 
   @@unique([moduleId, slug])
+}
+
+model LessonSegment {
+  id               String            @id @default(cuid())
+  lessonId         String
+  type             LessonSegmentType
+  titleEs          String
+  titleEn          String?
+  bodyEs           String?
+  bodyEn           String?
+  sortOrder        Int
+  voiceoverEnabled Boolean           @default(false)
+  resourceId       String?
+  lesson           Lesson            @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  resource         ContentResource?  @relation(fields: [resourceId], references: [id], onDelete: SetNull)
+  progress         LessonSegmentProgress[]
 }
 
 model Practice {
@@ -263,6 +571,7 @@ model Practice {
   lesson            Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   simulatorMappings SimulatorMapping[]
   evidences         SkillEvidence[]
+  attempts          PracticeAttempt[]
 }
 
 model ContentResource {
@@ -276,6 +585,7 @@ model ContentResource {
   bodyEn           String?
   voiceoverEnabled Boolean        @default(false)
   lesson           Lesson              @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonSegments   LessonSegment[]
 }
 
 model GlossaryTerm {
@@ -301,6 +611,7 @@ model Quiz {
   module         Module?   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   questions      Question[]
   attempts       QuizAttempt[]
+  retakeGrants   QuizRetakeGrant[]
 }
 
 model Question {
@@ -323,32 +634,60 @@ model AnswerOption {
 }
 
 model QuizAttempt {
-  id          String    @id @default(cuid())
-  quizId      String
-  userId      String
-  score       Int?
-  isPassed    Boolean?
-  startedAt   DateTime  @default(now())
-  submittedAt DateTime?
-  quiz        Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id              String             @id @default(cuid())
+  quizId          String
+  userId          String
+  score           Int?
+  isPassed        Boolean?
+  attemptNumber   Int                @default(1)
+  attemptSource   QuizAttemptSource  @default(STANDARD)
+  overrideGrantId String?
+  startedAt       DateTime           @default(now())
+  submittedAt     DateTime?
+  quiz            Quiz               @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  overrideGrant   QuizRetakeGrant?   @relation(fields: [overrideGrantId], references: [id], onDelete: SetNull)
 }
 
 model StudentEnrollment {
-  id                String               @id @default(cuid())
-  institutionId     String
-  studentId         String
-  courseId          String
-  status            EnrollmentStatus     @default(ACTIVE)
-  enrolledAt        DateTime             @default(now())
-  institution       Institution          @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  student           User                 @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  course            Course               @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  progress          StudentProgress[]
-  lessonProgress    LessonProgress[]
-  simulatorSessions SimulatorSession[]
+  id                      String                        @id @default(cuid())
+  institutionId           String
+  studentId               String
+  courseId                String
+  learningPathAssignmentId String?
+  assignedByUserId        String?
+  assignedLevelCode       String?
+  notes                   String?
+  status                  EnrollmentStatus              @default(ACTIVE)
+  enrolledAt              DateTime                      @default(now())
+  institution             Institution                   @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  student                 User                          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course                  Course                        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  learningPathAssignment  StudentLearningPathAssignment? @relation(fields: [learningPathAssignmentId], references: [id], onDelete: SetNull)
+  progress                StudentProgress[]
+  lessonProgress          LessonProgress[]
+  lessonSegmentProgress   LessonSegmentProgress[]
+  practiceAttempts        PracticeAttempt[]
+  simulatorSessions       SimulatorSession[]
 
   @@unique([institutionId, studentId, courseId])
+}
+
+model StudentLearningPathAssignment {
+  id               String            @id @default(cuid())
+  institutionId    String
+  studentId        String
+  learningPathId   String
+  assignedLevelCode String
+  assignedByUserId String
+  status           EnrollmentStatus  @default(ACTIVE)
+  effectiveFrom    DateTime          @default(now())
+  effectiveUntil   DateTime?
+  notes            String?
+  institution      Institution       @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  student          User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  learningPath     LearningPath      @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
+  enrollments      StudentEnrollment[]
 }
 
 model StudentProgress {
@@ -356,9 +695,11 @@ model StudentProgress {
   enrollmentId   String
   progressPct    Float             @default(0)
   lessonsDone    Int               @default(0)
+  segmentsDone   Int               @default(0)
   practicesDone  Int               @default(0)
   quizzesPassed  Int               @default(0)
   simulatorsDone Int               @default(0)
+  lastActivityAt DateTime?
   updatedAt      DateTime          @updatedAt
   enrollment     StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
 
@@ -374,6 +715,31 @@ model LessonProgress {
   enrollment    StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
 
   @@unique([lessonId, enrollmentId])
+}
+
+model LessonSegmentProgress {
+  id              String         @id @default(cuid())
+  lessonSegmentId String
+  enrollmentId    String
+  completedAt     DateTime?
+  lessonSegment   LessonSegment  @relation(fields: [lessonSegmentId], references: [id], onDelete: Cascade)
+  enrollment      StudentEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonSegmentId, enrollmentId])
+}
+
+model PracticeAttempt {
+  id           String                @id @default(cuid())
+  practiceId    String
+  enrollmentId  String
+  studentId     String
+  status        PracticeAttemptStatus @default(SUBMITTED)
+  score         Float?
+  notes         String?
+  submittedAt   DateTime             @default(now())
+  practice      Practice             @relation(fields: [practiceId], references: [id], onDelete: Cascade)
+  enrollment    StudentEnrollment    @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  student       User                 @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model SkillEvidence {
@@ -421,6 +787,25 @@ model SimulatorSession {
   simulator    Simulator               @relation(fields: [simulatorId], references: [id], onDelete: Cascade)
   student      User                    @relation(fields: [studentId], references: [id], onDelete: Cascade)
   enrollment   StudentEnrollment?      @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+}
+
+model QuizRetakeGrant {
+  id               String        @id @default(cuid())
+  quizId           String
+  studentId        String
+  grantedByUserId  String
+  courseId         String?
+  moduleId         String?
+  reason           String
+  maxExtraAttempts Int           @default(1)
+  expiresAt        DateTime?
+  createdAt        DateTime      @default(now())
+  quiz             Quiz          @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  student          User          @relation("QuizRetakeStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  grantedByUser    User          @relation("QuizRetakeTeacher", fields: [grantedByUserId], references: [id], onDelete: Restrict)
+  course           Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  module           Module?       @relation(fields: [moduleId], references: [id], onDelete: SetNull)
+  attempts         QuizAttempt[]
 }
 
 model Notification {

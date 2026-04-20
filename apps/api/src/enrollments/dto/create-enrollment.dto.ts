@@ -1,4 +1,4 @@
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class CreateEnrollmentDto {
   @IsString()
@@ -9,4 +9,16 @@ export class CreateEnrollmentDto {
 
   @IsString()
   courseId!: string;
+
+  @IsOptional()
+  @IsString()
+  assignedByUserId?: string;
+
+  @IsOptional()
+  @IsString()
+  assignedLevelCode?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }

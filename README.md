@@ -13,14 +13,22 @@ Construir un LMS que tome como documento rector el manual de contenido y requisi
 - Requisitos base: `docs/requisitos-base.md`
 - Alcance rector del proyecto: `docs/alcance-biblia.md`
 - Flujo de trabajo: `docs/flujo-de-trabajo.md`
+- Matriz de trazabilidad de modulos: `docs/matriz-trazabilidad-modulos.md`
 - Estado actual: `docs/estado-actual.md`
 - Bitacora de desarrollo: `docs/bitacora-desarrollo.md`
 - Comandos locales: `docs/comandos-locales.md`
 - Requisitos funcionales: `docs/requisitos-funcionales.md`
 - Arquitectura del LMS: `docs/arquitectura-lms.md`
 - Modelo de datos inicial: `docs/modelo-de-datos.md`
+- Diseno del modulo de usuarios y roles: `docs/modulo-usuarios-y-roles.md`
+- Diseno del modulo de instituciones, licencias y vigencias: `docs/modulo-instituciones-licencias-vigencias.md`
+- Diseno del modulo academico: `docs/modulo-academico.md`
+- Diseno del modulo de matricula e inscripcion: `docs/modulo-matricula-inscripcion.md`
+- Diseno del modulo de progreso y evaluaciones: `docs/modulo-progreso-y-evaluaciones.md`
 - Backlog por fases: `docs/backlog-fases.md`
 - Estrategia de simuladores: `docs/simuladores-decisiones.md`
+- Prompt de cursos, modulos y rutas: `prompts/cursos-modulos-rutas.md`
+- Prompt de progreso y evaluaciones: `prompts/progreso-y-evaluaciones.md`
 
 ## Estructura inicial
 

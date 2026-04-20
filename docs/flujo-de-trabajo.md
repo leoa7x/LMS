@@ -23,6 +23,9 @@ Si existe contradiccion entre ideas nuevas y estos documentos, prevalecen estos 
 - No construir demos escolares.
 - Si algo no esta completamente definido, proponer una decision razonable, justificarla y documentarla en `docs/`.
 - Los simuladores no se asumen propios por defecto.
+- Antes de implementar cualquier modulo, revisar `docs/matriz-trazabilidad-modulos.md`.
+- No se aceptan CRUD basicos o modulos genericos si no responden al pliego.
+- Cada modulo debe explicitar: requisitos que cubre, entidades, campos, relaciones, reglas de negocio, roles, validaciones, alcance MVP y alcance posterior.
 
 ## Regla de simuladores
 
@@ -74,6 +77,7 @@ Construir un LMS web con:
 
 1. Leer `docs/alcance-biblia.md`
 2. Leer este archivo
-3. Leer `prompts/main-prompt.md`
-4. Revisar `docs/backlog-fases.md`
-5. Continuar desde la fase en curso
+3. Leer `docs/matriz-trazabilidad-modulos.md`
+4. Leer `prompts/main-prompt.md`
+5. Revisar `docs/backlog-fases.md`
+6. Continuar desde la fase en curso

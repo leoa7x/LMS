@@ -4,6 +4,7 @@ import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
 import { CreateQuestionDto } from "./dto/create-question.dto";
 import { CreateQuizDto } from "./dto/create-quiz.dto";
+import { GrantQuizRetakeDto } from "./dto/grant-quiz-retake.dto";
 import { SubmitQuizAttemptDto } from "./dto/submit-quiz-attempt.dto";
 import { QuizzesService } from "./quizzes.service";
 
@@ -36,9 +37,21 @@ export class QuizzesController {
     return this.quizzesService.findAttempts();
   }
 
+  @Get("retake-grants")
+  @Roles("ADMIN", "TEACHER", "SUPPORT")
+  findRetakeGrants() {
+    return this.quizzesService.findRetakeGrants();
+  }
+
   @Post("attempts")
   @Roles("ADMIN", "TEACHER", "STUDENT")
   submitAttempt(@Body() dto: SubmitQuizAttemptDto) {
     return this.quizzesService.submitAttempt(dto);
+  }
+
+  @Post("retake-grants")
+  @Roles("ADMIN", "TEACHER")
+  grantRetake(@Body() dto: GrantQuizRetakeDto) {
+    return this.quizzesService.grantRetake(dto);
   }
 }
