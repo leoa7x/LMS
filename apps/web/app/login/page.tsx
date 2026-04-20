@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Shell } from "../../components/shell";
 import { useAuth } from "../../components/auth-provider";
+import { defaultRouteByRole, getPrimaryRole } from "../../lib/role-navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -45,7 +46,8 @@ export default function LoginPage() {
         user: data.user,
       });
 
-      router.push("/admin");
+      const primaryRole = getPrimaryRole(data.user.roles);
+      router.push(defaultRouteByRole[primaryRole]);
     } catch (submitError) {
       setError(
         submitError instanceof Error ? submitError.message : "Fallo el inicio de sesion",
@@ -60,7 +62,7 @@ export default function LoginPage() {
       <section className="mx-auto max-w-xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <h2 className="mb-2 text-2xl font-semibold text-ink">Acceso al portal</h2>
         <p className="mb-8 text-sm leading-6 text-slate-600">
-          Login real contra el backend del LMS usando JWT y refresh token.
+          Acceso real contra el backend del LMS con contexto por rol y sesion protegida.
         </p>
 
         <form className="space-y-5" onSubmit={handleSubmit}>

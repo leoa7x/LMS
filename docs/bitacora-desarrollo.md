@@ -1313,3 +1313,119 @@ Cerrar la integracion minima entre simulador, practica, matricula y trazabilidad
 Los simuladores ya no quedan como piezas separadas del flujo academico.
 
 El backend ahora puede validar, contextualizar y trazar uso minimo real del simulador dentro del LMS.
+
+## 2026-04-20 - Frontend MVP Oleada 1
+
+### Objetivo
+
+Abrir frontend real del MVP sobre backend ya cerrado, sin panel generico y con experiencia diferenciada por rol.
+
+### Cambios aplicados
+
+- se agrego navegacion por rol
+- se agrego `PortalShell`
+- se agrego `RoleGuard`
+- el login ahora redirige segun rol activo
+- se implementaron dashboards funcionales para:
+  - admin
+  - docente
+  - estudiante
+- se implementaron vistas de Oleada 1 para:
+  - usuarios
+  - institucion, sedes y laboratorios
+  - cursos y rutas
+  - contenidos
+  - cursos docente
+  - contenidos docente
+  - cursos estudiante
+  - contenidos estudiante
+
+### Validacion
+
+- `npm run build:web` correcto
+
+### Efecto practico
+
+El frontend del LMS ya no es solo una maqueta administrativa.
+
+La primera oleada funcional ya quedo montada sobre el backend real y separada por rol, manteniendo la operacion academica e institucional como prioridad.
+
+## 2026-04-20 - Frontend MVP Oleada 2
+
+### Objetivo
+
+Extender el frontend del MVP sobre la base backend ya cerrada para cubrir progreso, evaluaciones, resultados consolidados, bilinguismo visible y exportacion PDF.
+
+### Cambios aplicados
+
+- se agregaron vistas de progreso para:
+  - admin
+  - docente
+  - estudiante
+- se agregaron vistas de evaluaciones para:
+  - admin
+  - docente
+  - estudiante
+- se agregaron vistas de resultados consolidados para:
+  - admin
+  - docente
+  - estudiante
+- se expuso el bilinguismo visible en UI mediante selector de idioma en evaluaciones y contenidos
+- se conecto la exportacion PDF por modulo desde las vistas de resultados
+- se ajusto la navegacion por rol para incorporar:
+  - progreso
+  - evaluaciones
+  - resultados
+
+### Validacion
+
+- `npm run build:web` correcto
+
+### Efecto practico
+
+El frontend del MVP ya cubre la operacion academica central del pliego en su parte visual inicial.
+
+La experiencia por rol ya permite navegar entre cursos, contenidos, progreso, evaluaciones y resultados sobre contratos reales del backend, sin caer en un panel generico.
+
+## 2026-04-20 - Frontend MVP Oleada 3
+
+### Objetivo
+
+Cerrar el MVP visual sobre los modulos del pliego que quedaban pendientes antes de considerar el frontend base como completo: simuladores, soporte y vistas administrativas consolidadas.
+
+### Cambios aplicados
+
+- se reescribio la vista administrativa de simuladores sobre `PortalShell`
+- se agregaron vistas de simuladores para:
+  - admin
+  - docente
+  - estudiante
+- la vista del estudiante ahora permite:
+  - abrir sesion de simulador
+  - cargar contexto academico
+  - registrar eventos minimos
+  - completar sesion
+- se agregaron vistas de soporte para:
+  - admin y soporte
+  - docente
+  - estudiante
+- la vista administrativa de soporte ahora cubre:
+  - tickets
+  - SLA operativo
+  - comentarios internos
+  - creacion de politicas SLA
+- se reescribio la vista de auditoria administrativa sobre `PortalShell`
+- se amplio la navegacion por rol para incorporar:
+  - simuladores
+  - soporte
+  - auditoria
+
+### Validacion
+
+- `npm run build:web` correcto
+
+### Efecto practico
+
+El frontend MVP ya cubre las tres oleadas definidas en los prompts rectores.
+
+La interfaz ahora refleja la operacion institucional, academica, de soporte y de simuladores sobre endpoints reales del backend, manteniendo el tono sobrio y funcional exigido por el proyecto.

@@ -61,4 +61,11 @@ Construir un LMS que tome como documento rector el manual de contenido y requisi
 
 ## Estado
 
-El repositorio ya queda preparado para Fase 0 y Fase 1: documentacion de arquitectura y bootstrap base del producto.
+El repositorio ya tiene:
+
+- backend base del LMS alineado con el pliego y compilando
+- frontend MVP Oleada 1 cerrada
+- frontend MVP Oleada 2 cerrada
+- frontend MVP Oleada 3 cerrada
+
+El siguiente bloque ya no es abrir nuevas pantallas base del MVP, sino endurecer, pulir y preparar integraciones y despliegue.

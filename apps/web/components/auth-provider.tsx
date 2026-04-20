@@ -13,6 +13,8 @@ type SessionUser = {
   id: string;
   email: string;
   roles: string[];
+  preferredLang?: string;
+  institutionId?: string;
 };
 
 type SessionState = {

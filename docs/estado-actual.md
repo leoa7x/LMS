@@ -45,9 +45,17 @@ En implementacion backend ya existen:
 
 En frontend ya existen:
 
-- shell administrativo base
-- dashboard admin base
-- vistas iniciales para academico, usuarios, simuladores y auditoria
+- navegacion por rol
+- login con redireccion por rol
+- dashboard admin
+- dashboard docente
+- dashboard estudiante
+- gestion admin de usuarios
+- gestion admin de instituciones, sedes y laboratorios
+- gestion admin de cursos y rutas
+- vista admin de contenidos
+- vistas de cursos y contenidos para docente
+- vistas de cursos y contenidos para estudiante
 
 ## Referencias externas cargadas
 
@@ -62,6 +70,29 @@ Antes de seguir desarrollando, cualquier sesion nueva debe tomar estos archivos 
 - `docs/alcance-biblia.md`
 - `docs/estado-actual.md`
 - `prompts/main-prompt.md`
+
+## Estado de frontend MVP
+
+Se implemento la `Oleada 1` del frontend funcional sobre backend estable y alineado con el pliego.
+
+Pantallas cerradas en esta oleada:
+
+- `login`
+- `dashboard admin`
+- `dashboard docente`
+- `dashboard estudiante`
+- `usuarios`
+- `institucion / sedes / laboratorios`
+- `cursos / rutas`
+- `contenidos`
+- `cursos docente`
+- `contenidos docente`
+- `cursos estudiante`
+- `contenidos estudiante`
+
+Validacion:
+
+- `npm run build:web` correcto
 
 ## Fase en curso
 
@@ -594,6 +625,33 @@ Documentacion rectora del modulo:
 - Migracion del modulo de soporte tecnico aplicada
 - Migracion del modulo de notificaciones y correo aplicada
 - Migracion del modulo de auditoria aplicada
+
+## Estado actual del frontend MVP
+
+- Oleada 1 cerrada sobre backend estable:
+  - login con redireccion por rol
+  - dashboards de admin, docente y estudiante
+  - usuarios
+  - institucion, sedes y laboratorios
+  - cursos y rutas
+  - contenidos
+- Oleada 2 cerrada sobre backend estable:
+  - progreso institucional, docente y estudiante
+  - evaluaciones visibles por rol
+  - autorizacion de reintentos
+  - resultados consolidados por matricula y ruta
+  - glosario y contenidos con bilinguismo visible en UI
+  - exportacion PDF por modulo desde frontend
+- Oleada 3 cerrada sobre backend estable:
+  - simuladores integrados minimos en UI
+  - soporte, tickets y SLA en UI
+  - auditoria administrativa consolidada
+  - navegacion por rol extendida para cierre visual del MVP
+
+## Validacion reciente
+
+- `npm run build:api` correcto
+- `npm run build:web` correcto
 
 ## Instruccion para retomarlo
 

@@ -1,30 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AdminGuard } from "../../components/admin-guard";
-import { AdminShell } from "../../components/admin-shell";
 import { MetricCard } from "../../components/metric-card";
+import { PortalShell } from "../../components/portal-shell";
+import { RoleGuard } from "../../components/role-guard";
 import { SectionCard } from "../../components/section-card";
 import { useAuth } from "../../components/auth-provider";
 import { apiRequest } from "../../lib/client-api";
 
 type AdminSummary = {
-  users: number;
-  institutions: number;
-  courses: number;
-  enrollments: number;
-  quizzes: number;
-  supportTickets: number;
+  activeMemberships: number;
+  activeStudents: number;
+  activeTeachers: number;
+  publishedCourses: number;
+  activeEnrollments: number;
+  openSupportTickets: number;
+  activeSessions: number;
+  expiringMemberships: number;
+  completedSimulatorSessions: number;
   averageProgress: number;
 };
 
 const defaultSummary: AdminSummary = {
-  users: 0,
-  institutions: 0,
-  courses: 0,
-  enrollments: 0,
-  quizzes: 0,
-  supportTickets: 0,
+  activeMemberships: 0,
+  activeStudents: 0,
+  activeTeachers: 0,
+  publishedCourses: 0,
+  activeEnrollments: 0,
+  openSupportTickets: 0,
+  activeSessions: 0,
+  expiringMemberships: 0,
+  completedSimulatorSessions: 0,
   averageProgress: 0,
 };
 
@@ -43,56 +49,82 @@ export default function AdminPage() {
   }, [accessToken]);
 
   return (
-    <AdminShell
+    <PortalShell
       eyebrow="Dashboard administrativo"
-      title="Control central del LMS tecnico"
-      description="Vista operativa para supervisar usuarios, institucion, catalogo academico, evaluacion, progreso y la futura capa de simuladores integrados."
+      title="Operacion institucional del LMS"
+      description="Vista institucional para controlar acceso, matriculas, cursos publicados, progreso, soporte y actividad general de la plataforma."
     >
-      <AdminGuard>
+      <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <MetricCard
-            hint="Total de cuentas registradas en la plataforma."
-            label="Usuarios"
-            value={summary.users}
+            hint="Membresias activas con acceso operativo al portal."
+            label="Accesos activos"
+            value={summary.activeMemberships}
           />
           <MetricCard
-            hint="Entidades o sedes asociadas a licencias y matriculas."
-            label="Instituciones"
-            value={summary.institutions}
+            hint="Estudiantes activos bajo la institucion actual."
+            label="Estudiantes"
+            value={summary.activeStudents}
           />
           <MetricCard
-            hint="Cursos tecnicos creados dentro del catalogo actual."
-            label="Cursos"
-            value={summary.courses}
+            hint="Docentes activos vinculados a la operacion academica."
+            label="Docentes"
+            value={summary.activeTeachers}
           />
           <MetricCard
-            hint="Asignaciones activas de estudiantes a cursos."
+            hint="Matriculas activas dentro del contexto institucional."
             label="Matriculas"
-            value={summary.enrollments}
+            value={summary.activeEnrollments}
           />
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
           <SectionCard
-            description="Resumen de la capa academica y de evaluacion ya implementada."
+            description="Indicadores institucionales sobre acceso, soporte y uso operativo del LMS."
             title="Estado operativo"
           >
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                  Quizzes
-                </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">{summary.quizzes}</p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                  Tickets
+                  Cursos publicados
                 </p>
                 <p className="mt-3 text-3xl font-semibold text-slate-950">
-                  {summary.supportTickets}
+                  {summary.publishedCourses}
                 </p>
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Tickets abiertos
+                </p>
+                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                  {summary.openSupportTickets}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Sesiones activas
+                </p>
+                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                  {summary.activeSessions}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Vigencias por vencer
+                </p>
+                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                  {summary.expiringMemberships}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                  Simuladores completados
+                </p>
+                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                  {summary.completedSimulatorSessions}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                   Progreso promedio
                 </p>
@@ -104,23 +136,23 @@ export default function AdminPage() {
           </SectionCard>
 
           <SectionCard
-            description="Bloques de gestion que deben consolidarse visualmente en el panel."
-            title="Prioridades"
+            description="Focos de trabajo del MVP visual construidos sobre backend ya estable."
+            title="Bloques activos"
           >
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Usuarios, roles, instituciones y licencias
+                Acceso operativo, usuarios y administracion institucional
               </li>
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Catalogo tecnico por areas, cursos, modulos y lecciones
+                Cursos, rutas preconfiguradas y contenidos tecnicos
               </li>
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Progreso, quizzes, simuladores y trazabilidad
+                Progreso, simuladores, soporte y trazabilidad
               </li>
             </ul>
           </SectionCard>
         </section>
-      </AdminGuard>
-    </AdminShell>
+      </RoleGuard>
+    </PortalShell>
   );
 }
