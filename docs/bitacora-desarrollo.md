@@ -1493,3 +1493,29 @@ Mejorar la estabilidad operativa del frontend para que el acceso al portal no de
 ### Efecto practico
 
 El frontend queda mas cercano a operacion real continua, alineado con el requisito de acceso sostenido y administracion formal del portal.
+
+## 2026-04-20 - Fase 7 inicial: validacion de arranque integrado
+
+### Objetivo
+
+Confirmar que el LMS no solo compila, sino que arranca como stack integrado real con `postgres`, `api` y `web`.
+
+### Cambios aplicados
+
+- se detecto un fallo real de arranque en Nest:
+  - `QuizzesService` dependia de `ProgressService`
+  - `QuizzesModule` no importaba `ProgressModule`
+- se corrigio el wiring en:
+  - `apps/api/src/quizzes/quizzes.module.ts`
+
+### Validacion
+
+- `npm run build:api` correcto
+- `docker compose up -d --build` correcto
+- `docker compose ps` correcto
+- `curl http://localhost:4000/api/v1/health` correcto
+- `curl -I http://localhost:3000` correcto
+
+### Efecto practico
+
+El LMS ya arranca como sistema integrado real en local, con API saludable y frontend sirviendo correctamente sobre Docker Compose.

@@ -677,6 +677,15 @@ Documentacion rectora del modulo:
 - `logout` intenta revocar sesion en backend antes de limpiar estado local
 - `npm run build:web` correcto despues del endurecimiento
 
+## Estado de arranque integrado
+
+- `docker compose up -d --build` validado
+- `docker compose ps` validado
+- health API validado en `http://localhost:4000/api/v1/health`
+- frontend web validado en `http://localhost:3000`
+- bug de wiring corregido en:
+  - `apps/api/src/quizzes/quizzes.module.ts`
+
 ## Instruccion para retomarlo
 
 Si una sesion nueva necesita retomar el proyecto, la instruccion corta debe ser:
