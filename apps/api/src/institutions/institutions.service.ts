@@ -1,9 +1,11 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import { EntityStatus } from "@prisma/client";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateCampusDto } from "./dto/create-campus.dto";
 import { CreateInstitutionDto } from "./dto/create-institution.dto";
@@ -14,8 +16,11 @@ import { UpdateEntityStatusDto } from "./dto/update-entity-status.dto";
 export class InstitutionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
+  findAll(user: JwtPayload) {
     return this.prisma.institution.findMany({
+      where: {
+        id: user.institutionId,
+      },
       include: {
         campuses: {
           include: {
@@ -31,9 +36,15 @@ export class InstitutionsService {
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, user: JwtPayload) {
+    if (id !== user.institutionId) {
+      throw new ForbiddenException(
+        "Institution detail must match the active institution context",
+      );
+    }
+
     return this.prisma.institution.findUnique({
-      where: { id },
+      where: { id: user.institutionId },
       include: {
         campuses: {
           include: {
@@ -77,8 +88,11 @@ export class InstitutionsService {
     });
   }
 
-  findCampuses() {
+  findCampuses(user: JwtPayload) {
     return this.prisma.campus.findMany({
+      where: {
+        institutionId: user.institutionId,
+      },
       include: {
         institution: true,
         laboratories: true,
@@ -89,7 +103,13 @@ export class InstitutionsService {
     });
   }
 
-  async createCampus(dto: CreateCampusDto) {
+  async createCampus(dto: CreateCampusDto, user: JwtPayload) {
+    if (dto.institutionId !== user.institutionId) {
+      throw new ForbiddenException(
+        "Campus must be created inside the active institution context",
+      );
+    }
+
     const institution = await this.prisma.institution.findUnique({
       where: { id: dto.institutionId },
       select: { id: true, status: true },
@@ -136,8 +156,13 @@ export class InstitutionsService {
     });
   }
 
-  findLaboratories() {
+  findLaboratories(user: JwtPayload) {
     return this.prisma.laboratory.findMany({
+      where: {
+        campus: {
+          institutionId: user.institutionId,
+        },
+      },
       include: {
         campus: {
           include: {
@@ -152,7 +177,7 @@ export class InstitutionsService {
     });
   }
 
-  async createLaboratory(dto: CreateLaboratoryDto) {
+  async createLaboratory(dto: CreateLaboratoryDto, user: JwtPayload) {
     const campus = await this.prisma.campus.findUnique({
       where: { id: dto.campusId },
       include: {
@@ -162,6 +187,12 @@ export class InstitutionsService {
 
     if (!campus) {
       throw new NotFoundException("Campus not found");
+    }
+
+    if (campus.institutionId !== user.institutionId) {
+      throw new ForbiddenException(
+        "Laboratory must be created inside the active institution context",
+      );
     }
 
     if (

@@ -3,13 +3,15 @@ import { JwtService } from "@nestjs/jwt";
 import { compare, hash } from "bcryptjs";
 import { Request } from "express";
 import {
+  AccessEventType,
   AccessSessionStatus,
-  MembershipStatus,
   ScopeStatus,
   UserStatus,
 } from "@prisma/client";
+import { AccessPolicyService } from "../access-policy/access-policy.service";
+import { AuditService } from "../audit/audit.service";
 import { PrismaService } from "../prisma/prisma.service";
-import { UsersService, UserWithAccessContext } from "../users/users.service";
+import { UsersService } from "../users/users.service";
 import { JwtPayload } from "./interfaces/jwt-payload.interface";
 
 function parseDurationToSeconds(value: string, fallbackSeconds: number): number {
@@ -40,6 +42,8 @@ function parseDurationToSeconds(value: string, fallbackSeconds: number): number 
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly accessPolicyService: AccessPolicyService,
+    private readonly auditService: AuditService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
@@ -61,7 +65,10 @@ export class AuthService {
       throw new UnauthorizedException("Invalid credentials");
     }
 
-    const membership = this.resolveActiveMembership(user.institutions);
+    const { membership } = this.accessPolicyService.resolveActiveMembership(
+      user.institutions,
+    );
+    await this.accessPolicyService.enforceConcurrency(membership);
     const scopedRoles = user.roles.filter(
       (assignment) =>
         assignment.scopeStatus === ScopeStatus.ACTIVE &&
@@ -96,7 +103,7 @@ export class AuthService {
     );
   }
 
-  async refresh(refreshToken: string) {
+  async refresh(refreshToken: string, request?: Request) {
     try {
       const payload = await this.jwtService.verifyAsync<JwtPayload>(refreshToken, {
         secret: process.env.JWT_REFRESH_SECRET ?? "change-me-refresh",
@@ -124,7 +131,11 @@ export class AuthService {
         throw new UnauthorizedException("Invalid refresh token");
       }
 
-      const membership = this.resolveActiveMembership(user.institutions, payload.institutionMembershipId);
+      const { membership } = this.accessPolicyService.resolveActiveMembership(
+        user.institutions,
+        payload.institutionMembershipId,
+      );
+      await this.accessPolicyService.enforceConcurrency(membership, session.id);
       const scopedRoles = user.roles.filter(
         (assignment) =>
           assignment.scopeStatus === ScopeStatus.ACTIVE &&
@@ -152,7 +163,7 @@ export class AuthService {
           sessionId: session.id,
           preferredLang: user.preferredLang,
         },
-        undefined,
+        request,
         session.id,
       );
     } catch {
@@ -218,6 +229,18 @@ export class AuthService {
       },
     });
 
+    await this.auditService.createAccessEvent({
+      institutionId: input.institutionId,
+      userId: input.sub,
+      institutionMemberId: input.institutionMembershipId,
+      sessionId,
+      eventType: existingSessionId
+        ? AccessEventType.TOKEN_REFRESH
+        : AccessEventType.LOGIN_SUCCESS,
+      ipAddress: request?.ip,
+      userAgent: request?.headers["user-agent"],
+    });
+
     return {
       accessToken,
       refreshToken,
@@ -234,31 +257,37 @@ export class AuthService {
     };
   }
 
-  private resolveActiveMembership(
-    memberships: UserWithAccessContext["institutions"],
-    requestedMembershipId?: string,
-  ) {
-    const now = new Date();
-    const activeMemberships = memberships.filter((membership) => {
-      const withinWindow =
-        membership.accessStartAt <= now &&
-        (!membership.accessEndAt || membership.accessEndAt >= now);
-
-      return (
-        membership.membershipStatus === MembershipStatus.ACTIVE &&
-        membership.institution.status === "ACTIVE" &&
-        withinWindow
-      );
+  async logout(user: { sub: string; sessionId: string }) {
+    const session = await this.prisma.accessSession.findUnique({
+      where: { id: user.sessionId },
+      include: {
+        institutionMember: true,
+      },
     });
 
-    const selected =
-      activeMemberships.find((membership) => membership.id === requestedMembershipId) ??
-      activeMemberships[0];
-
-    if (!selected) {
-      throw new UnauthorizedException("User does not have an active institutional membership");
+    if (!session || session.userId !== user.sub) {
+      throw new UnauthorizedException("Invalid session");
     }
 
-    return selected;
+    await this.prisma.accessSession.update({
+      where: { id: session.id },
+      data: {
+        status: AccessSessionStatus.REVOKED,
+        revokedAt: new Date(),
+        revokedReason: "USER_LOGOUT",
+      },
+    });
+
+    await this.auditService.createAccessEvent({
+      institutionId: session.institutionMember.institutionId,
+      userId: session.userId,
+      institutionMemberId: session.institutionMemberId,
+      sessionId: session.id,
+      eventType: AccessEventType.LOGOUT,
+      ipAddress: session.ipAddress ?? undefined,
+      userAgent: session.userAgent ?? undefined,
+    });
+
+    return { success: true };
   }
 }

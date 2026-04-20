@@ -69,6 +69,223 @@ Fase 1 cerrada a nivel de bootstrap de codigo y validacion de build.
 
 La base documental y el esqueleto tecnico ya fueron preparados. Prisma genera cliente, el backend compila y el frontend compila.
 
+## Cierre de bloqueo critico de oleada 1
+
+Se endurecio `vigencia, acceso por 36 meses, contrato, licencia y concurrencia` para que dejen de ser datos decorativos y pasen a gobernar el acceso real.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-acceso-operativo.md`
+- se agrego `AccessPolicyService` como politica central de acceso
+- `auth` ahora usa esa politica para:
+  - resolver membresia efectiva
+  - validar ventana de acceso real
+  - validar contrato vigente
+  - aplicar concurrencia por contrato
+  - aplicar concurrencia por licencia
+- `users` ahora deriva `accessEndAt` al crear membresias usando:
+  - `accessStartAt`
+  - `License.durationMonths`
+  - `ContractTerm.endAt`
+- la vigencia de 36 meses ya no depende solo de cargar manualmente `accessEndAt`
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-acceso-operativo.md`
+
+## Cierre de bloqueo critico de oleada 1
+
+Se endurecio `administracion por nivel y visibilidad transversal` para que el catalogo academico deje de exponerse de forma plana.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-visibilidad-por-nivel.md`
+- se agrego `AcademicVisibilityService`
+- se resolvio `accessibleCourseIds` por rol:
+  - admin y soporte
+  - docente segun `TeacherScopeAssignment`
+  - estudiante segun matricula, ruta y reglas de visibilidad
+- se aplico filtrado de visibilidad en:
+  - `courses`
+  - `modules`
+  - `lessons`
+  - `practices`
+  - `quizzes`
+  - `simulators`
+- estudiantes ya pueden consultar contenido filtrado donde antes solo habia lectura plana o roles limitados
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-visibilidad-por-nivel.md`
+
+## Cierre de bloqueo critico de oleada 1
+
+Se endurecio `bilinguismo transversal backend` para que el frontend no tenga que reconstruir localizacion con contratos inconsistentes.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-bilinguismo-transversal.md`
+- se agrego modulo `i18n`
+- se agrego `I18nService`
+- se resolvio idioma efectivo por:
+  - `lang` en query
+  - `preferredLang` del usuario
+  - fallback a espanol
+- se agregaron campos localizados en lecturas de:
+  - cursos
+  - modulos
+  - lecciones
+  - practicas
+  - quizzes
+  - recursos de contenido
+  - glosario
+- se mantuvieron los campos base `Es/En`, pero ya existe una capa backend consistente para frontend
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-bilinguismo-transversal.md`
+
+## Cierre de bloqueo critico de oleada 1
+
+Se endurecio `administracion centralizada coherente` para que los modulos troncales de operacion institucional no sigan trabajando como CRUDs globales o con referencias cruzadas inconsistentes.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-administracion-centralizada.md`
+- se agrego `AdministrationScopeService`
+- se fijo criterio institucional comun para:
+  - `users`
+  - `institutions`
+  - `licenses`
+  - `enrollments`
+- los listados administrativos ahora se resuelven por `institutionId` activo del token
+- las escrituras con `institutionId` ahora deben coincidir con la institucion activa
+- se bloqueo que matriculas y rutas academicas queden firmadas por un `assignedByUserId` distinto al usuario autenticado
+- se corrigio lectura de detalle de usuarios para que respete el contexto institucional
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-administracion-centralizada.md`
+
+## Cierre de consistencia funcional
+
+Se endurecio `resultados consolidados` para que el LMS deje de exponer progreso, quizzes, practicas y simuladores como datos aislados.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-resultados-consolidados.md`
+- se agrego resultado consolidado por matricula:
+  - `GET /reports/enrollments/:enrollmentId/result`
+- se agrego resultado consolidado por ruta formativa:
+  - `GET /reports/learning-path-assignments/:assignmentId/result`
+- ambos resultados integran:
+  - progreso
+  - evaluaciones pre y post
+  - cuestionarios previos por modulo
+  - practicas
+  - simuladores
+  - decision final
+- las lecturas respetan permisos por:
+  - admin
+  - docente con alcance
+  - estudiante propietario
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-resultados-consolidados.md`
+
+## Cierre de consistencia funcional
+
+Se endurecio `rutas preconfiguradas con secuencia minima` para que las rutas dejen de ser agrupaciones planas y pasen a gobernar orden y desbloqueo basico.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-rutas-preconfiguradas.md`
+- se agrego secuencia por ruta asignada:
+  - `GET /learning-paths/assignments/:assignmentId/sequence`
+- la secuencia ahora calcula por curso:
+  - `LOCKED`
+  - `UNLOCKED`
+  - `COMPLETED`
+- el desbloqueo usa:
+  - `sortOrder`
+  - cursos requeridos previos
+  - estado de matricula
+  - cierre por `POST_COURSE` o progreso consolidado
+- la lectura respeta permisos por:
+  - admin
+  - soporte
+  - docente con alcance
+  - estudiante propietario
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-rutas-preconfiguradas.md`
+
+## Cierre de consistencia funcional
+
+Se endurecio `exportacion PDF basica` para que la plataforma produzca salida real por modulo y no solo almacene plantillas.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-exportacion-pdf.md`
+- se agrego endpoint:
+  - `GET /content-resources/modules/:moduleId/pdf-export`
+- la exportacion ahora integra:
+  - plantilla del modulo
+  - estudiante objetivo
+  - progreso del modulo
+  - resumen de practicas
+  - evidencias de habilidad
+- el backend genera un PDF valido y bilingue segun idioma efectivo
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-exportacion-pdf.md`
+
+## Cierre de consistencia funcional
+
+Se endurecio `soporte y SLA operativo` para que el backend ya no trate el SLA como solo fechas guardadas sin lectura de cumplimiento.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-sla-operativo.md`
+- se enriquecieron tickets con:
+  - vencimiento de respuesta
+  - vencimiento de resolucion
+  - horas restantes
+- se agrego resumen institucional:
+  - `GET /support/operations/summary`
+- el soporte ya puede exponer:
+  - tickets vencidos
+  - tickets proximos a vencer
+  - carga abierta e in progress
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-sla-operativo.md`
+
+## Cierre de consistencia funcional
+
+Se endurecio `simuladores integrados minimos` para que las sesiones de simulacion dejen de comportarse como launch URLs sin contexto academico.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-simuladores-integracion-minima.md`
+- las sesiones ahora validan:
+  - matricula valida
+  - estudiante correcto
+  - mapeo del simulador a practicas del curso
+- se agrego contexto de sesion:
+  - `GET /simulators/sessions/:sessionId/context`
+- se agrego registro minimo de eventos:
+  - `POST /simulators/sessions/events`
+- al completar simulador, el backend ya puede generar evidencia academica basica ligada a practica
+
+Documentacion rectora del bloque:
+
+- `docs/modulo-simuladores-integracion-minima.md`
+
 ## Modulo endurecido contra pliego
 
 Se rediseño e implemento el modulo de `usuarios y roles` para dejar de tratarlo como CRUD generico.
@@ -189,6 +406,182 @@ Documentacion rectora del modulo:
 - `docs/modulo-progreso-y-evaluaciones.md`
 - `prompts/progreso-y-evaluaciones.md`
 
+## Modulo alineado contra pliego
+
+Se valido y documento el `modulo de simuladores` como parte integral del LMS, no como sistema externo separado.
+
+Estado aplicado:
+
+- se fijo la arquitectura y taxonomia del modulo en `docs/modulo-simuladores.md`
+- se mantiene la clasificacion:
+  - `EMBEDDABLE_EXISTING`
+  - `THIRD_PARTY_ADAPTER`
+  - `NATIVE_BASIC`
+  - `NATIVE_ADVANCED`
+- el backend ya soporta:
+  - catalogo de simuladores
+  - mapeo simulador a practica
+  - sesiones por estudiante
+  - cierre de sesion con trazabilidad
+  - integracion base con progreso
+
+Documentacion rectora del modulo:
+
+- `docs/modulo-simuladores.md`
+- `prompts/simuladores-integracion.md`
+
+## Modulo endurecido contra pliego
+
+Se rediseño e implemento el `modulo de contenidos, glosario y bilinguismo` para dejar de tratar recursos como adjuntos planos.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-contenidos-glosario-bilinguismo.md`
+- `ContentResource` ahora soporta:
+  - versiones de contenido
+  - relaciones con glosario
+  - contexto academico ampliado en lecturas
+- se agregaron:
+  - `ContentResourceVersion`
+  - `GlossaryTermRelation`
+  - `ModulePdfExportTemplate`
+- `content-resources` ahora soporta:
+  - creacion de version inicial
+  - versiones adicionales
+  - configuracion de plantillas PDF por modulo
+- `glossary` ahora soporta relaciones explicitas entre termino tecnico y recurso de contenido
+
+Migracion aplicada:
+
+- `prisma/migrations/20260420131312_content_glossary_bilingual_alignment/migration.sql`
+
+Documentacion rectora del modulo:
+
+- `docs/modulo-contenidos-glosario-bilinguismo.md`
+- `prompts/contenidos-glosario-bilinguismo.md`
+
+## Modulo endurecido contra pliego
+
+Se rediseño e implemento el `modulo de reportes y dashboards` para dejar de tratar analitica y paneles como simples contadores globales.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-reportes-y-dashboards.md`
+- `dashboard/admin` ahora responde al contexto institucional activo
+- `dashboard/teacher` ahora calcula alcance docente real sobre matriculas, cursos y progreso
+- `dashboard/student/me` ahora devuelve resumen academico propio del estudiante
+- se agregaron reportes accionables:
+  - `GET /reports/courses/:courseId/summary`
+  - `GET /reports/students/:studentId/summary`
+- los reportes ahora respetan:
+  - institucion activa
+  - alcance docente
+  - restriccion de estudiante a su propio resumen
+
+Documentacion rectora del modulo:
+
+- `docs/modulo-reportes-y-dashboards.md`
+
+## Modulo endurecido contra pliego
+
+Se rediseño e implemento el `modulo de soporte tecnico` para dejar de tratar tickets como mensajes planos sin SLA ni contexto institucional.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-soporte-tecnico.md`
+- `SupportTicket` ahora soporta:
+  - institucion
+  - sede
+  - laboratorio
+  - responsable asignado
+  - politica SLA
+  - prioridad
+  - vencimiento de respuesta
+  - timestamps de respuesta, resolucion y cierre
+- se agregaron:
+  - `SupportTicketComment`
+  - `SupportSlaPolicy`
+- se agrego modulo backend `support` con endpoints para:
+  - tickets
+  - comentarios
+  - actualizacion de ticket
+  - politicas SLA
+
+Migracion aplicada:
+
+- `prisma/migrations/20260420132539_support_module_alignment/migration.sql`
+
+Documentacion rectora del modulo:
+
+- `docs/modulo-soporte-tecnico.md`
+
+## Modulo endurecido contra pliego
+
+Se rediseño e implemento el `modulo de notificaciones y correo` para dejar de tratar notificaciones como avisos planos sin trazabilidad de entrega.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-notificaciones-y-correo.md`
+- `Notification` ahora soporta:
+  - institucion
+  - canal
+  - estado
+  - plantilla
+  - referencia academica
+  - marcas de lectura y envio
+- se agregaron:
+  - `NotificationTemplate`
+  - `EmailDelivery`
+  - enums `NotificationChannel` y `NotificationStatus`
+- se agrego modulo backend `notifications` con endpoints para:
+  - notificaciones propias
+  - marcado de lectura
+  - plantillas
+  - creacion de notificaciones
+  - envio de practica de demostracion
+
+Migracion aplicada:
+
+- `prisma/migrations/20260420134845_notifications_email_alignment/migration.sql`
+
+Documentacion rectora del modulo:
+
+- `docs/modulo-notificaciones-y-correo.md`
+
+## Modulo endurecido contra pliego
+
+Se rediseño e implemento el `modulo de auditoria` para dejar de tratar la trazabilidad como un log minimo sin contexto institucional ni eventos de acceso.
+
+Cambios aplicados:
+
+- se documento el diseno formal en `docs/modulo-auditoria.md`
+- `AuditLog` ahora soporta:
+  - institucion
+  - membresia institucional
+  - sesion
+  - roles efectivos del actor
+  - IP
+  - user-agent
+- se agrego `AccessEventLog`
+- se agrego enum `AccessEventType`
+- `audit` ahora soporta:
+  - filtros por accion, entidad y usuario
+  - consulta de eventos de acceso
+- `auth` ahora registra:
+  - login exitoso
+  - refresh
+  - logout
+- se agrego endpoint:
+  - `POST /auth/logout`
+
+Migracion aplicada:
+
+- `prisma/migrations/20260420135745_audit_alignment/migration.sql`
+
+Documentacion rectora del modulo:
+
+- `docs/modulo-auditoria.md`
+
 ## Estado de infraestructura local
 
 - Docker operativo
@@ -197,6 +590,10 @@ Documentacion rectora del modulo:
 - Seed inicial ejecutado
 - Migracion de usuarios y roles aplicada
 - Seed actualizado ejecutado
+- Migracion de contenidos, glosario y bilinguismo aplicada
+- Migracion del modulo de soporte tecnico aplicada
+- Migracion del modulo de notificaciones y correo aplicada
+- Migracion del modulo de auditoria aplicada
 
 ## Instruccion para retomarlo
 

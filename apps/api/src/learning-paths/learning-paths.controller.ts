@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
+import { Request } from "express";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
@@ -15,6 +17,15 @@ export class LearningPathsController {
   @Roles("ADMIN", "TEACHER", "SUPPORT")
   findAll() {
     return this.learningPathsService.findAll();
+  }
+
+  @Get("assignments/:assignmentId/sequence")
+  @Roles("ADMIN", "TEACHER", "STUDENT", "SUPPORT")
+  assignmentSequence(@Param("assignmentId") assignmentId: string, @Req() req: Request) {
+    return this.learningPathsService.assignmentSequence(
+      assignmentId,
+      req.user as JwtPayload,
+    );
   }
 
   @Post()

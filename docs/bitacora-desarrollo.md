@@ -494,6 +494,36 @@ Antes de continuar con cursos, modulos, rutas y programas preconfigurados, el tr
 
 Antes de continuar con progreso y evaluaciones, el trabajo debe responder tambien a este prompt, ademas del pliego y la matriz de trazabilidad.
 
+## 2026-04-20 - Nuevo prompt rector para contenidos, glosario y bilinguismo
+
+### Prompt agregado
+
+- `prompts/contenidos-glosario-bilinguismo.md`
+
+### Efecto practico
+
+Antes de continuar con contenidos, glosario, bilinguismo y recursos del portal, el trabajo debe responder tambien a este prompt, ademas del pliego y la matriz de trazabilidad.
+
+## 2026-04-20 - Nuevo prompt rector para institucional y acceso
+
+### Prompt agregado
+
+- `prompts/institucional-y-acceso.md`
+
+### Efecto practico
+
+Aunque el modulo institucional y de acceso ya fue endurecido, cualquier ajuste posterior sobre instituciones, sedes, laboratorios, vigencia y acceso debe responder tambien a este prompt, ademas del pliego y la matriz de trazabilidad.
+
+## 2026-04-20 - Nuevo prompt rector para simuladores integrados
+
+### Prompt agregado
+
+- `prompts/simuladores-integracion.md`
+
+### Efecto practico
+
+El siguiente bloque en el orden de trabajo es simuladores. A partir de aqui, cualquier ajuste del modulo debe responder tambien a este prompt, ademas del pliego y la matriz de trazabilidad.
+
 ## 2026-04-19 - Implementacion inicial del modulo academico
 
 ### Documentos rectores usados
@@ -656,3 +686,630 @@ Ahora el LMS soporta:
 - evaluaciones con intentos numerados
 - reintentos autorizados por docente
 - integracion del progreso con quizzes y simuladores
+
+## 2026-04-20 - Validacion del modulo de simuladores
+
+### Documentos rectores usados
+
+- `prompts/simuladores-integracion.md`
+- `docs/modulo-simuladores.md`
+
+### Objetivo
+
+Confirmar que simuladores siga integrado al flujo academico y no como modulo aislado.
+
+### Resultado
+
+- se documento formalmente la arquitectura del modulo
+- se confirmo que la base backend ya soporta:
+  - catalogo
+  - taxonomia de simuladores
+  - mapeo a practicas
+  - sesiones por estudiante
+  - trazabilidad de uso
+  - integracion base con progreso
+
+### Validacion
+
+- `npm run build:api` correcto despues de la revision
+
+## 2026-04-20 - Implementacion del modulo de contenidos, glosario y bilinguismo
+
+### Documentos rectores usados
+
+- `prompts/contenidos-glosario-bilinguismo.md`
+- `docs/modulo-contenidos-glosario-bilinguismo.md`
+
+### Objetivo
+
+Pasar de recursos sueltos a un modulo de contenidos versionado, bilingue, enlazado al glosario y preparado para exportacion PDF por modulo.
+
+### Cambios aplicados en modelo
+
+- `ContentResource` ahora soporta:
+  - `versions`
+  - `glossaryLinks`
+- `GlossaryTerm` ahora soporta:
+  - `relations`
+- `Module` ahora soporta:
+  - `pdfExportTemplate`
+- se agregaron:
+  - `ContentResourceVersion`
+  - `GlossaryTermRelation`
+  - `ModulePdfExportTemplate`
+
+### Cambios aplicados en backend
+
+- `content-resources` ahora soporta:
+  - version inicial automatica al crear contenido
+  - nuevas versiones
+  - consulta de plantillas PDF
+  - configuracion de plantilla PDF por modulo
+- `glossary` ahora soporta relaciones explicitas entre terminos y recursos
+
+### Persistencia aplicada
+
+- migracion creada y aplicada:
+  - `prisma/migrations/20260420131312_content_glossary_bilingual_alignment/migration.sql`
+
+### Validacion
+
+- `npx prisma validate` correcto
+- `npx prisma generate` correcto
+- `npm run build:api` correcto
+
+### Efecto practico
+
+La seccion de contenidos, glosario y bilinguismo ya quedo cerrada a nivel de backend base.
+
+Ahora el LMS soporta:
+
+- contenido bilingue versionado
+- enlazado de glosario tecnico a recursos de contenido
+- configuracion de exportacion PDF por modulo
+- base para material interactivo y vocalizacion sobre el mismo portal
+
+## 2026-04-20 - Implementacion del modulo de reportes y dashboards
+
+### Documento rector agregado
+
+- `docs/modulo-reportes-y-dashboards.md`
+
+### Objetivo
+
+Sacar dashboards y reportes del terreno generico y alinearlos a institucion activa, alcance docente y seguimiento real del estudiante.
+
+### Cambios aplicados en backend
+
+- `dashboard/admin` ahora entrega lectura institucional operativa
+- `dashboard/teacher` ahora calcula alcance real por `TeacherScopeAssignment`
+- `dashboard/student/me` ahora expone resumen propio del estudiante
+- se agrego `ReportsController`
+- se agregaron endpoints:
+  - `GET /reports/courses/:courseId/summary`
+  - `GET /reports/students/:studentId/summary`
+
+### Reglas implementadas
+
+- el admin opera dentro de la institucion activa del token
+- el docente solo puede ver cursos y estudiantes dentro de su alcance
+- el estudiante solo puede ver su propio resumen
+- los reportes mezclan progreso, practicas, quizzes y simuladores
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+La seccion de reportes y dashboards ya quedo cerrada a nivel de backend base.
+
+Ahora el LMS soporta:
+
+- dashboard institucional para administracion
+- dashboard docente con alumnos y cursos dentro de alcance
+- dashboard propio del estudiante
+- reportes accionables de curso y estudiante
+
+## 2026-04-20 - Implementacion del modulo de soporte tecnico
+
+### Documento rector agregado
+
+- `docs/modulo-soporte-tecnico.md`
+
+### Objetivo
+
+Convertir soporte en un modulo institucional real con SLA, comentarios, responsable y contexto de sede/laboratorio.
+
+### Cambios aplicados en modelo
+
+- `SupportTicket` ahora soporta:
+  - `institutionId`
+  - `campusId`
+  - `laboratoryId`
+  - `assignedToUserId`
+  - `slaPolicyId`
+  - `category`
+  - `priority`
+  - `responseDueAt`
+  - `resolutionDueAt`
+  - `firstRespondedAt`
+  - `resolvedAt`
+  - `closedAt`
+- se agregaron:
+  - `SupportTicketComment`
+  - `SupportSlaPolicy`
+  - enum `SupportTicketPriority`
+
+### Cambios aplicados en backend
+
+- se agrego modulo `support`
+- se agregaron endpoints:
+  - `GET /support/tickets`
+  - `GET /support/tickets/:ticketId`
+  - `POST /support/tickets`
+  - `POST /support/tickets/:ticketId/comments`
+  - `PATCH /support/tickets/:ticketId`
+  - `GET /support/sla-policies`
+  - `POST /support/sla-policies`
+- se implementaron reglas de acceso por rol
+- se implemento calculo de SLA con 48h por defecto
+- se agrego auditoria para creacion, comentario y actualizacion de ticket
+
+### Persistencia aplicada
+
+- migracion creada y aplicada:
+  - `prisma/migrations/20260420132539_support_module_alignment/migration.sql`
+
+### Validacion
+
+- `npx prisma validate` correcto
+- `npx prisma generate` correcto
+- `npm run build:api` correcto
+
+### Efecto practico
+
+La seccion de soporte tecnico ya quedo cerrada a nivel de backend base.
+
+Ahora el LMS soporta:
+
+- tickets institucionales con contexto de sede y laboratorio
+- SLA configurable por institucion
+- comentarios y primera respuesta trazable
+- asignacion operativa a admin o soporte
+
+## 2026-04-20 - Implementacion del modulo de notificaciones y correo
+
+### Documento rector agregado
+
+- `docs/modulo-notificaciones-y-correo.md`
+
+### Objetivo
+
+Resolver notificaciones internas y correo como parte del dominio del LMS, incluyendo envio de practicas de demostracion y trazabilidad de entrega.
+
+### Cambios aplicados en modelo
+
+- `Notification` ahora soporta:
+  - `institutionId`
+  - `templateId`
+  - `channel`
+  - `status`
+  - `entityType`
+  - `entityId`
+  - `readAt`
+  - `sentAt`
+- se agregaron:
+  - `NotificationTemplate`
+  - `EmailDelivery`
+  - enums `NotificationChannel`
+  - `NotificationStatus`
+
+### Cambios aplicados en backend
+
+- se agrego modulo `notifications`
+- se agregaron endpoints:
+  - `GET /notifications/mine`
+  - `PATCH /notifications/:notificationId/read`
+  - `GET /notifications/templates`
+  - `POST /notifications/templates`
+  - `POST /notifications`
+  - `POST /notifications/practice-demonstrations`
+- se implemento creacion de notificaciones internas
+- se implemento registro de entrega por correo
+- se implemento envio de practicas de demostracion con trazabilidad
+
+### Persistencia aplicada
+
+- migracion creada y aplicada:
+  - `prisma/migrations/20260420134845_notifications_email_alignment/migration.sql`
+
+### Validacion
+
+- `npx prisma validate` correcto
+- `npx prisma generate` correcto
+- `npm run build:api` correcto
+
+### Efecto practico
+
+La seccion de notificaciones y correo ya quedo cerrada a nivel de backend base.
+
+Ahora el LMS soporta:
+
+- notificaciones internas por usuario
+- plantillas institucionales
+- registro de entrega por correo
+- envio de practicas de demostracion desde el LMS
+
+## 2026-04-20 - Implementacion del modulo de auditoria
+
+### Documento rector agregado
+
+- `docs/modulo-auditoria.md`
+
+### Objetivo
+
+Convertir auditoria en una capacidad operativa real con contexto institucional, sesion y eventos de acceso.
+
+### Cambios aplicados en modelo
+
+- `AuditLog` ahora soporta:
+  - `institutionId`
+  - `institutionMemberId`
+  - `sessionId`
+  - `actorRoles`
+  - `ipAddress`
+  - `userAgent`
+- se agrego:
+  - `AccessEventLog`
+  - enum `AccessEventType`
+
+### Cambios aplicados en backend
+
+- `audit` ahora soporta filtros basicos
+- se agrego endpoint:
+  - `GET /audit/access-events`
+- `auth` ahora soporta:
+  - `POST /auth/logout`
+  - registro de `LOGIN_SUCCESS`
+  - registro de `TOKEN_REFRESH`
+  - registro de `LOGOUT`
+
+### Persistencia aplicada
+
+- migracion creada y aplicada:
+  - `prisma/migrations/20260420135745_audit_alignment/migration.sql`
+
+### Validacion
+
+- `npx prisma validate` correcto
+- `npx prisma generate` correcto
+- `npm run build:api` correcto
+
+### Efecto practico
+
+La seccion de auditoria ya quedo cerrada a nivel de backend base.
+
+Ahora el LMS soporta:
+
+- auditoria institucional filtrable
+- historial de eventos de acceso
+- trazabilidad de login, refresh y logout
+- contexto de actor, sesion e institucion en auditoria
+
+## 2026-04-20 - Cierre de bloqueo critico: acceso operativo, vigencia y concurrencia
+
+### Documento rector agregado
+
+- `docs/modulo-acceso-operativo.md`
+
+### Objetivo
+
+Hacer efectivo el requisito de acceso por vigencia, 36 meses, contrato y concurrencia antes de pasar al frontend del MVP.
+
+### Cambios aplicados en backend
+
+- se agrego modulo `access-policy`
+- se agrego `AccessPolicyService`
+- `auth` ahora delega en ese servicio para:
+  - resolver membresia valida
+  - calcular ventana efectiva
+  - validar contrato activo
+  - aplicar concurrencia por `ContractTerm.concurrentCap`
+  - aplicar concurrencia por `License.seats`
+- `users` ahora valida consistencia entre institucion, licencia y contrato
+- `users` ahora deriva `accessEndAt` efectivo al crear membresias
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El primer bloqueo critico de la oleada 1 ya quedo cerrado.
+
+Ahora el LMS ya no trata vigencia y licenciamiento como metadata pasiva; el acceso real depende de esas reglas.
+
+## 2026-04-20 - Cierre de bloqueo critico: visibilidad por nivel y alcance academico
+
+### Documento rector agregado
+
+- `docs/modulo-visibilidad-por-nivel.md`
+
+### Objetivo
+
+Hacer efectiva la administracion por nivel para que el backend no entregue catalogo y contenido academico de manera plana.
+
+### Cambios aplicados en backend
+
+- se agrego modulo `academic-visibility`
+- se agrego `AcademicVisibilityService`
+- el servicio resuelve `accessibleCourseIds` por usuario
+- se aplico visibilidad en:
+  - cursos
+  - modulos
+  - lecciones
+  - practicas
+  - quizzes
+  - simuladores
+- se habilito lectura filtrada para `STUDENT` en endpoints de contenido donde hacia falta
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El segundo bloqueo critico de la oleada 1 ya quedo cerrado.
+
+Ahora el backend ya no expone el catalogo academico solo por rol; tambien lo restringe por nivel, ruta y alcance.
+
+## 2026-04-20 - Cierre de bloqueo critico: bilinguismo transversal backend
+
+### Documento rector agregado
+
+- `docs/modulo-bilinguismo-transversal.md`
+
+### Objetivo
+
+Dar al frontend una resolucion de idioma consistente desde backend para catalogo, contenido, evaluaciones y glosario.
+
+### Cambios aplicados en backend
+
+- se agrego modulo `i18n`
+- se agrego `I18nService`
+- se resolvio idioma efectivo por query, preferencia de usuario y fallback a espanol
+- se agregaron campos localizados en:
+  - cursos
+  - modulos
+  - lecciones
+  - practicas
+  - quizzes
+  - content-resources
+  - glossary
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El tercer bloqueo critico de la oleada 1 ya quedo cerrado.
+
+Ahora el backend devuelve contenido academico localizado de forma consistente y con fallback a espanol.
+
+## 2026-04-20 - Cierre de bloqueo critico: administracion centralizada coherente
+
+### Documento rector agregado
+
+- `docs/modulo-administracion-centralizada.md`
+
+### Objetivo
+
+Hacer que los modulos administrativos troncales operen dentro del contexto institucional activo y dejen de aceptar referencias inconsistentes entre usuarios, licencias, contratos y matriculas.
+
+### Cambios aplicados en backend
+
+- se agrego modulo `administration-scope`
+- se agrego `AdministrationScopeService`
+- se corrigio `users` para que:
+  - liste usuarios solo dentro de la institucion activa
+  - resuelva detalle de usuario dentro del contexto institucional
+  - valide creacion de membresia dentro de la institucion activa
+- se corrigio `institutions` para que sedes y laboratorios operen bajo la institucion activa
+- se corrigio `licenses` para que:
+  - liste licencias y contratos por institucion activa
+  - cree contratos y licencias solo dentro de la institucion activa
+- se corrigio `enrollments` para que:
+  - liste matriculas y asignaciones de ruta por institucion activa
+  - valide `institutionId` contra el contexto autenticado
+  - impida `assignedByUserId` inconsistente con el usuario autenticado
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El cuarto cierre critico de la oleada 1 ya quedo resuelto.
+
+Ahora los modulos administrativos troncales del LMS comparten el mismo criterio institucional y dejan de mezclar datos fuera del contexto activo.
+
+## 2026-04-20 - Cierre de consistencia funcional: resultados consolidados
+
+### Documento rector agregado
+
+- `docs/modulo-resultados-consolidados.md`
+
+### Objetivo
+
+Cerrar la brecha entre progreso, evaluaciones, practicas y simuladores para exponer resultado academico real por matricula y por ruta formativa.
+
+### Cambios aplicados en backend
+
+- se agrego resultado consolidado por matricula:
+  - `GET /reports/enrollments/:enrollmentId/result`
+- se agrego resultado consolidado por ruta formativa:
+  - `GET /reports/learning-path-assignments/:assignmentId/result`
+- la consolidacion ahora integra:
+  - progreso por matricula
+  - evaluaciones `PRE_COURSE`
+  - evaluaciones `POST_COURSE`
+  - cuestionarios `PRE_MODULE`
+  - `PRACTICE_CHECK`
+  - practicas trazables
+  - sesiones de simulador
+  - decision final por matricula
+- las rutas formativas ahora entregan:
+  - cursos requeridos
+  - cursos requeridos aprobados o completados
+  - progreso promedio
+  - score final promedio
+  - certificaciones relacionadas
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El backend ya no devuelve solo telemetria academica dispersa.
+
+Ahora el LMS puede responder con resultado consolidado por estudiante y ruta, que es lo que necesita el frontend del MVP para operar sin rehacer logica academica.
+
+## 2026-04-20 - Cierre de consistencia funcional: rutas preconfiguradas con secuencia minima
+
+### Documento rector agregado
+
+- `docs/modulo-rutas-preconfiguradas.md`
+
+### Objetivo
+
+Hacer que las rutas formativas dejen de ser listas de cursos y pasen a exponer orden, bloqueo y desbloqueo basico por estudiante.
+
+### Cambios aplicados en backend
+
+- se agrego lectura de secuencia por ruta asignada:
+  - `GET /learning-paths/assignments/:assignmentId/sequence`
+- la secuencia ahora calcula por curso:
+  - `LOCKED`
+  - `UNLOCKED`
+  - `COMPLETED`
+- el desbloqueo considera:
+  - `sortOrder`
+  - cursos requeridos previos
+  - estado de matricula
+  - aprobacion por `POST_COURSE`
+  - progreso consolidado
+- la lectura ya respeta acceso de:
+  - admin
+  - soporte
+  - docente con alcance
+  - estudiante propietario
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+Las rutas del LMS ya pueden gobernar secuencia minima en el MVP.
+
+Eso evita que el frontend tenga que inventar la logica de desbloqueo por fuera del backend.
+
+## 2026-04-20 - Cierre de consistencia funcional: exportacion PDF basica
+
+### Documento rector agregado
+
+- `docs/modulo-exportacion-pdf.md`
+
+### Objetivo
+
+Convertir la plantilla PDF por modulo en una exportacion real desde backend, alineada al requisito explicito del pliego.
+
+### Cambios aplicados en backend
+
+- se agrego endpoint:
+  - `GET /content-resources/modules/:moduleId/pdf-export`
+- la exportacion ahora usa:
+  - plantilla del modulo
+  - idioma efectivo
+  - matricula del estudiante
+  - progreso del modulo
+  - resumen de practicas
+  - evidencias de habilidad
+- el backend genera un PDF valido y descargable para el modulo
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El LMS ya puede responder con un PDF real de habilidades desarrolladas por modulo sin delegar esa logica al frontend.
+
+## 2026-04-20 - Cierre de consistencia funcional: soporte y SLA operativo
+
+### Documento rector agregado
+
+- `docs/modulo-sla-operativo.md`
+
+### Objetivo
+
+Hacer que el soporte tecnico del LMS entregue lectura real de cumplimiento del SLA exigido por el pliego.
+
+### Cambios aplicados en backend
+
+- los tickets ahora salen enriquecidos con:
+  - `responseBreached`
+  - `resolutionBreached`
+  - `responseHoursRemaining`
+  - `resolutionHoursRemaining`
+- se agrego resumen operacional:
+  - `GET /support/operations/summary`
+- el resumen institucional ahora expone:
+  - tickets abiertos
+  - tickets en progreso
+  - tickets vencidos de respuesta
+  - tickets vencidos de resolucion
+  - tickets proximos a vencer
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El backend ya puede medir cumplimiento operativo del soporte local comprometido en el pliego, no solo almacenar tickets y fechas.
+
+## 2026-04-20 - Cierre de consistencia funcional: simuladores integrados minimos
+
+### Documento rector agregado
+
+- `docs/modulo-simuladores-integracion-minima.md`
+
+### Objetivo
+
+Cerrar la integracion minima entre simulador, practica, matricula y trazabilidad dentro del LMS antes de pasar a frontend.
+
+### Cambios aplicados en backend
+
+- la apertura de sesion ahora valida:
+  - matricula valida
+  - estudiante correcto
+  - mapeo a practicas del curso
+- se agrego contexto academico por sesion:
+  - `GET /simulators/sessions/:sessionId/context`
+- se agrego registro de eventos minimos:
+  - `POST /simulators/sessions/events`
+- al completar sesion, el backend genera evidencia academica basica ligada a practicas mapeadas
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+Los simuladores ya no quedan como piezas separadas del flujo academico.
+
+El backend ahora puede validar, contextualizar y trazar uso minimo real del simulador dentro del LMS.

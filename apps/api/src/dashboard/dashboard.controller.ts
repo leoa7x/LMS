@@ -1,7 +1,9 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common";
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { Request } from "express";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { DashboardService } from "./dashboard.service";
 
 @Controller("dashboard")
@@ -11,19 +13,19 @@ export class DashboardController {
 
   @Get("admin")
   @Roles("ADMIN")
-  adminSummary() {
-    return this.dashboardService.adminSummary();
+  adminSummary(@Req() req: Request) {
+    return this.dashboardService.adminSummary(req.user as JwtPayload);
   }
 
   @Get("teacher")
   @Roles("ADMIN", "TEACHER")
-  teacherSummary() {
-    return this.dashboardService.teacherSummary();
+  teacherSummary(@Req() req: Request) {
+    return this.dashboardService.teacherSummary(req.user as JwtPayload);
   }
 
-  @Get("student/:studentId")
-  @Roles("ADMIN", "TEACHER", "STUDENT")
-  studentSummary(@Param("studentId") studentId: string) {
-    return this.dashboardService.studentSummary(studentId);
+  @Get("student/me")
+  @Roles("STUDENT")
+  studentSummary(@Req() req: Request) {
+    return this.dashboardService.studentSummary(req.user as JwtPayload);
   }
 }

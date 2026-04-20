@@ -1,4 +1,8 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Query } from "@nestjs/common";
+import { Request } from "express";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
+import { LangQueryDto } from "../common/dto/lang-query.dto";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
@@ -15,8 +19,8 @@ export class QuizzesController {
 
   @Get()
   @Roles("ADMIN", "TEACHER", "SUPPORT", "STUDENT")
-  findAll() {
-    return this.quizzesService.findAll();
+  findAll(@Req() req: Request, @Query() query: LangQueryDto) {
+    return this.quizzesService.findAll(req.user as JwtPayload, query.lang);
   }
 
   @Post()

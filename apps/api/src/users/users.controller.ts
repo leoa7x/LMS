@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
@@ -23,21 +24,21 @@ export class UsersController {
 
   @Get()
   @Roles("ADMIN", "SUPPORT", "TEACHER")
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Req() req: Request) {
+    return this.usersService.findAll(req.user as JwtPayload);
   }
 
   @Get(":id")
   @Roles("ADMIN", "SUPPORT", "TEACHER")
-  findOne(@Param("id") id: string) {
-    return this.usersService.findOne(id);
+  findOne(@Param("id") id: string, @Req() req: Request) {
+    return this.usersService.findOne(id, req.user as JwtPayload);
   }
 
   @Post()
   @Roles("ADMIN")
   create(@Body() dto: CreateUserDto, @Req() req: Request) {
-    const actor = req.user as { sub?: string } | undefined;
-    return this.usersService.create(dto, actor?.sub);
+    const actor = req.user as JwtPayload | undefined;
+    return this.usersService.create(dto, actor);
   }
 
   @Patch(":id/status")
@@ -47,7 +48,7 @@ export class UsersController {
     @Body() dto: UpdateUserStatusDto,
     @Req() req: Request,
   ) {
-    const actor = req.user as { sub?: string } | undefined;
-    return this.usersService.updateStatus(id, dto, actor?.sub);
+    const actor = req.user as JwtPayload | undefined;
+    return this.usersService.updateStatus(id, dto, actor);
   }
 }

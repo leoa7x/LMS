@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Request } from "express";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
@@ -13,25 +15,25 @@ export class EnrollmentsController {
 
   @Get()
   @Roles("ADMIN", "TEACHER", "SUPPORT")
-  findAll() {
-    return this.enrollmentsService.findAll();
+  findAll(@Req() req: Request) {
+    return this.enrollmentsService.findAll(req.user as JwtPayload);
   }
 
   @Get("learning-path-assignments")
   @Roles("ADMIN", "TEACHER", "SUPPORT")
-  findLearningPathAssignments() {
-    return this.enrollmentsService.findLearningPathAssignments();
+  findLearningPathAssignments(@Req() req: Request) {
+    return this.enrollmentsService.findLearningPathAssignments(req.user as JwtPayload);
   }
 
   @Post()
   @Roles("ADMIN", "TEACHER")
-  create(@Body() dto: CreateEnrollmentDto) {
-    return this.enrollmentsService.create(dto);
+  create(@Body() dto: CreateEnrollmentDto, @Req() req: Request) {
+    return this.enrollmentsService.create(dto, req.user as JwtPayload);
   }
 
   @Post("learning-paths/assign")
   @Roles("ADMIN", "TEACHER")
-  assignLearningPath(@Body() dto: AssignLearningPathDto) {
-    return this.enrollmentsService.assignLearningPath(dto);
+  assignLearningPath(@Body() dto: AssignLearningPathDto, @Req() req: Request) {
+    return this.enrollmentsService.assignLearningPath(dto, req.user as JwtPayload);
   }
 }

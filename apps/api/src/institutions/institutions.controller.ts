@@ -5,8 +5,11 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from "@nestjs/common";
+import { Request } from "express";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
@@ -23,8 +26,8 @@ export class InstitutionsController {
 
   @Get()
   @Roles("ADMIN", "SUPPORT")
-  findAll() {
-    return this.institutionsService.findAll();
+  findAll(@Req() req: Request) {
+    return this.institutionsService.findAll(req.user as JwtPayload);
   }
 
   @Post()
@@ -35,14 +38,14 @@ export class InstitutionsController {
 
   @Get("campuses/all")
   @Roles("ADMIN", "SUPPORT")
-  findCampuses() {
-    return this.institutionsService.findCampuses();
+  findCampuses(@Req() req: Request) {
+    return this.institutionsService.findCampuses(req.user as JwtPayload);
   }
 
   @Post("campuses")
   @Roles("ADMIN")
-  createCampus(@Body() dto: CreateCampusDto) {
-    return this.institutionsService.createCampus(dto);
+  createCampus(@Body() dto: CreateCampusDto, @Req() req: Request) {
+    return this.institutionsService.createCampus(dto, req.user as JwtPayload);
   }
 
   @Patch("campuses/:id/status")
@@ -53,14 +56,14 @@ export class InstitutionsController {
 
   @Get("laboratories/all")
   @Roles("ADMIN", "SUPPORT")
-  findLaboratories() {
-    return this.institutionsService.findLaboratories();
+  findLaboratories(@Req() req: Request) {
+    return this.institutionsService.findLaboratories(req.user as JwtPayload);
   }
 
   @Post("laboratories")
   @Roles("ADMIN")
-  createLaboratory(@Body() dto: CreateLaboratoryDto) {
-    return this.institutionsService.createLaboratory(dto);
+  createLaboratory(@Body() dto: CreateLaboratoryDto, @Req() req: Request) {
+    return this.institutionsService.createLaboratory(dto, req.user as JwtPayload);
   }
 
   @Patch("laboratories/:id/status")
@@ -74,8 +77,8 @@ export class InstitutionsController {
 
   @Get(":id")
   @Roles("ADMIN", "SUPPORT")
-  findOne(@Param("id") id: string) {
-    return this.institutionsService.findOne(id);
+  findOne(@Param("id") id: string, @Req() req: Request) {
+    return this.institutionsService.findOne(id, req.user as JwtPayload);
   }
 
   @Patch(":id/status")

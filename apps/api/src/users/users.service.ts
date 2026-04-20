@@ -14,6 +14,9 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { hash } from "bcryptjs";
+import { AdministrationScopeService } from "../administration-scope/administration-scope.service";
+import { AccessPolicyService } from "../access-policy/access-policy.service";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserStatusDto } from "./dto/update-user-status.dto";
@@ -72,10 +75,21 @@ export type UserWithAccessContext = Prisma.UserGetPayload<{
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly administrationScopeService: AdministrationScopeService,
+    private readonly accessPolicyService: AccessPolicyService,
+  ) {}
 
-  findAll() {
+  findAll(user: JwtPayload) {
     return this.prisma.user.findMany({
+      where: {
+        institutions: {
+          some: {
+            institutionId: user.institutionId,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -83,9 +97,18 @@ export class UsersService {
     });
   }
 
-  findOne(id: string): Promise<UserWithAccessContext | null> {
-    return this.prisma.user.findUnique({
-      where: { id },
+  findOne(id: string, user?: JwtPayload): Promise<UserWithAccessContext | null> {
+    return this.prisma.user.findFirst({
+      where: user
+        ? {
+            id,
+            institutions: {
+              some: {
+                institutionId: user.institutionId,
+              },
+            },
+          }
+        : { id },
       include: fullUserInclude,
     });
   }
@@ -97,8 +120,32 @@ export class UsersService {
     });
   }
 
-  async create(dto: CreateUserDto, actorUserId?: string) {
+  async create(dto: CreateUserDto, actor?: JwtPayload) {
+    if (actor) {
+      this.administrationScopeService.assertInstitutionAccess(
+        actor,
+        dto.membership.institutionId,
+      );
+    }
+
     const passwordHash = await hash(dto.password, 10);
+    const accessStartAt = dto.membership.accessStartAt
+      ? new Date(dto.membership.accessStartAt)
+      : new Date();
+    const membershipReferences =
+      await this.accessPolicyService.validateMembershipReferences({
+        institutionId: dto.membership.institutionId,
+        licenseId: dto.membership.licenseId,
+        contractTermId: dto.membership.contractTermId,
+      });
+    const effectiveAccessEndAt = this.accessPolicyService.computeMembershipAccessEnd({
+      accessStartAt,
+      accessEndAt: dto.membership.accessEndAt
+        ? new Date(dto.membership.accessEndAt)
+        : undefined,
+      license: membershipReferences.license,
+      contractTerm: membershipReferences.contractTerm,
+    });
 
     const createdUserId = await this.prisma.$transaction(async (tx) => {
       const user = await tx.user.create({
@@ -126,12 +173,8 @@ export class UsersService {
           licenseId: dto.membership.licenseId,
           contractTermId: dto.membership.contractTermId,
           membershipStatus: dto.membership.membershipStatus ?? MembershipStatus.ACTIVE,
-          accessStartAt: dto.membership.accessStartAt
-            ? new Date(dto.membership.accessStartAt)
-            : new Date(),
-          accessEndAt: dto.membership.accessEndAt
-            ? new Date(dto.membership.accessEndAt)
-            : undefined,
+          accessStartAt,
+          accessEndAt: effectiveAccessEndAt,
         },
       });
 
@@ -157,7 +200,7 @@ export class UsersService {
             courseId: assignment.courseId,
             learningPathId: assignment.learningPathId,
             levelCode: assignment.levelCode,
-            assignedByUserId: actorUserId,
+            assignedByUserId: actor?.sub,
           },
         });
       }
@@ -215,10 +258,13 @@ export class UsersService {
 
       await tx.auditLog.create({
         data: {
-          userId: actorUserId,
+          userId: actor?.sub ?? user.id,
           action: "USER_CREATED",
           entityType: "User",
           entityId: user.id,
+          institutionId: dto.membership.institutionId,
+          institutionMemberId: membership.id,
+          actorRoles: actor?.roles ?? [],
           meta: JSON.parse(
             JSON.stringify({
               membership: dto.membership,
@@ -234,7 +280,7 @@ export class UsersService {
         data: {
           userId: user.id,
           eventType: UserLifecycleEventType.CREATED,
-          performedByUserId: actorUserId ?? user.id,
+          performedByUserId: actor?.sub ?? user.id,
           afterState: {
             status: user.status,
             membershipStatus: dto.membership.membershipStatus ?? MembershipStatus.ACTIVE,
@@ -248,8 +294,8 @@ export class UsersService {
     return this.findOneOrFail(createdUserId);
   }
 
-  async updateStatus(userId: string, dto: UpdateUserStatusDto, actorUserId?: string) {
-    const existing = await this.findOneOrFail(userId);
+  async updateStatus(userId: string, dto: UpdateUserStatusDto, actor?: JwtPayload) {
+    const existing = await this.findOneOrFail(userId, actor);
 
     const updatedUserId = await this.prisma.$transaction(async (tx) => {
       const user = await tx.user.update({
@@ -264,10 +310,12 @@ export class UsersService {
 
       await tx.auditLog.create({
         data: {
-          userId: actorUserId,
+          institutionId: actor?.institutionId,
+          userId: actor?.sub,
           action: dto.status === UserStatus.ACTIVE ? "USER_ACTIVATED" : "USER_DEACTIVATED",
           entityType: "User",
           entityId: userId,
+          actorRoles: actor?.roles ?? [],
           meta: {
             previousStatus: existing.status,
             newStatus: dto.status,
@@ -283,7 +331,7 @@ export class UsersService {
             dto.status === UserStatus.ACTIVE
               ? UserLifecycleEventType.ACTIVATED
               : UserLifecycleEventType.DEACTIVATED,
-          performedByUserId: actorUserId ?? userId,
+          performedByUserId: actor?.sub ?? userId,
           reason: dto.reason,
           beforeState: {
             status: existing.status,
@@ -316,8 +364,8 @@ export class UsersService {
     return this.findOneOrFail(updatedUserId);
   }
 
-  private async findOneOrFail(id: string): Promise<UserWithAccessContext> {
-    const user = await this.findOne(id);
+  private async findOneOrFail(id: string, actor?: JwtPayload): Promise<UserWithAccessContext> {
+    const user = await this.findOne(id, actor);
 
     if (!user) {
       throw new NotFoundException("User not found");

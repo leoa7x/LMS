@@ -1,13 +1,29 @@
 import { Injectable } from "@nestjs/common";
+import { AcademicVisibilityService } from "../academic-visibility/academic-visibility.service";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
+import { I18nService } from "../i18n/i18n.service";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateCourseDto } from "./dto/create-course.dto";
 
 @Injectable()
 export class CoursesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly academicVisibilityService: AcademicVisibilityService,
+    private readonly i18nService: I18nService,
+  ) {}
 
-  findAll() {
-    return this.prisma.course.findMany({
+  async findAll(user: JwtPayload, requestedLang?: string) {
+    const accessibleCourseIds =
+      await this.academicVisibilityService.getAccessibleCourseIds(user);
+    const lang = this.i18nService.resolveLang(requestedLang, user.preferredLang);
+
+    const courses = await this.prisma.course.findMany({
+      where: {
+        id: {
+          in: accessibleCourseIds,
+        },
+      },
       include: {
         technicalArea: true,
         modules: {
@@ -23,6 +39,38 @@ export class CoursesService {
         createdAt: "desc",
       },
     });
+
+    return courses.map((course) => ({
+      ...course,
+      locale: lang,
+      localizedTitle: this.i18nService.pick(course.titleEs, course.titleEn, lang),
+      localizedDescription: this.i18nService.pick(
+        course.descriptionEs,
+        course.descriptionEn,
+        lang,
+      ),
+      technicalArea: {
+        ...course.technicalArea,
+        localizedName: this.i18nService.pick(
+          course.technicalArea.nameEs,
+          course.technicalArea.nameEn,
+          lang,
+        ),
+      },
+      modules: course.modules.map((module) => ({
+        ...module,
+        localizedTitle: this.i18nService.pick(module.titleEs, module.titleEn, lang),
+        lessons: module.lessons.map((lesson) => ({
+          ...lesson,
+          localizedTitle: this.i18nService.pick(lesson.titleEs, lesson.titleEn, lang),
+          localizedSummary: this.i18nService.pick(
+            lesson.summaryEs,
+            lesson.summaryEn,
+            lang,
+          ),
+        })),
+      })),
+    }));
   }
 
   create(dto: CreateCourseDto) {

@@ -3,16 +3,24 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { AdministrationScopeService } from "../administration-scope/administration-scope.service";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateContractTermDto } from "./dto/create-contract-term.dto";
 import { CreateLicenseDto } from "./dto/create-license.dto";
 
 @Injectable()
 export class LicensesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly administrationScopeService: AdministrationScopeService,
+  ) {}
 
-  findAllContracts() {
+  findAllContracts(user: JwtPayload) {
     return this.prisma.contractTerm.findMany({
+      where: {
+        institutionId: user.institutionId,
+      },
       include: {
         institution: true,
         licenses: true,
@@ -24,7 +32,12 @@ export class LicensesService {
     });
   }
 
-  async createContractTerm(dto: CreateContractTermDto) {
+  async createContractTerm(dto: CreateContractTermDto, user: JwtPayload) {
+    this.administrationScopeService.assertInstitutionAccess(
+      user,
+      dto.institutionId,
+    );
+
     const startAt = new Date(dto.startAt);
     const endAt = new Date(dto.endAt);
 
@@ -55,8 +68,11 @@ export class LicensesService {
     });
   }
 
-  findAll() {
+  findAll(user: JwtPayload) {
     return this.prisma.license.findMany({
+      where: {
+        institutionId: user.institutionId,
+      },
       include: {
         institution: true,
         contractTerm: true,
@@ -68,7 +84,12 @@ export class LicensesService {
     });
   }
 
-  async create(dto: CreateLicenseDto) {
+  async create(dto: CreateLicenseDto, user: JwtPayload) {
+    this.administrationScopeService.assertInstitutionAccess(
+      user,
+      dto.institutionId,
+    );
+
     const institution = await this.prisma.institution.findUnique({
       where: { id: dto.institutionId },
       select: { id: true, status: true },

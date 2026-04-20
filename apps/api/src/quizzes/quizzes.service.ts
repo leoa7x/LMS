@@ -1,5 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { QuizAttemptSource } from "@prisma/client";
+import { AcademicVisibilityService } from "../academic-visibility/academic-visibility.service";
+import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
+import { I18nService } from "../i18n/i18n.service";
 import { PrismaService } from "../prisma/prisma.service";
 import { ProgressService } from "../progress/progress.service";
 import { CreateQuestionDto } from "./dto/create-question.dto";
@@ -11,11 +14,33 @@ import { SubmitQuizAttemptDto } from "./dto/submit-quiz-attempt.dto";
 export class QuizzesService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly academicVisibilityService: AcademicVisibilityService,
+    private readonly i18nService: I18nService,
     private readonly progressService: ProgressService,
   ) {}
 
-  findAll() {
-    return this.prisma.quiz.findMany({
+  async findAll(user: JwtPayload, requestedLang?: string) {
+    const accessibleCourseIds =
+      await this.academicVisibilityService.getAccessibleCourseIds(user);
+    const lang = this.i18nService.resolveLang(requestedLang, user.preferredLang);
+
+    const quizzes = await this.prisma.quiz.findMany({
+      where: {
+        OR: [
+          {
+            courseId: {
+              in: accessibleCourseIds,
+            },
+          },
+          {
+            module: {
+              courseId: {
+                in: accessibleCourseIds,
+              },
+            },
+          },
+        ],
+      },
       include: {
         course: true,
         module: true,
@@ -34,6 +59,48 @@ export class QuizzesService {
         titleEs: "asc",
       },
     });
+
+    return quizzes.map((quiz) => ({
+      ...quiz,
+      locale: lang,
+      localizedTitle: this.i18nService.pick(quiz.titleEs, quiz.titleEn, lang),
+      course: quiz.course
+        ? {
+            ...quiz.course,
+            localizedTitle: this.i18nService.pick(
+              quiz.course.titleEs,
+              quiz.course.titleEn,
+              lang,
+            ),
+          }
+        : null,
+      module: quiz.module
+        ? {
+            ...quiz.module,
+            localizedTitle: this.i18nService.pick(
+              quiz.module.titleEs,
+              quiz.module.titleEn,
+              lang,
+            ),
+          }
+        : null,
+      questions: quiz.questions.map((question) => ({
+        ...question,
+        localizedPrompt: this.i18nService.pick(
+          question.promptEs,
+          question.promptEn,
+          lang,
+        ),
+        options: question.options.map((option) => ({
+          ...option,
+          localizedLabel: this.i18nService.pick(
+            option.labelEs,
+            option.labelEn,
+            lang,
+          ),
+        })),
+      })),
+    }));
   }
 
   createQuiz(dto: CreateQuizDto) {

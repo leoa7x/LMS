@@ -126,6 +126,32 @@ enum SupportTicketStatus {
   CLOSED
 }
 
+enum SupportTicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  BOTH
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  READ
+}
+
+enum AccessEventType {
+  LOGIN_SUCCESS
+  TOKEN_REFRESH
+  LOGOUT
+}
+
 enum PracticeAttemptStatus {
   STARTED
   SUBMITTED
@@ -163,7 +189,10 @@ model User {
   quizAttempts       QuizAttempt[]
   notifications      Notification[]
   supportTickets     SupportTicket[]         @relation("SupportTicketRequester")
+  assignedSupportTickets SupportTicket[]     @relation("SupportTicketAssignee")
+  supportTicketComments SupportTicketComment[]
   auditLogs          AuditLog[]
+  accessEvents       AccessEventLog[]
   simulatorRuns      SimulatorSession[]
   skillEvidences     SkillEvidence[]
   practiceAttempts   PracticeAttempt[]
@@ -229,6 +258,12 @@ model Institution {
   enrollments   StudentEnrollment[]
   learningPathAssignments StudentLearningPathAssignment[]
   teacherScopes TeacherScopeAssignment[]
+  supportTickets SupportTicket[]
+  supportSlaPolicies SupportSlaPolicy[]
+  notifications Notification[]
+  notificationTemplates NotificationTemplate[]
+  auditLogs      AuditLog[]
+  accessEvents   AccessEventLog[]
 }
 
 model UserInstitution {
@@ -251,6 +286,8 @@ model UserInstitution {
   roles              UserRole[]
   studentProfile     StudentAcademicProfile?
   accessSessions     AccessSession[]
+  auditLogs          AuditLog[]
+  accessEvents       AccessEventLog[]
 
   @@unique([userId, institutionId])
 }
@@ -295,6 +332,7 @@ model Campus {
   memberships   UserInstitution[]
   roleScopes    UserRole[]
   teacherScopes TeacherScopeAssignment[]
+  supportTickets SupportTicket[]
 
   @@unique([institutionId, name])
 }
@@ -313,6 +351,7 @@ model Laboratory {
   memberships     UserInstitution[]
   roleScopes      UserRole[]
   teacherScopes   TeacherScopeAssignment[]
+  supportTickets  SupportTicket[]
 
   @@unique([campusId, name])
 }
@@ -405,6 +444,8 @@ model AccessSession {
   revokedReason       String?
   user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   institutionMember   UserInstitution     @relation(fields: [institutionMemberId], references: [id], onDelete: Cascade)
+  auditLogs           AuditLog[]
+  accessEvents        AccessEventLog[]
 }
 
 model UserLifecycleAudit {
@@ -523,6 +564,7 @@ model Module {
   quizzes     Quiz[]
   visibilityRules StudentVisibilityAssignment[]
   retakeGrants QuizRetakeGrant[]
+  pdfExportTemplate ModulePdfExportTemplate?
 
   @@unique([courseId, slug])
 }
@@ -586,6 +628,8 @@ model ContentResource {
   voiceoverEnabled Boolean        @default(false)
   lesson           Lesson              @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonSegments   LessonSegment[]
+  versions         ContentResourceVersion[]
+  glossaryLinks    GlossaryTermRelation[]
 }
 
 model GlossaryTerm {
@@ -596,6 +640,43 @@ model GlossaryTerm {
   definitionEs String
   definitionEn String?
   createdAt    DateTime @default(now())
+  relations    GlossaryTermRelation[]
+}
+
+model ContentResourceVersion {
+  id                String          @id @default(cuid())
+  contentResourceId String
+  versionLabel      String
+  titleEs           String
+  titleEn           String?
+  bodyEs            String?
+  bodyEn            String?
+  uri               String?
+  isCurrent         Boolean         @default(false)
+  releasedAt        DateTime        @default(now())
+  contentResource   ContentResource @relation(fields: [contentResourceId], references: [id], onDelete: Cascade)
+}
+
+model GlossaryTermRelation {
+  id                String          @id @default(cuid())
+  glossaryTermId    String
+  contentResourceId String
+  glossaryTerm      GlossaryTerm    @relation(fields: [glossaryTermId], references: [id], onDelete: Cascade)
+  contentResource   ContentResource @relation(fields: [contentResourceId], references: [id], onDelete: Cascade)
+
+  @@unique([glossaryTermId, contentResourceId])
+}
+
+model ModulePdfExportTemplate {
+  id                    String   @id @default(cuid())
+  moduleId              String   @unique
+  isEnabled             Boolean  @default(true)
+  titleTemplate         String?
+  includeSkillEvidence  Boolean  @default(true)
+  includePracticeSummary Boolean @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  module                Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 }
 
 model Quiz {
@@ -809,34 +890,147 @@ model QuizRetakeGrant {
 }
 
 model Notification {
-  id        String   @id @default(cuid())
-  userId    String
-  title     String
-  body      String
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String              @id @default(cuid())
+  institutionId  String
+  userId         String
+  templateId     String?
+  channel        NotificationChannel @default(IN_APP)
+  status         NotificationStatus  @default(PENDING)
+  title          String
+  body           String
+  entityType     String?
+  entityId       String?
+  isRead         Boolean             @default(false)
+  readAt         DateTime?
+  sentAt         DateTime?
+  createdAt      DateTime            @default(now())
+  institution    Institution         @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  user           User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  template       NotificationTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  emailDeliveries EmailDelivery[]
+}
+
+model NotificationTemplate {
+  id             String      @id @default(cuid())
+  institutionId  String
+  key            String
+  name           String
+  subjectEs      String
+  subjectEn      String?
+  bodyEs         String
+  bodyEn         String?
+  channel        NotificationChannel @default(BOTH)
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  institution    Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  notifications  Notification[]
+
+  @@unique([institutionId, key])
+}
+
+model EmailDelivery {
+  id              String             @id @default(cuid())
+  notificationId  String
+  recipientEmail  String
+  subject         String
+  body            String
+  status          NotificationStatus @default(PENDING)
+  provider        String?
+  providerRef     String?
+  sentAt          DateTime?
+  errorMessage    String?
+  createdAt       DateTime           @default(now())
+  notification    Notification       @relation(fields: [notificationId], references: [id], onDelete: Cascade)
 }
 
 model SupportTicket {
-  id          String              @id @default(cuid())
-  requesterId String
-  subject     String
-  description String
-  status      SupportTicketStatus @default(OPEN)
-  createdAt   DateTime            @default(now())
-  requester   User                @relation("SupportTicketRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  id               String                @id @default(cuid())
+  institutionId    String
+  campusId         String?
+  laboratoryId     String?
+  requesterId      String
+  assignedToUserId String?
+  slaPolicyId      String?
+  subject          String
+  description      String
+  category         String?
+  priority         SupportTicketPriority @default(MEDIUM)
+  status           SupportTicketStatus   @default(OPEN)
+  responseDueAt    DateTime
+  resolutionDueAt  DateTime?
+  firstRespondedAt DateTime?
+  resolvedAt       DateTime?
+  closedAt         DateTime?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  institution      Institution           @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  campus           Campus?               @relation(fields: [campusId], references: [id], onDelete: SetNull)
+  laboratory       Laboratory?           @relation(fields: [laboratoryId], references: [id], onDelete: SetNull)
+  requester        User                  @relation("SupportTicketRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  assignedToUser   User?                 @relation("SupportTicketAssignee", fields: [assignedToUserId], references: [id], onDelete: SetNull)
+  slaPolicy        SupportSlaPolicy?     @relation(fields: [slaPolicyId], references: [id], onDelete: SetNull)
+  comments         SupportTicketComment[]
+}
+
+model SupportTicketComment {
+  id           String        @id @default(cuid())
+  ticketId      String
+  authorUserId  String
+  body          String
+  isInternal    Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  ticket        SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorUser    User          @relation(fields: [authorUserId], references: [id], onDelete: Cascade)
+}
+
+model SupportSlaPolicy {
+  id               String      @id @default(cuid())
+  institutionId    String
+  name             String
+  responseHours    Int         @default(48)
+  resolutionHours  Int?
+  isActive         Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  institution      Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  tickets          SupportTicket[]
 }
 
 model AuditLog {
-  id         String   @id @default(cuid())
-  userId     String?
-  action     String
-  entityType String
-  entityId   String?
-  meta       Json?
-  createdAt  DateTime @default(now())
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id                  String       @id @default(cuid())
+  institutionId       String?
+  userId              String?
+  institutionMemberId String?
+  sessionId           String?
+  action              String
+  entityType          String
+  entityId            String?
+  actorRoles          String[]     @default([])
+  ipAddress           String?
+  userAgent           String?
+  meta                Json?
+  createdAt           DateTime     @default(now())
+  institution         Institution? @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  user                User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  institutionMember   UserInstitution? @relation(fields: [institutionMemberId], references: [id], onDelete: SetNull)
+  session             AccessSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+}
+
+model AccessEventLog {
+  id                  String          @id @default(cuid())
+  institutionId       String?
+  userId              String?
+  institutionMemberId String?
+  sessionId           String?
+  eventType           AccessEventType
+  ipAddress           String?
+  userAgent           String?
+  createdAt           DateTime        @default(now())
+  institution         Institution?    @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  user                User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  institutionMember   UserInstitution? @relation(fields: [institutionMemberId], references: [id], onDelete: SetNull)
+  session             AccessSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
 }
 
 model LanguageContent {

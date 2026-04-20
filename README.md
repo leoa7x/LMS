@@ -25,10 +25,28 @@ Construir un LMS que tome como documento rector el manual de contenido y requisi
 - Diseno del modulo academico: `docs/modulo-academico.md`
 - Diseno del modulo de matricula e inscripcion: `docs/modulo-matricula-inscripcion.md`
 - Diseno del modulo de progreso y evaluaciones: `docs/modulo-progreso-y-evaluaciones.md`
+- Diseno del modulo de simuladores: `docs/modulo-simuladores.md`
+- Diseno del modulo de contenidos, glosario y bilinguismo: `docs/modulo-contenidos-glosario-bilinguismo.md`
+- Diseno del modulo de reportes y dashboards: `docs/modulo-reportes-y-dashboards.md`
+- Diseno del modulo de soporte tecnico: `docs/modulo-soporte-tecnico.md`
+- Diseno del modulo de notificaciones y correo: `docs/modulo-notificaciones-y-correo.md`
+- Diseno del modulo de auditoria: `docs/modulo-auditoria.md`
+- Diseno del modulo de acceso operativo: `docs/modulo-acceso-operativo.md`
+- Diseno del modulo de visibilidad por nivel: `docs/modulo-visibilidad-por-nivel.md`
+- Diseno del modulo de bilinguismo transversal: `docs/modulo-bilinguismo-transversal.md`
+- Diseno del modulo de administracion centralizada: `docs/modulo-administracion-centralizada.md`
+- Diseno del modulo de resultados consolidados: `docs/modulo-resultados-consolidados.md`
+- Diseno del modulo de rutas preconfiguradas: `docs/modulo-rutas-preconfiguradas.md`
+- Diseno del modulo de exportacion PDF: `docs/modulo-exportacion-pdf.md`
+- Diseno del modulo de SLA operativo: `docs/modulo-sla-operativo.md`
+- Diseno del modulo de simuladores integracion minima: `docs/modulo-simuladores-integracion-minima.md`
 - Backlog por fases: `docs/backlog-fases.md`
 - Estrategia de simuladores: `docs/simuladores-decisiones.md`
 - Prompt de cursos, modulos y rutas: `prompts/cursos-modulos-rutas.md`
 - Prompt de progreso y evaluaciones: `prompts/progreso-y-evaluaciones.md`
+- Prompt de contenidos, glosario y bilinguismo: `prompts/contenidos-glosario-bilinguismo.md`
+- Prompt institucional y de acceso: `prompts/institucional-y-acceso.md`
+- Prompt de simuladores integrados: `prompts/simuladores-integracion.md`
 
 ## Estructura inicial
 
