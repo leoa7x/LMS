@@ -1,21 +1,13 @@
 import { IsIn, IsOptional, IsString } from "class-validator";
 
-export class FindAccessEventsQueryDto {
+export class FindAccessSessionsQueryDto {
   @IsOptional()
   @IsString()
   userId?: string;
 
   @IsOptional()
-  @IsString()
-  eventType?: string;
-
-  @IsOptional()
-  @IsString()
-  sessionId?: string;
-
-  @IsOptional()
   @IsIn(["ACTIVE", "REVOKED", "EXPIRED"])
-  sessionStatus?: "ACTIVE" | "REVOKED" | "EXPIRED";
+  status?: "ACTIVE" | "REVOKED" | "EXPIRED";
 
   @IsOptional()
   @IsString()

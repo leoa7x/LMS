@@ -6,5 +6,6 @@ import { ReportsController } from "./reports.controller";
 @Module({
   controllers: [DashboardController, ReportsController],
   providers: [DashboardService],
+  exports: [DashboardService],
 })
 export class DashboardModule {}

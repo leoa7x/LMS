@@ -1,5 +1,12 @@
 import { SimulatorKind } from "@prisma/client";
-import { IsBoolean, IsEnum, IsOptional, IsString, MinLength } from "class-validator";
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MinLength,
+} from "class-validator";
 
 export class CreateSimulatorDto {
   @IsString()
@@ -12,6 +19,16 @@ export class CreateSimulatorDto {
 
   @IsEnum(SimulatorKind)
   kind!: SimulatorKind;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  vendorCoverageTags?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  technologyCoverageTags?: string[];
 
   @IsOptional()
   @IsString()

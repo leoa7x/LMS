@@ -38,7 +38,7 @@ Si se resuelve solo como mensajes sueltos en base de datos, el sistema no cubre 
 4. `ADMIN` y `TEACHER` pueden generar notificaciones academicas dentro de su alcance.
 5. El estudiante solo consulta y marca sus notificaciones.
 6. El sistema debe conservar estado de lectura y de entrega.
-7. Si no existe integracion SMTP real en MVP, debe quedar la cola de entrega modelada y trazable.
+7. La entrega por correo debe poder ejecutarse mediante SMTP real y dejar trazabilidad por destinatario.
 
 ## Roles involucrados
 
@@ -61,12 +61,13 @@ Si se resuelve solo como mensajes sueltos en base de datos, el sistema no cubre 
 - marcado como leida
 - plantillas basicas institucionales
 - registro de entrega por correo
+- envio SMTP real cuando la configuracion este disponible
 - endpoint para envio de practica de demostracion
 - trazabilidad en auditoria
 
 ## Fase posterior
 
-- envio SMTP real o proveedor externo;
+- proveedor externo distinto de SMTP;
 - programacion y reintentos automaticos;
 - notificaciones masivas por curso o ruta;
 - preferencias de canal por usuario;

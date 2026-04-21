@@ -42,6 +42,8 @@ En implementacion backend ya existen:
 - dashboards
 - auditoria minima
 - simuladores
+- certificaciones externas con estado certificable por estudiante
+- notificaciones y correo con entrega SMTP real
 
 En frontend ya existen:
 
@@ -685,6 +687,117 @@ Documentacion rectora del modulo:
 - frontend web validado en `http://localhost:3000`
 - bug de wiring corregido en:
   - `apps/api/src/quizzes/quizzes.module.ts`
+
+## Estado de certificaciones externas
+
+- documento rector agregado en:
+  - `docs/modulo-certificaciones-externas.md`
+- `CertificationTrackCourse` ahora soporta:
+  - `sortOrder`
+  - `isRequired`
+  - `minimumScore`
+- nuevo modelo:
+  - `StudentCertificationStatus`
+- nuevos endpoints:
+  - `GET /certification-tracks/:trackId/students/:studentId/status`
+  - `GET /certification-tracks/:trackId/statuses`
+- migracion aplicada:
+  - `prisma/migrations/20260420210656_certification_status_alignment/migration.sql`
+- `npm run build:api` correcto
+
+## Estado de notificaciones y correo
+
+- `notifications` ahora integra entrega SMTP real
+- nuevo servicio:
+  - `apps/api/src/notifications/email-delivery.service.ts`
+- `createNotification` y `sendPracticeDemonstration` ahora intentan entrega real por correo
+- `.env.example` ahora soporta:
+  - `SMTP_HOST`
+  - `SMTP_PORT`
+  - `SMTP_SECURE`
+  - `SMTP_USER`
+  - `SMTP_PASS`
+  - `SMTP_FROM`
+- `npm run build:api` correcto
+
+## Estado de vocalizacion y contenido interactivo
+
+- documento rector agregado en:
+  - `docs/modulo-vocalizacion-y-contenido-interactivo.md`
+- nuevos enums en el modelo:
+  - `VoiceoverSourceKind`
+  - `VoiceoverStatus`
+  - `InteractiveContentKind`
+- nuevos modelos:
+  - `ContentVoiceoverTrack`
+  - `InteractiveContentConfig`
+- `ContentResource` y `LessonSegment` ahora pueden exponer:
+  - pistas de vocalizacion
+  - configuraciones de contenido interactivo
+- nuevos endpoints:
+  - `GET /content-resources/voiceovers`
+  - `POST /content-resources/voiceovers`
+  - `GET /content-resources/interactive-configs`
+  - `POST /content-resources/interactive-configs`
+- `GET /content-resources` ahora incluye:
+  - `voiceoverTracks`
+  - `interactiveConfigs`
+  con localizacion resuelta segun idioma
+- migracion aplicada:
+  - `prisma/migrations/20260421003012_vocalization_interactive_content_alignment/migration.sql`
+- validacion reciente:
+  - `npx prisma validate` correcto
+  - `npm run prisma:generate` correcto
+  - `npm run build:api` correcto
+
+## Estado de cobertura tecnica industrial
+
+- documento rector agregado en:
+  - `docs/modulo-cobertura-tecnica-industrial.md`
+- `Course` ahora soporta:
+  - `vendorCoverageTags`
+  - `technologyCoverageTags`
+- `Simulator` ahora soporta:
+  - `vendorCoverageTags`
+  - `technologyCoverageTags`
+- `CreateCourseDto` y `CreateSimulatorDto` ya aceptan esta metadata
+- `courses` y `simulators` ya persisten esta cobertura desde backend
+- migracion aplicada:
+  - `prisma/migrations/20260421003648_technical_coverage_industrial_alignment/migration.sql`
+- validacion reciente:
+  - `npx prisma validate` correcto
+  - `npm run prisma:generate` correcto
+  - `npm run build:api` correcto
+
+## Estado de historial de acceso operativo
+
+- documento rector agregado en:
+  - `docs/modulo-historial-acceso-operativo.md`
+- `audit` ahora soporta filtros ampliados para:
+  - `sessionId`
+  - rango `from/to`
+- `access-events` ahora soporta filtros ampliados para:
+  - `sessionId`
+  - `sessionStatus`
+  - rango `from/to`
+- nuevos endpoints:
+  - `GET /audit/access-sessions`
+  - `GET /audit/access-operations-summary`
+- `access-sessions` ya expone:
+  - usuario
+  - membresia institucional
+  - sede
+  - laboratorio
+  - eventos recientes por sesion
+- `access-operations-summary` ya consolida:
+  - sesiones activas
+  - sesiones revocadas
+  - sesiones expiradas
+  - logins recientes
+  - refresh recientes
+  - logouts recientes
+- validacion reciente:
+  - `npm run build:api` correcto
 
 ## Instruccion para retomarlo
 

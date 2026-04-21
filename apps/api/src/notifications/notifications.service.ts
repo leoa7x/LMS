@@ -11,6 +11,7 @@ import {
 } from "@prisma/client";
 import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { PrismaService } from "../prisma/prisma.service";
+import { EmailDeliveryService } from "./email-delivery.service";
 import { CreateNotificationDto } from "./dto/create-notification.dto";
 import { CreateNotificationTemplateDto } from "./dto/create-notification-template.dto";
 import { SendPracticeDemonstrationDto } from "./dto/send-practice-demonstration.dto";
@@ -22,7 +23,10 @@ const notificationInclude = Prisma.validator<Prisma.NotificationInclude>()({
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly emailDeliveryService: EmailDeliveryService,
+  ) {}
 
   findMine(user: JwtPayload) {
     return this.prisma.notification.findMany({
@@ -164,7 +168,22 @@ export class NotificationsService {
                     },
                   },
           },
+          include: notificationInclude,
         }),
+      ),
+    );
+
+    await Promise.all(
+      created.flatMap((notification) =>
+        notification.emailDeliveries.map((delivery) =>
+          this.emailDeliveryService.deliverEmail({
+            notificationId: notification.id,
+            deliveryId: delivery.id,
+            recipientEmail: delivery.recipientEmail,
+            subject: delivery.subject,
+            body: delivery.body,
+          }),
+        ),
       ),
     );
 
@@ -268,6 +287,20 @@ export class NotificationsService {
           },
           include: notificationInclude,
         }),
+      ),
+    );
+
+    await Promise.all(
+      notifications.flatMap((notification) =>
+        notification.emailDeliveries.map((delivery) =>
+          this.emailDeliveryService.deliverEmail({
+            notificationId: notification.id,
+            deliveryId: delivery.id,
+            recipientEmail: delivery.recipientEmail,
+            subject: delivery.subject,
+            body: delivery.body,
+          }),
+        ),
       ),
     );
 

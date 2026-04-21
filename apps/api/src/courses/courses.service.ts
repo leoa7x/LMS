@@ -86,6 +86,8 @@ export class CoursesService {
         descriptionEn: dto.descriptionEn,
         isPublished: dto.isPublished ?? false,
         progressStrategy: dto.progressStrategy ?? "weighted",
+        vendorCoverageTags: dto.vendorCoverageTags ?? [],
+        technologyCoverageTags: dto.technologyCoverageTags ?? [],
         lessonWeight: dto.lessonWeight ?? 20,
         practiceWeight: dto.practiceWeight ?? 30,
         evaluationWeight: dto.evaluationWeight ?? 20,
@@ -105,6 +107,8 @@ export class CoursesService {
           meta: {
             technicalAreaId: dto.technicalAreaId,
             slug: dto.slug,
+            vendorCoverageTags: dto.vendorCoverageTags ?? [],
+            technologyCoverageTags: dto.technologyCoverageTags ?? [],
           },
         },
       });

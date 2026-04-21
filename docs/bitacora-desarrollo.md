@@ -1519,3 +1519,190 @@ Confirmar que el LMS no solo compila, sino que arranca como stack integrado real
 ### Efecto practico
 
 El LMS ya arranca como sistema integrado real en local, con API saludable y frontend sirviendo correctamente sobre Docker Compose.
+
+## 2026-04-20 - Cierre parcial de pliego: certificaciones externas
+
+### Documento rector agregado
+
+- `docs/modulo-certificaciones-externas.md`
+
+### Objetivo
+
+Dejar de tratar las certificaciones como listas decorativas y conectarlas con cursos, rutas y resultados consolidados.
+
+### Cambios aplicados
+
+- `CertificationTrackCourse` ahora soporta:
+  - `sortOrder`
+  - `isRequired`
+  - `minimumScore`
+- se agrego `StudentCertificationStatus`
+- `CertificationTracksService` ahora:
+  - filtra tracks por alcance academico
+  - calcula elegibilidad por estudiante
+  - persiste estado certificable consolidado
+  - lista estados por track dentro de la institucion activa
+- se agregaron endpoints para:
+  - estado certificable por estudiante
+  - estados consolidados por track
+- `CertificationTracksModule` ahora importa:
+  - `AcademicVisibilityModule`
+  - `DashboardModule`
+
+### Validacion
+
+- `npm run prisma:generate` correcto
+- `npm run build:api` correcto
+- migracion aplicada:
+  - `prisma/migrations/20260420210656_certification_status_alignment/migration.sql`
+
+### Efecto practico
+
+El LMS ya puede mapear una certificacion externa a cursos concretos y calcular si un estudiante se encuentra en `NOT_STARTED`, `IN_PROGRESS` o `ELIGIBLE` segun sus resultados consolidados.
+
+## 2026-04-20 - Cierre parcial de pliego: notificaciones y correo con entrega real
+
+### Objetivo
+
+Cerrar el gap entre cola trazable y entrega real por correo para practicas de demostracion y notificaciones academicas.
+
+### Cambios aplicados
+
+- se agrego `nodemailer` al backend
+- se agrego `EmailDeliveryService`
+- `notifications` ahora intenta envio SMTP real por cada `EmailDelivery`
+- se actualiza estado de:
+  - `EmailDelivery`
+  - `Notification`
+  segun resultado del envio
+- `createNotification` y `sendPracticeDemonstration` ya no dejan solo registros `PENDING`
+- `.env.example` se amplio con configuracion SMTP
+
+### Validacion
+
+- `npm run build:api` correcto
+- `npm run build:web` se mantiene correcto
+
+### Efecto practico
+
+El LMS ya puede entregar correos reales cuando exista configuracion SMTP, manteniendo trazabilidad por destinatario y alineando el modulo con el requisito expreso del pliego sobre envio de practicas de demostracion por e-mail.
+
+## 2026-04-20 - Cierre parcial de pliego: vocalizacion y contenido interactivo
+
+### Documento rector agregado
+
+- `docs/modulo-vocalizacion-y-contenido-interactivo.md`
+
+### Objetivo
+
+Cerrar el gap entre un simple flag `voiceoverEnabled` y una capa real de vocalizacion e interactividad integrada al portal y al flujo academico.
+
+### Cambios aplicados
+
+- se agregaron nuevos enums al modelo:
+  - `VoiceoverSourceKind`
+  - `VoiceoverStatus`
+  - `InteractiveContentKind`
+- se agregaron nuevos modelos:
+  - `ContentVoiceoverTrack`
+  - `InteractiveContentConfig`
+- `ContentResource` y `LessonSegment` ahora pueden colgar:
+  - pistas de vocalizacion
+  - configuraciones de contenido interactivo
+- `ContentResourcesService` ahora:
+  - lista pistas de vocalizacion visibles por alcance academico
+  - crea pistas de vocalizacion y activa `voiceoverEnabled`
+  - lista configuraciones interactivas visibles por alcance academico
+  - crea configuraciones interactivas ligadas a recurso o segmento
+  - expone esta informacion tambien dentro de `GET /content-resources`
+- se agregaron endpoints para:
+  - `GET /content-resources/voiceovers`
+  - `POST /content-resources/voiceovers`
+  - `GET /content-resources/interactive-configs`
+  - `POST /content-resources/interactive-configs`
+
+### Validacion
+
+- `npx prisma validate` correcto
+- `npm run prisma:generate` correcto
+- migracion aplicada:
+  - `prisma/migrations/20260421003012_vocalization_interactive_content_alignment/migration.sql`
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El LMS ya no depende de una bandera plana para vocalizacion o interactividad. Ahora tiene una base real para servir audio, transcript y configuracion interactiva desde el mismo portal, ligada a recursos y segmentos academicos.
+
+## 2026-04-20 - Cierre parcial de pliego: cobertura tecnica industrial
+
+### Documento rector agregado
+
+- `docs/modulo-cobertura-tecnica-industrial.md`
+
+### Objetivo
+
+Permitir que el LMS declare cobertura tecnica especializada en cursos y simuladores para requisitos explicitos del pliego como Allen Bradley y Siemens.
+
+### Cambios aplicados
+
+- `Course` ahora incluye:
+  - `vendorCoverageTags`
+  - `technologyCoverageTags`
+- `Simulator` ahora incluye:
+  - `vendorCoverageTags`
+  - `technologyCoverageTags`
+- se ampliaron:
+  - `CreateCourseDto`
+  - `CreateSimulatorDto`
+- `CoursesService` y `SimulatorsService` ya persisten esta metadata y la registran en auditoria
+
+### Validacion
+
+- `npx prisma validate` correcto
+- `npm run prisma:generate` correcto
+- migracion aplicada:
+  - `prisma/migrations/20260421003648_technical_coverage_industrial_alignment/migration.sql`
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El LMS ya puede declarar de forma consistente que un curso o simulador cubre fabricantes y tecnologias industriales concretas, sin deformar la jerarquia academica ni amarrar todo el sistema a un solo proveedor.
+
+## 2026-04-20 - Cierre parcial de pliego: historial de acceso operativo
+
+### Documento rector agregado
+
+- `docs/modulo-historial-acceso-operativo.md`
+
+### Objetivo
+
+Volver util el historial de accesos para operacion institucional, soporte y control de sesiones, no dejarlo como simple lista de eventos.
+
+### Cambios aplicados
+
+- `FindAuditQueryDto` ahora soporta:
+  - `sessionId`
+  - `from`
+  - `to`
+- `FindAccessEventsQueryDto` ahora soporta:
+  - `sessionId`
+  - `sessionStatus`
+  - `from`
+  - `to`
+- se agrego `FindAccessSessionsQueryDto`
+- `AuditService` ahora soporta:
+  - consulta filtrada de auditoria por fecha y sesion
+  - consulta filtrada de eventos de acceso por fecha, sesion y estado
+  - listado de sesiones de acceso institucionales
+  - resumen operativo de acceso de los ultimos 7 dias
+- se agregaron endpoints:
+  - `GET /audit/access-sessions`
+  - `GET /audit/access-operations-summary`
+
+### Validacion
+
+- `npm run build:api` correcto
+
+### Efecto practico
+
+El LMS ya permite revisar sesiones activas, revocadas o expiradas, navegar historial de acceso por ventana temporal y obtener un resumen operativo real para administracion y soporte.

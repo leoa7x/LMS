@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsEnum,
   IsInt,
+  IsArray,
   IsOptional,
   IsString,
   Max,
@@ -49,6 +50,16 @@ export class CreateCourseDto {
   @IsOptional()
   @IsString()
   progressStrategy?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  vendorCoverageTags?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  technologyCoverageTags?: string[];
 
   @IsOptional()
   @IsInt()

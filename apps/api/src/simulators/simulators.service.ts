@@ -74,6 +74,8 @@ export class SimulatorsService {
           slug: dto.slug,
           name: dto.name,
           kind: dto.kind,
+          vendorCoverageTags: dto.vendorCoverageTags ?? [],
+          technologyCoverageTags: dto.technologyCoverageTags ?? [],
           launchUrl: dto.launchUrl,
           configJson: dto.configJson as Prisma.InputJsonValue | undefined,
           isTrackable: dto.isTrackable ?? true,
@@ -88,6 +90,8 @@ export class SimulatorsService {
             meta: {
               slug: dto.slug,
               kind: dto.kind,
+              vendorCoverageTags: dto.vendorCoverageTags ?? [],
+              technologyCoverageTags: dto.technologyCoverageTags ?? [],
             },
           },
         });

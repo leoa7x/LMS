@@ -4,13 +4,19 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { PracticeAttemptStatus } from "@prisma/client";
+import {
+  PracticeAttemptStatus,
+  Prisma,
+  VoiceoverStatus,
+} from "@prisma/client";
 import { AcademicVisibilityService } from "../academic-visibility/academic-visibility.service";
 import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { I18nService } from "../i18n/i18n.service";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateContentResourceDto } from "./dto/create-content-resource.dto";
 import { CreateContentResourceVersionDto } from "./dto/create-content-resource-version.dto";
+import { CreateContentVoiceoverTrackDto } from "./dto/create-content-voiceover-track.dto";
+import { CreateInteractiveContentConfigDto } from "./dto/create-interactive-content-config.dto";
 import { CreateModulePdfExportTemplateDto } from "./dto/create-module-pdf-export-template.dto";
 import { ModulePdfExportQueryDto } from "./dto/module-pdf-export-query.dto";
 
@@ -60,6 +66,40 @@ function buildSimplePdfBuffer(lines: string[]) {
   return Buffer.from(pdf, "utf8");
 }
 
+const contentResourceInclude =
+  Prisma.validator<Prisma.ContentResourceInclude>()({
+    lesson: {
+      include: {
+        module: {
+          include: {
+            course: true,
+            pdfExportTemplate: true,
+          },
+        },
+      },
+    },
+    versions: {
+      orderBy: {
+        releasedAt: "desc",
+      },
+    },
+    glossaryLinks: {
+      include: {
+        glossaryTerm: true,
+      },
+    },
+    voiceoverTracks: {
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+    interactiveConfigs: {
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+  });
+
 @Injectable()
 export class ContentResourcesService {
   constructor(
@@ -83,28 +123,7 @@ export class ContentResourcesService {
           },
         },
       },
-      include: {
-        lesson: {
-          include: {
-            module: {
-              include: {
-                course: true,
-                pdfExportTemplate: true,
-              },
-            },
-          },
-        },
-        versions: {
-          orderBy: {
-            releasedAt: "desc",
-          },
-        },
-        glossaryLinks: {
-          include: {
-            glossaryTerm: true,
-          },
-        },
-      },
+      include: contentResourceInclude,
       orderBy: {
         titleEs: "asc",
       },
@@ -143,6 +162,18 @@ export class ContentResourcesService {
         ...version,
         localizedTitle: this.i18nService.pick(version.titleEs, version.titleEn, lang),
         localizedBody: this.i18nService.pick(version.bodyEs, version.bodyEn, lang),
+      })),
+      voiceoverTracks: resource.voiceoverTracks.map((track) => ({
+        ...track,
+        localizedTranscript: this.i18nService.pick(
+          track.transcriptEs,
+          track.transcriptEn,
+          lang,
+        ),
+      })),
+      interactiveConfigs: resource.interactiveConfigs.map((config) => ({
+        ...config,
+        localizedTitle: this.i18nService.pick(config.titleEs, config.titleEn, lang),
       })),
       glossaryLinks: resource.glossaryLinks.map((link) => ({
         ...link,
@@ -223,6 +254,286 @@ export class ContentResourcesService {
           isCurrent: dto.isCurrent ?? false,
         },
       });
+    });
+  }
+
+  async findVoiceoverTracks(user: JwtPayload, requestedLang?: string) {
+    const accessibleCourseIds =
+      await this.academicVisibilityService.getAccessibleCourseIds(user);
+    const lang = this.i18nService.resolveLang(requestedLang, user.preferredLang);
+
+    const tracks = await this.prisma.contentVoiceoverTrack.findMany({
+      where: {
+        OR: [
+          {
+            contentResource: {
+              lesson: {
+                module: {
+                  courseId: {
+                    in: accessibleCourseIds,
+                  },
+                },
+              },
+            },
+          },
+          {
+            lessonSegment: {
+              lesson: {
+                module: {
+                  courseId: {
+                    in: accessibleCourseIds,
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        contentResource: {
+          include: {
+            lesson: {
+              include: {
+                module: {
+                  include: {
+                    course: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        lessonSegment: {
+          include: {
+            lesson: {
+              include: {
+                module: {
+                  include: {
+                    course: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return tracks.map((track) => ({
+      ...track,
+      locale: lang,
+      localizedTranscript: this.i18nService.pick(
+        track.transcriptEs,
+        track.transcriptEn,
+        lang,
+      ),
+    }));
+  }
+
+  async createVoiceoverTrack(dto: CreateContentVoiceoverTrackDto) {
+    if (!dto.contentResourceId && !dto.lessonSegmentId) {
+      throw new BadRequestException(
+        "contentResourceId or lessonSegmentId is required",
+      );
+    }
+
+    if (dto.contentResourceId && dto.lessonSegmentId) {
+      throw new BadRequestException(
+        "Use either contentResourceId or lessonSegmentId, not both",
+      );
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      if (dto.contentResourceId) {
+        const resource = await tx.contentResource.findUnique({
+          where: {
+            id: dto.contentResourceId,
+          },
+        });
+
+        if (!resource) {
+          throw new NotFoundException("Content resource not found");
+        }
+
+        await tx.contentResource.update({
+          where: {
+            id: resource.id,
+          },
+          data: {
+            voiceoverEnabled: true,
+          },
+        });
+      }
+
+      if (dto.lessonSegmentId) {
+        const segment = await tx.lessonSegment.findUnique({
+          where: {
+            id: dto.lessonSegmentId,
+          },
+        });
+
+        if (!segment) {
+          throw new NotFoundException("Lesson segment not found");
+        }
+
+        await tx.lessonSegment.update({
+          where: {
+            id: segment.id,
+          },
+          data: {
+            voiceoverEnabled: true,
+          },
+        });
+      }
+
+      return tx.contentVoiceoverTrack.create({
+        data: {
+          contentResourceId: dto.contentResourceId,
+          lessonSegmentId: dto.lessonSegmentId,
+          language: dto.language,
+          sourceKind: dto.sourceKind,
+          status: dto.status ?? VoiceoverStatus.DRAFT,
+          title: dto.title,
+          transcriptEs: dto.transcriptEs,
+          transcriptEn: dto.transcriptEn,
+          audioUri: dto.audioUri,
+          durationSeconds: dto.durationSeconds,
+        },
+        include: {
+          contentResource: true,
+          lessonSegment: true,
+        },
+      });
+    });
+  }
+
+  async findInteractiveConfigs(user: JwtPayload, requestedLang?: string) {
+    const accessibleCourseIds =
+      await this.academicVisibilityService.getAccessibleCourseIds(user);
+    const lang = this.i18nService.resolveLang(requestedLang, user.preferredLang);
+
+    const configs = await this.prisma.interactiveContentConfig.findMany({
+      where: {
+        OR: [
+          {
+            contentResource: {
+              lesson: {
+                module: {
+                  courseId: {
+                    in: accessibleCourseIds,
+                  },
+                },
+              },
+            },
+          },
+          {
+            lessonSegment: {
+              lesson: {
+                module: {
+                  courseId: {
+                    in: accessibleCourseIds,
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        contentResource: {
+          include: {
+            lesson: {
+              include: {
+                module: {
+                  include: {
+                    course: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        lessonSegment: {
+          include: {
+            lesson: {
+              include: {
+                module: {
+                  include: {
+                    course: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return configs.map((config) => ({
+      ...config,
+      locale: lang,
+      localizedTitle: this.i18nService.pick(config.titleEs, config.titleEn, lang),
+    }));
+  }
+
+  async createInteractiveConfig(dto: CreateInteractiveContentConfigDto) {
+    if (!dto.contentResourceId && !dto.lessonSegmentId) {
+      throw new BadRequestException(
+        "contentResourceId or lessonSegmentId is required",
+      );
+    }
+
+    if (dto.contentResourceId && dto.lessonSegmentId) {
+      throw new BadRequestException(
+        "Use either contentResourceId or lessonSegmentId, not both",
+      );
+    }
+
+    if (dto.contentResourceId) {
+      const resource = await this.prisma.contentResource.findUnique({
+        where: {
+          id: dto.contentResourceId,
+        },
+      });
+
+      if (!resource) {
+        throw new NotFoundException("Content resource not found");
+      }
+    }
+
+    if (dto.lessonSegmentId) {
+      const segment = await this.prisma.lessonSegment.findUnique({
+        where: {
+          id: dto.lessonSegmentId,
+        },
+      });
+
+      if (!segment) {
+        throw new NotFoundException("Lesson segment not found");
+      }
+    }
+
+    return this.prisma.interactiveContentConfig.create({
+      data: {
+        contentResourceId: dto.contentResourceId,
+        lessonSegmentId: dto.lessonSegmentId,
+        kind: dto.kind,
+        titleEs: dto.titleEs,
+        titleEn: dto.titleEn,
+        configJson: dto.configJson as Prisma.InputJsonValue,
+        embedUri: dto.embedUri,
+        isActive: dto.isActive ?? true,
+      },
+      include: {
+        contentResource: true,
+        lessonSegment: true,
+      },
     });
   }
 

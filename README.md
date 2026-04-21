@@ -41,6 +41,10 @@ Construir un LMS que tome como documento rector el manual de contenido y requisi
 - Diseno del modulo de exportacion PDF: `docs/modulo-exportacion-pdf.md`
 - Diseno del modulo de SLA operativo: `docs/modulo-sla-operativo.md`
 - Diseno del modulo de simuladores integracion minima: `docs/modulo-simuladores-integracion-minima.md`
+- Diseno del modulo de certificaciones externas: `docs/modulo-certificaciones-externas.md`
+- Diseno del modulo de vocalizacion y contenido interactivo: `docs/modulo-vocalizacion-y-contenido-interactivo.md`
+- Diseno del modulo de cobertura tecnica industrial: `docs/modulo-cobertura-tecnica-industrial.md`
+- Diseno del modulo de historial de acceso operativo: `docs/modulo-historial-acceso-operativo.md`
 - Backlog por fases: `docs/backlog-fases.md`
 - Estrategia de simuladores: `docs/simuladores-decisiones.md`
 - Prompt de cursos, modulos y rutas: `prompts/cursos-modulos-rutas.md`

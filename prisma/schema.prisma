@@ -84,6 +84,26 @@ enum ContentResourceType {
   EXTERNAL_LINK
 }
 
+enum VoiceoverSourceKind {
+  UPLOADED
+  TTS_REFERENCE
+  MANUAL_RECORDING
+}
+
+enum VoiceoverStatus {
+  DRAFT
+  READY
+  FAILED
+  DISABLED
+}
+
+enum InteractiveContentKind {
+  EMBEDDED_WIDGET
+  DIAGRAM_COMPONENT_MAP
+  STEP_GUIDED_ACTIVITY
+  THREE_D_SCENE
+}
+
 enum SimulatorKind {
   EMBEDDABLE_EXISTING
   THIRD_PARTY_ADAPTER
@@ -164,6 +184,12 @@ enum QuizAttemptSource {
   RETAKE_OVERRIDE
 }
 
+enum CertificationStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  ELIGIBLE
+}
+
 model User {
   id                 String                  @id @default(cuid())
   email              String                  @unique
@@ -205,6 +231,7 @@ model User {
   lifecycleActors    UserLifecycleAudit[]    @relation("UserLifecycleActor")
   retakeGrantsReceived QuizRetakeGrant[]     @relation("QuizRetakeStudent")
   retakeGrantsIssued   QuizRetakeGrant[]     @relation("QuizRetakeTeacher")
+  certificationStatuses StudentCertificationStatus[]
 }
 
 model Role {
@@ -264,6 +291,7 @@ model Institution {
   notificationTemplates NotificationTemplate[]
   auditLogs      AuditLog[]
   accessEvents   AccessEventLog[]
+  certificationStatuses StudentCertificationStatus[]
 }
 
 model UserInstitution {
@@ -486,6 +514,8 @@ model Course {
   descriptionEn    String?
   isPublished      Boolean                 @default(false)
   progressStrategy String                  @default("weighted")
+  vendorCoverageTags String[]              @default([])
+  technologyCoverageTags String[]          @default([])
   lessonWeight     Int                     @default(20)
   practiceWeight   Int                     @default(30)
   evaluationWeight Int                     @default(20)
@@ -539,16 +569,40 @@ model CertificationTrack {
   description String?
   createdAt   DateTime                  @default(now())
   courses     CertificationTrackCourse[]
+  studentStatuses StudentCertificationStatus[]
 }
 
 model CertificationTrackCourse {
   id                   String             @id @default(cuid())
   certificationTrackId String
   courseId             String
+  sortOrder            Int                @default(1)
+  isRequired           Boolean            @default(true)
+  minimumScore         Float?
   certificationTrack   CertificationTrack @relation(fields: [certificationTrackId], references: [id], onDelete: Cascade)
   course               Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([certificationTrackId, courseId])
+}
+
+model StudentCertificationStatus {
+  id                     String                        @id @default(cuid())
+  institutionId          String
+  studentId              String
+  certificationTrackId   String
+  learningPathAssignmentId String?
+  status                 CertificationStatus          @default(NOT_STARTED)
+  requiredCourses        Int                          @default(0)
+  completedRequiredCourses Int                        @default(0)
+  averageFinalScore      Float?
+  eligibleAt             DateTime?
+  lastCalculatedAt       DateTime                     @default(now())
+  institution            Institution                  @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  student                User                         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  certificationTrack     CertificationTrack           @relation(fields: [certificationTrackId], references: [id], onDelete: Cascade)
+  learningPathAssignment StudentLearningPathAssignment? @relation(fields: [learningPathAssignmentId], references: [id], onDelete: SetNull)
+
+  @@unique([studentId, certificationTrackId])
 }
 
 model Module {
@@ -601,6 +655,8 @@ model LessonSegment {
   lesson           Lesson            @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   resource         ContentResource?  @relation(fields: [resourceId], references: [id], onDelete: SetNull)
   progress         LessonSegmentProgress[]
+  voiceoverTracks  ContentVoiceoverTrack[]
+  interactiveConfigs InteractiveContentConfig[]
 }
 
 model Practice {
@@ -630,6 +686,48 @@ model ContentResource {
   lessonSegments   LessonSegment[]
   versions         ContentResourceVersion[]
   glossaryLinks    GlossaryTermRelation[]
+  voiceoverTracks  ContentVoiceoverTrack[]
+  interactiveConfigs InteractiveContentConfig[]
+}
+
+model ContentVoiceoverTrack {
+  id                String              @id @default(cuid())
+  contentResourceId String?
+  lessonSegmentId   String?
+  language          String
+  sourceKind        VoiceoverSourceKind
+  status            VoiceoverStatus     @default(DRAFT)
+  title             String?
+  transcriptEs      String?
+  transcriptEn      String?
+  audioUri          String?
+  durationSeconds   Int?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  contentResource   ContentResource?    @relation(fields: [contentResourceId], references: [id], onDelete: Cascade)
+  lessonSegment     LessonSegment?      @relation(fields: [lessonSegmentId], references: [id], onDelete: Cascade)
+
+  @@index([contentResourceId, language])
+  @@index([lessonSegmentId, language])
+}
+
+model InteractiveContentConfig {
+  id                String                 @id @default(cuid())
+  contentResourceId String?
+  lessonSegmentId   String?
+  kind              InteractiveContentKind
+  titleEs           String
+  titleEn           String?
+  configJson        Json
+  embedUri          String?
+  isActive          Boolean                @default(true)
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  contentResource   ContentResource?       @relation(fields: [contentResourceId], references: [id], onDelete: Cascade)
+  lessonSegment     LessonSegment?         @relation(fields: [lessonSegmentId], references: [id], onDelete: Cascade)
+
+  @@index([contentResourceId])
+  @@index([lessonSegmentId])
 }
 
 model GlossaryTerm {
@@ -769,6 +867,7 @@ model StudentLearningPathAssignment {
   student          User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
   learningPath     LearningPath      @relation(fields: [learningPathId], references: [id], onDelete: Cascade)
   enrollments      StudentEnrollment[]
+  certificationStatuses StudentCertificationStatus[]
 }
 
 model StudentProgress {
@@ -838,6 +937,8 @@ model Simulator {
   slug           String           @unique
   name           String
   kind           SimulatorKind
+  vendorCoverageTags String[]     @default([])
+  technologyCoverageTags String[] @default([])
   launchUrl      String?
   configJson     Json?
   isTrackable    Boolean          @default(true)

@@ -18,6 +18,8 @@ import { RolesGuard } from "../auth/guards/roles.guard";
 import { JwtPayload } from "../auth/interfaces/jwt-payload.interface";
 import { CreateContentResourceDto } from "./dto/create-content-resource.dto";
 import { CreateContentResourceVersionDto } from "./dto/create-content-resource-version.dto";
+import { CreateContentVoiceoverTrackDto } from "./dto/create-content-voiceover-track.dto";
+import { CreateInteractiveContentConfigDto } from "./dto/create-interactive-content-config.dto";
 import { CreateModulePdfExportTemplateDto } from "./dto/create-module-pdf-export-template.dto";
 import { ModulePdfExportQueryDto } from "./dto/module-pdf-export-query.dto";
 import { ContentResourcesService } from "./content-resources.service";
@@ -46,6 +48,36 @@ export class ContentResourcesController {
   @Roles("ADMIN", "TEACHER")
   createVersion(@Body() dto: CreateContentResourceVersionDto) {
     return this.contentResourcesService.createVersion(dto);
+  }
+
+  @Get("voiceovers")
+  @Roles("ADMIN", "TEACHER", "SUPPORT", "STUDENT")
+  findVoiceoverTracks(@Req() req: Request, @Query() query: LangQueryDto) {
+    return this.contentResourcesService.findVoiceoverTracks(
+      req.user as JwtPayload,
+      query.lang,
+    );
+  }
+
+  @Post("voiceovers")
+  @Roles("ADMIN", "TEACHER")
+  createVoiceoverTrack(@Body() dto: CreateContentVoiceoverTrackDto) {
+    return this.contentResourcesService.createVoiceoverTrack(dto);
+  }
+
+  @Get("interactive-configs")
+  @Roles("ADMIN", "TEACHER", "SUPPORT", "STUDENT")
+  findInteractiveConfigs(@Req() req: Request, @Query() query: LangQueryDto) {
+    return this.contentResourcesService.findInteractiveConfigs(
+      req.user as JwtPayload,
+      query.lang,
+    );
+  }
+
+  @Post("interactive-configs")
+  @Roles("ADMIN", "TEACHER")
+  createInteractiveConfig(@Body() dto: CreateInteractiveContentConfigDto) {
+    return this.contentResourcesService.createInteractiveConfig(dto);
   }
 
   @Get("pdf-templates")
