@@ -79,7 +79,7 @@ export default function StudentResultsPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Mis resultados"
-      description="Lectura consolidada de resultados por matricula y descarga PDF por modulo."
+      description="Consulta tus resultados por curso y descarga constancias por modulo cuando esten disponibles."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <DataPanel title="Resultado por curso">
@@ -108,11 +108,11 @@ export default function StudentResultsPage() {
                     { metric: "Simuladores", value: result.consolidatedResult.progress.simulatorsDone },
                     { metric: "Score final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
                   ]}
-                  emptyLabel="Sin datos"
+                  emptyLabel="No hay informacion disponible."
                 />
                 <div className="grid gap-3 md:grid-cols-[1fr_auto]">
                   <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedModuleId} onChange={(event)=>setSelectedModuleId(event.target.value)}>
-                    <option value="">Selecciona modulo para PDF</option>
+                    <option value="">Selecciona un modulo</option>
                     {moduleOptions.map((module)=>(
                       <option key={module.id} value={module.id}>{module.titleEs}</option>
                     ))}

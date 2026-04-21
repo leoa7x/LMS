@@ -12,8 +12,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("admin@lms.local");
-  const [password, setPassword] = useState("Admin12345!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,7 +63,8 @@ export default function LoginPage() {
       <section className="mx-auto max-w-xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <h2 className="mb-2 text-2xl font-semibold text-ink">Acceso al portal</h2>
         <p className="mb-8 text-sm leading-6 text-slate-600">
-          Acceso real contra el backend del LMS con contexto por rol y sesion protegida.
+          Ingresa con tu cuenta institucional para acceder a tus funciones y
+          servicios disponibles.
         </p>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
@@ -72,7 +73,7 @@ export default function LoginPage() {
             <input
               className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-copper"
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="admin@lms.local"
+              placeholder="correo@institucion.edu"
               type="email"
               value={email}
             />

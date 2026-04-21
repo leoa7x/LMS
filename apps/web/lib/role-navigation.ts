@@ -21,21 +21,21 @@ export const defaultRouteByRole: Record<RoleKey, string> = {
 
 export const navigationByRole: Record<RoleKey, NavigationItem[]> = {
   ADMIN: [
-    { href: "/admin", label: "Dashboard" },
+    { href: "/admin", label: "Panel principal" },
     { href: "/admin/users", label: "Usuarios" },
     { href: "/admin/institutions", label: "Institucion" },
-    { href: "/admin/academic", label: "Cursos y rutas" },
-    { href: "/admin/enrollments", label: "Matriculas" },
+    { href: "/admin/academic", label: "Oferta academica" },
+    { href: "/admin/enrollments", label: "Inscripciones" },
     { href: "/admin/content", label: "Contenidos" },
     { href: "/admin/progress", label: "Progreso" },
     { href: "/admin/evaluations", label: "Evaluaciones" },
     { href: "/admin/results", label: "Resultados" },
     { href: "/admin/simulators", label: "Simuladores" },
     { href: "/admin/support", label: "Soporte" },
-    { href: "/admin/audit", label: "Auditoria" },
+    { href: "/admin/audit", label: "Actividad y accesos" },
   ],
   TEACHER: [
-    { href: "/teacher", label: "Dashboard" },
+    { href: "/teacher", label: "Panel principal" },
     { href: "/teacher/courses", label: "Cursos" },
     { href: "/teacher/content", label: "Contenidos" },
     { href: "/teacher/progress", label: "Progreso" },
@@ -45,7 +45,7 @@ export const navigationByRole: Record<RoleKey, NavigationItem[]> = {
     { href: "/teacher/support", label: "Soporte" },
   ],
   STUDENT: [
-    { href: "/student", label: "Dashboard" },
+    { href: "/student", label: "Panel principal" },
     { href: "/student/courses", label: "Mis cursos" },
     { href: "/student/content", label: "Contenidos" },
     { href: "/student/progress", label: "Mi progreso" },
@@ -56,8 +56,8 @@ export const navigationByRole: Record<RoleKey, NavigationItem[]> = {
   ],
   SUPPORT: [
     { href: "/admin/support", label: "Soporte" },
-    { href: "/admin/audit", label: "Auditoria" },
-    { href: "/admin", label: "Dashboard" },
+    { href: "/admin/audit", label: "Actividad y accesos" },
+    { href: "/admin", label: "Panel principal" },
     { href: "/admin/users", label: "Usuarios" },
     { href: "/admin/institutions", label: "Institucion" },
   ],

@@ -37,11 +37,11 @@ export function PortalShell({
               Instituto Profesional y Tecnico de Veraguas
             </p>
             <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950">
-              LMS Tecnico
+              Plataforma de formacion tecnica
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Plataforma formal para operacion academica, evaluacion, progreso y
-              simuladores integrados.
+              Consulta cursos, contenidos, evaluaciones, progreso y practicas desde
+              una experiencia unificada.
             </p>
           </div>
 
@@ -80,7 +80,7 @@ export function PortalShell({
               href="/"
               className="rounded-full border border-slate-300 px-4 py-2 font-medium text-slate-700"
             >
-              Portal
+              Inicio
             </Link>
             <button
               className="rounded-full bg-slate-950 px-4 py-2 font-medium text-white"

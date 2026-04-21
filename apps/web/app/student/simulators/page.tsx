@@ -151,11 +151,11 @@ export default function StudentSimulatorsPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Simuladores integrados"
-      description="Operacion minima del simulador dentro del LMS: abrir sesion, cargar contexto academico, registrar eventos y completar practica."
+      description="Accede a tus simuladores, carga la actividad asociada y registra el trabajo realizado."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-          <DataPanel title="Abrir sesion de simulador">
+          <DataPanel title="Iniciar simulador">
             <form className="grid gap-4" onSubmit={startSession}>
               <select
                 className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
@@ -165,7 +165,7 @@ export default function StudentSimulatorsPage() {
                 <option value="">Selecciona simulador</option>
                 {simulators.map((simulator) => (
                   <option key={simulator.id} value={simulator.id}>
-                    {simulator.name} · {simulator.kind}
+                    {simulator.name}
                   </option>
                 ))}
               </select>
@@ -174,7 +174,7 @@ export default function StudentSimulatorsPage() {
                 value={selectedEnrollmentId}
                 onChange={(event) => setSelectedEnrollmentId(event.target.value)}
               >
-                <option value="">Selecciona curso (opcional)</option>
+                  <option value="">Selecciona un curso (opcional)</option>
                 {dashboard.currentCourses.map((course) => (
                   <option key={course.enrollmentId} value={course.enrollmentId}>
                     {course.titleEs}
@@ -185,7 +185,7 @@ export default function StudentSimulatorsPage() {
                 className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white"
                 type="submit"
               >
-                Iniciar sesion
+                Iniciar actividad
               </button>
             </form>
             {feedback ? (
@@ -195,11 +195,11 @@ export default function StudentSimulatorsPage() {
             ) : null}
           </DataPanel>
 
-          <DataPanel title="Contexto academico activo">
+          <DataPanel title="Actividad en curso">
             {activeContext ? (
               <div className="grid gap-5">
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-                  {activeContext.simulator.name} · {activeContext.enrollment?.courseTitleEs ?? "Sin curso ligado"}
+                  {activeContext.simulator.name} · {activeContext.enrollment?.courseTitleEs ?? "Sin curso asociado"}
                 </div>
                 <SimpleTable
                   columns={[
@@ -208,12 +208,12 @@ export default function StudentSimulatorsPage() {
                     { key: "module", header: "Modulo", render: (item) => item.moduleTitleEs ?? "-" },
                   ]}
                   rows={activeContext.mappings}
-                  emptyLabel="No hay practicas mapeadas."
+                  emptyLabel="No hay practicas asociadas."
                 />
                 <div className="grid gap-3 md:grid-cols-2">
                   <input
                     className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
-                    placeholder="Paso"
+                    placeholder="Paso o actividad"
                     value={eventForm.stepKey}
                     onChange={(event) =>
                       setEventForm((prev) => ({ ...prev, stepKey: event.target.value }))
@@ -221,7 +221,7 @@ export default function StudentSimulatorsPage() {
                   />
                   <input
                     className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
-                    placeholder="Componente"
+                    placeholder="Componente o equipo"
                     value={eventForm.componentKey}
                     onChange={(event) =>
                       setEventForm((prev) => ({ ...prev, componentKey: event.target.value }))
@@ -229,7 +229,7 @@ export default function StudentSimulatorsPage() {
                   />
                   <input
                     className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
-                    placeholder="Falla"
+                    placeholder="Codigo de falla"
                     value={eventForm.faultCode}
                     onChange={(event) =>
                       setEventForm((prev) => ({ ...prev, faultCode: event.target.value }))
@@ -252,7 +252,7 @@ export default function StudentSimulatorsPage() {
                   type="button"
                   onClick={logEvent}
                 >
-                  Registrar evento
+                  Registrar actividad
                 </button>
                 <div className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
                   <select
@@ -281,13 +281,13 @@ export default function StudentSimulatorsPage() {
                     type="button"
                     onClick={completeSession}
                   >
-                    Completar
+                    Finalizar sesion
                   </button>
                 </div>
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                Inicia una sesion para cargar practicas, lecciones y modulo asociados al simulador.
+                Inicia una actividad para ver las practicas y el contenido relacionado.
               </div>
             )}
           </DataPanel>

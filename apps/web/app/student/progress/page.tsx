@@ -36,7 +36,7 @@ export default function StudentProgressPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Mi progreso"
-      description="Seguimiento individual de avance por curso y ruta dentro del portal."
+      description="Consulta tu avance por curso y revisa las actividades completadas."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <DataPanel title="Resumen por curso">
@@ -51,7 +51,7 @@ export default function StudentProgressPage() {
               { key: "simulators", header: "Simuladores", render: (item) => item.progress?.[0]?.simulatorsDone ?? 0 },
             ]}
             rows={rows}
-            emptyLabel="No hay progreso visible."
+            emptyLabel="No hay informacion disponible."
           />
         </DataPanel>
       </RoleGuard>

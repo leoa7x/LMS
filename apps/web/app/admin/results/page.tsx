@@ -114,8 +114,8 @@ export default function AdminResultsPage() {
   return (
     <PortalShell
       eyebrow="Resultados"
-      title="Resultados consolidados y PDF"
-      description="Operacion de resultados por matricula y ruta, con exportacion PDF por modulo sobre el backend ya cerrado."
+      title="Resultados y constancias"
+      description="Consulta el desempeno por curso o ruta y genera constancias por modulo cuando sea necesario."
     >
       <RoleGuard roles={["ADMIN", "TEACHER"]}>
         <section className="grid gap-6">
@@ -153,7 +153,7 @@ export default function AdminResultsPage() {
                     />
                     <div className="grid gap-3 md:grid-cols-[1fr_auto]">
                       <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedModuleId} onChange={(event)=>setSelectedModuleId(event.target.value)}>
-                        <option value="">Selecciona modulo para PDF</option>
+                        <option value="">Selecciona un modulo</option>
                         {moduleOptions.map((module)=>(
                           <option key={module.id} value={module.id}>{module.titleEs}</option>
                         ))}

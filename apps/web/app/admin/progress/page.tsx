@@ -35,11 +35,11 @@ export default function AdminProgressPage() {
   return (
     <PortalShell
       eyebrow="Progreso"
-      title="Seguimiento institucional"
-      description="Vista consolidada del avance por matricula, pensada para control academico y seguimiento institucional."
+      title="Seguimiento academico"
+      description="Consulta el avance de los estudiantes por curso y da seguimiento al cumplimiento academico."
     >
       <RoleGuard roles={["ADMIN", "SUPPORT"]}>
-        <DataPanel title="Avance por matricula">
+        <DataPanel title="Avance por inscripcion">
           <SimpleTable
             columns={[
               {
@@ -67,7 +67,7 @@ export default function AdminProgressPage() {
               { key: "simulatorsDone", header: "Simuladores", render: (item) => item.simulatorsDone },
             ]}
             rows={rows}
-            emptyLabel="No hay progreso visible."
+            emptyLabel="No hay informacion disponible."
           />
         </DataPanel>
       </RoleGuard>

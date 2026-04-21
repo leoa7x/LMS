@@ -74,7 +74,7 @@ export default function StudentSupportPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Soporte del portal"
-      description="Canal del estudiante para reportar incidencias, seguir tickets y mantener trazabilidad dentro del portal."
+      description="Reporta inconvenientes, revisa el estado de tus solicitudes y agrega comentarios cuando sea necesario."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
@@ -86,7 +86,7 @@ export default function StudentSupportPage() {
                 { key: "priority", header: "Prioridad", render: (item) => item.priority },
               ]}
               rows={tickets}
-              emptyLabel="No hay tickets visibles."
+              emptyLabel="No hay solicitudes registradas."
             />
             <select className="mt-4 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedTicketId} onChange={(event)=>setSelectedTicketId(event.target.value)}>
               <option value="">Selecciona ticket</option>
@@ -96,10 +96,10 @@ export default function StudentSupportPage() {
             </select>
           </DataPanel>
 
-          <DataPanel title="Crear ticket">
+          <DataPanel title="Nueva solicitud">
             <form className="grid gap-4" onSubmit={createTicket}>
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Asunto" value={ticketForm.subject} onChange={(event)=>setTicketForm((prev)=>({...prev,subject:event.target.value}))} />
-              <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Descripcion" value={ticketForm.description} onChange={(event)=>setTicketForm((prev)=>({...prev,description:event.target.value}))} />
+              <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Describe la situacion" value={ticketForm.description} onChange={(event)=>setTicketForm((prev)=>({...prev,description:event.target.value}))} />
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Categoria" value={ticketForm.category} onChange={(event)=>setTicketForm((prev)=>({...prev,category:event.target.value}))} />
               <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={ticketForm.priority} onChange={(event)=>setTicketForm((prev)=>({...prev,priority:event.target.value}))}>
                 <option value="LOW">LOW</option>
@@ -115,7 +115,7 @@ export default function StudentSupportPage() {
         </section>
 
         <section className="mt-6">
-          <DataPanel title="Conversacion del ticket">
+          <DataPanel title="Seguimiento de la solicitud">
             {selectedTicket ? (
               <div className="grid gap-4">
                 <SimpleTable
@@ -125,10 +125,10 @@ export default function StudentSupportPage() {
                     { key: "internal", header: "Interno", render: (item) => (item.isInternal ? "Si" : "No") },
                   ]}
                   rows={selectedTicket.comments ?? []}
-                  emptyLabel="No hay comentarios."
+                  emptyLabel="No hay comentarios registrados."
                 />
                 <form className="grid gap-4" onSubmit={addComment}>
-                  <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Agregar comentario" value={commentBody} onChange={(event)=>setCommentBody(event.target.value)} />
+                  <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Escribe tu comentario" value={commentBody} onChange={(event)=>setCommentBody(event.target.value)} />
                   <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">
                     Enviar comentario
                   </button>

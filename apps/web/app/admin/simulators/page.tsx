@@ -74,15 +74,15 @@ export default function AdminSimulatorsPage() {
   return (
     <PortalShell
       eyebrow="Simuladores"
-      title="Catalogo y trazabilidad"
-      description="Operacion administrativa de simuladores integrados al portal, con mapeos a practicas y sesiones trazables."
+      title="Catalogo y actividad"
+      description="Administra los simuladores disponibles y revisa su uso dentro de las practicas formativas."
     >
       <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-6">
           <div className="grid gap-6 xl:grid-cols-2">
             <DataPanel
               title="Catalogo de simuladores"
-              description="Taxonomia activa del LMS para embebidos, adaptados y nativos, con seguimiento sobre practicas reales."
+              description="Consulta los simuladores disponibles y su tipo de integracion en la plataforma."
             >
               <SimpleTable
                 columns={[
@@ -110,8 +110,8 @@ export default function AdminSimulatorsPage() {
             </DataPanel>
 
             <DataPanel
-              title="Mapeo teoria-practica-simulacion"
-              description="Relacion entre simulador, practica, leccion, modulo y curso para sostener el flujo academico del pliego."
+              title="Relacion con las practicas"
+              description="Verifica que cada simulador este vinculado a la practica y al curso correspondiente."
             >
               <SimpleTable
                 columns={[
@@ -150,7 +150,7 @@ export default function AdminSimulatorsPage() {
 
           <DataPanel
             title="Sesiones registradas"
-            description="Trazabilidad minima de uso del simulador por estudiante, curso y estado final."
+            description="Consulta la actividad reciente de los estudiantes en los simuladores."
           >
             <SimpleTable
               columns={[

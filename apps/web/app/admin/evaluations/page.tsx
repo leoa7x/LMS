@@ -85,8 +85,8 @@ export default function AdminEvaluationsPage() {
   return (
     <PortalShell
       eyebrow="Evaluaciones"
-      title="Quizzes, intentos y reintentos"
-      description="Operacion de evaluaciones del LMS con visibilidad bilingue y control de reintentos."
+      title="Evaluaciones e intentos"
+      description="Consulta las evaluaciones disponibles, revisa intentos y autoriza nuevas oportunidades cuando corresponda."
     >
       <RoleGuard roles={["ADMIN", "TEACHER"]}>
         <section className="mb-6 flex items-center justify-end">
@@ -97,7 +97,7 @@ export default function AdminEvaluationsPage() {
         </section>
         <section className="grid gap-6">
           <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-            <DataPanel title="Quizzes visibles">
+            <DataPanel title="Evaluaciones disponibles">
               <SimpleTable
                 columns={[
                   { key: "title", header: "Quiz", render: (item) => item.localizedTitle ?? item.titleEs },
@@ -107,10 +107,10 @@ export default function AdminEvaluationsPage() {
                   { key: "passingScore", header: "Score", render: (item) => item.passingScore },
                 ]}
                 rows={quizzes}
-                emptyLabel="No hay quizzes visibles."
+                emptyLabel="No hay evaluaciones disponibles."
               />
             </DataPanel>
-            <DataPanel title="Autorizar reintento">
+            <DataPanel title="Autorizar nueva oportunidad">
               <form className="grid gap-4" onSubmit={createRetakeGrant}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={grantForm.quizId} onChange={(event)=>setGrantForm((prev)=>({...prev,quizId:event.target.value}))}>
                   <option value="">Selecciona quiz</option>
@@ -124,7 +124,7 @@ export default function AdminEvaluationsPage() {
                     <option key={item.id} value={item.id}>{item.email}</option>
                   ))}
                 </select>
-                <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Motivo del reintento" value={grantForm.reason} onChange={(event)=>setGrantForm((prev)=>({...prev,reason:event.target.value}))}/>
+                <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Motivo de la autorizacion" value={grantForm.reason} onChange={(event)=>setGrantForm((prev)=>({...prev,reason:event.target.value}))}/>
                 <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" type="number" min={1} value={grantForm.maxExtraAttempts} onChange={(event)=>setGrantForm((prev)=>({...prev,maxExtraAttempts:Number(event.target.value)}))}/>
                 <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Crear autorizacion</button>
               </form>
@@ -145,7 +145,7 @@ export default function AdminEvaluationsPage() {
                 emptyLabel="No hay intentos visibles."
               />
             </DataPanel>
-            <DataPanel title="Reintentos autorizados">
+            <DataPanel title="Autorizaciones activas">
               <SimpleTable
                 columns={[
                   { key: "quiz", header: "Quiz", render: (item) => item.quiz?.titleEs ?? "-" },
@@ -154,7 +154,7 @@ export default function AdminEvaluationsPage() {
                   { key: "reason", header: "Motivo", render: (item) => item.reason },
                 ]}
                 rows={retakeGrants}
-                emptyLabel="No hay grants visibles."
+                emptyLabel="No hay autorizaciones activas."
               />
             </DataPanel>
           </div>

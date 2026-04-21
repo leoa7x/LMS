@@ -32,8 +32,8 @@ export default function StudentCoursesPage() {
   return (
     <PortalShell
       eyebrow="Estudiante"
-      title="Mis cursos visibles"
-      description="Cursos activos disponibles por matricula o ruta dentro del contexto del estudiante."
+      title="Mis cursos"
+      description="Consulta los cursos activos que tienes habilitados en la plataforma."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <DataPanel title="Cursos activos">
@@ -45,7 +45,7 @@ export default function StudentCoursesPage() {
               { key: "status", header: "Estado", render: (item) => item.status },
             ]}
             rows={summary.currentCourses}
-            emptyLabel="No hay cursos activos visibles."
+            emptyLabel="No tienes cursos activos disponibles."
           />
         </DataPanel>
       </RoleGuard>

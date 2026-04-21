@@ -138,9 +138,9 @@ export default function UsersAdminPage() {
 
   return (
     <PortalShell
-      eyebrow="Gestion de usuarios"
+      eyebrow="Usuarios"
       title="Usuarios y acceso institucional"
-      description="Alta de usuarios con membresia institucional, rol operativo, idioma y contexto academico minimo, alineado con el modulo de acceso del LMS."
+      description="Registra usuarios, define su perfil y asigna su vinculacion institucional."
     >
       <RoleGuard roles={["ADMIN"]}>
         <section className="grid gap-4 md:grid-cols-3">
@@ -164,7 +164,7 @@ export default function UsersAdminPage() {
         <section className="mt-6 grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
           <DataPanel
             title="Crear usuario"
-            description="Formulario compatible con el backend real: membresia, rol y perfil academico minimo."
+            description="Completa los datos principales para habilitar el acceso del usuario."
           >
             <form className="grid gap-4" onSubmit={handleSubmit}>
               <input
@@ -234,7 +234,7 @@ export default function UsersAdminPage() {
                 }
                 value={form.institutionId}
               >
-                <option value="">Selecciona institucion</option>
+                <option value="">Selecciona una institucion</option>
                 {institutions.map((institution) => (
                   <option key={institution.id} value={institution.id}>
                     {institution.name}
@@ -253,7 +253,7 @@ export default function UsersAdminPage() {
                   }
                   value={form.campusId}
                 >
-                  <option value="">Sin sede</option>
+                  <option value="">Sin sede asignada</option>
                   {filteredCampuses.map((campus) => (
                     <option key={campus.id} value={campus.id}>
                       {campus.name}
@@ -267,7 +267,7 @@ export default function UsersAdminPage() {
                   }
                   value={form.laboratoryId}
                 >
-                  <option value="">Sin laboratorio</option>
+                  <option value="">Sin laboratorio asignado</option>
                   {filteredLaboratories.map((laboratory) => (
                     <option key={laboratory.id} value={laboratory.id}>
                       {laboratory.name}
@@ -282,7 +282,7 @@ export default function UsersAdminPage() {
                   onChange={(event) =>
                     setForm((prev) => ({ ...prev, currentLevel: event.target.value }))
                   }
-                  placeholder="Nivel actual"
+                  placeholder="Nivel academico"
                   value={form.currentLevel}
                 />
               ) : null}
@@ -298,7 +298,7 @@ export default function UsersAdminPage() {
 
           <DataPanel
             title="Usuarios registrados"
-            description="Lectura institucional centralizada sobre el backend ya endurecido."
+            description="Consulta los usuarios activos y su ubicacion dentro de la institucion."
           >
             <SimpleTable
               columns={[

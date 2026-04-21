@@ -799,6 +799,31 @@ Documentacion rectora del modulo:
 - validacion reciente:
   - `npm run build:api` correcto
 
+## Estado de copy y lenguaje de producto en frontend
+
+- se audito el copy visible del portal para eliminar lenguaje interno de desarrollo
+- se corrigieron textos que hablaban de:
+  - MVP
+  - backend
+  - alcance tecnico
+  - arquitectura
+  - demo
+  - trazabilidad tecnica presentada como copy de usuario
+- se actualizaron:
+  - inicio
+  - ingreso
+  - navegacion por rol
+  - shells compartidos
+  - guardas de acceso
+  - pantallas principales de administrador, docente y estudiante
+  - pantallas de cursos, contenidos, progreso, evaluaciones, resultados, simuladores, soporte y auditoria
+- el tono visible ahora esta orientado a:
+  - operacion institucional
+  - gestion academica
+  - uso diario por rol
+- validacion reciente:
+  - `npm run build:web` correcto
+
 ## Instruccion para retomarlo
 
 Si una sesion nueva necesita retomar el proyecto, la instruccion corta debe ser:

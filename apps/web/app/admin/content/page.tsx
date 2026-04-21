@@ -110,9 +110,9 @@ export default function ContentAdminPage() {
 
   return (
     <PortalShell
-      description="Gestion de recursos, practicas y glosario tecnico con bilinguismo visible desde la misma vista operativa."
+      description="Administra practicas, recursos y terminos tecnicos disponibles para la comunidad academica."
       eyebrow="Contenidos"
-      title="Contenido tecnico y glosario"
+      title="Recursos y glosario"
     >
       <RoleGuard roles={["ADMIN", "TEACHER"]}>
         <section className="mb-6 flex items-center justify-end">
@@ -128,7 +128,7 @@ export default function ContentAdminPage() {
 
         <section className="grid gap-6">
           <div className="grid gap-6 xl:grid-cols-3">
-            <DataPanel title="Crear practica">
+            <DataPanel title="Nueva practica">
               <form className="grid gap-4" onSubmit={createPractice}>
                 <select
                   className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
@@ -144,8 +144,8 @@ export default function ContentAdminPage() {
                     </option>
                   ))}
                 </select>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo ES" value={practiceForm.titleEs} onChange={(event)=>setPracticeForm((prev)=>({...prev,titleEs:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Title EN" value={practiceForm.titleEn} onChange={(event)=>setPracticeForm((prev)=>({...prev,titleEn:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en espanol" value={practiceForm.titleEs} onChange={(event)=>setPracticeForm((prev)=>({...prev,titleEs:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en ingles" value={practiceForm.titleEn} onChange={(event)=>setPracticeForm((prev)=>({...prev,titleEn:event.target.value}))}/>
                 <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Instrucciones" value={practiceForm.instructions} onChange={(event)=>setPracticeForm((prev)=>({...prev,instructions:event.target.value}))}/>
                 <label className="flex items-center gap-3 text-sm text-slate-700">
                   <input checked={practiceForm.requiresSimulator} onChange={(event)=>setPracticeForm((prev)=>({...prev,requiresSimulator:event.target.checked}))} type="checkbox"/>
@@ -155,7 +155,7 @@ export default function ContentAdminPage() {
               </form>
             </DataPanel>
 
-            <DataPanel title="Crear recurso">
+            <DataPanel title="Nuevo recurso">
               <form className="grid gap-4" onSubmit={createResource}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" onChange={(event)=>setResourceForm((prev)=>({...prev,lessonId:event.target.value}))} value={resourceForm.lessonId}>
                   <option value="">Selecciona leccion</option>
@@ -170,22 +170,22 @@ export default function ContentAdminPage() {
                   <option value="IMAGE">IMAGE</option>
                   <option value="EBOOK">EBOOK</option>
                 </select>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo ES" value={resourceForm.titleEs} onChange={(event)=>setResourceForm((prev)=>({...prev,titleEs:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Title EN" value={resourceForm.titleEn} onChange={(event)=>setResourceForm((prev)=>({...prev,titleEn:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en espanol" value={resourceForm.titleEs} onChange={(event)=>setResourceForm((prev)=>({...prev,titleEs:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en ingles" value={resourceForm.titleEn} onChange={(event)=>setResourceForm((prev)=>({...prev,titleEn:event.target.value}))}/>
                 <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="URL o ruta" value={resourceForm.uri} onChange={(event)=>setResourceForm((prev)=>({...prev,uri:event.target.value}))}/>
                 <textarea className="min-h-24 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Contenido ES" value={resourceForm.bodyEs} onChange={(event)=>setResourceForm((prev)=>({...prev,bodyEs:event.target.value}))}/>
-                <textarea className="min-h-24 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Content EN" value={resourceForm.bodyEn} onChange={(event)=>setResourceForm((prev)=>({...prev,bodyEn:event.target.value}))}/>
+                <textarea className="min-h-24 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Contenido en ingles" value={resourceForm.bodyEn} onChange={(event)=>setResourceForm((prev)=>({...prev,bodyEn:event.target.value}))}/>
                 <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Crear recurso</button>
               </form>
             </DataPanel>
 
-            <DataPanel title="Crear termino de glosario">
+            <DataPanel title="Nuevo termino de glosario">
               <form className="grid gap-4" onSubmit={createGlossary}>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="slug" value={glossaryForm.slug} onChange={(event)=>setGlossaryForm((prev)=>({...prev,slug:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Termino ES" value={glossaryForm.termEs} onChange={(event)=>setGlossaryForm((prev)=>({...prev,termEs:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Term EN" value={glossaryForm.termEn} onChange={(event)=>setGlossaryForm((prev)=>({...prev,termEn:event.target.value}))}/>
-                <textarea className="min-h-24 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Definicion ES" value={glossaryForm.definitionEs} onChange={(event)=>setGlossaryForm((prev)=>({...prev,definitionEs:event.target.value}))}/>
-                <textarea className="min-h-24 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Definition EN" value={glossaryForm.definitionEn} onChange={(event)=>setGlossaryForm((prev)=>({...prev,definitionEn:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Identificador" value={glossaryForm.slug} onChange={(event)=>setGlossaryForm((prev)=>({...prev,slug:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Termino en espanol" value={glossaryForm.termEs} onChange={(event)=>setGlossaryForm((prev)=>({...prev,termEs:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Termino en ingles" value={glossaryForm.termEn} onChange={(event)=>setGlossaryForm((prev)=>({...prev,termEn:event.target.value}))}/>
+                <textarea className="min-h-24 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Definicion en espanol" value={glossaryForm.definitionEs} onChange={(event)=>setGlossaryForm((prev)=>({...prev,definitionEs:event.target.value}))}/>
+                <textarea className="min-h-24 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Definicion en ingles" value={glossaryForm.definitionEn} onChange={(event)=>setGlossaryForm((prev)=>({...prev,definitionEn:event.target.value}))}/>
                 <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Crear termino</button>
               </form>
             </DataPanel>
@@ -199,7 +199,7 @@ export default function ContentAdminPage() {
                   { key: "sim", header: "Simulador", render: (item) => (item.requiresSimulator ? "Si" : "No") },
                 ]}
                 rows={practices}
-                emptyLabel="No hay practicas visibles."
+                emptyLabel="No hay practicas registradas."
               />
             </DataPanel>
             <DataPanel title="Recursos">
@@ -209,7 +209,7 @@ export default function ContentAdminPage() {
                   { key: "type", header: "Tipo", render: (item) => item.type },
                 ]}
                 rows={resources}
-                emptyLabel="No hay recursos visibles."
+                emptyLabel="No hay recursos registrados."
               />
             </DataPanel>
             <DataPanel title="Glosario">
@@ -219,7 +219,7 @@ export default function ContentAdminPage() {
                   { key: "definition", header: "Definicion", render: (item) => item.localizedDefinition ?? "-" },
                 ]}
                 rows={glossary}
-                emptyLabel="No hay terminos visibles."
+                emptyLabel="No hay terminos registrados."
               />
             </DataPanel>
           </div>

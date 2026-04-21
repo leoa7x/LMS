@@ -143,65 +143,65 @@ export default function AcademicAdminPage() {
 
   return (
     <PortalShell
-      eyebrow="Gestion academica"
+      eyebrow="Academico"
       title="Cursos y rutas formativas"
-      description="Operacion del catalogo tecnico por areas, cursos publicados y rutas preconfiguradas del LMS."
+      description="Organiza la oferta academica por areas tecnicas, cursos y rutas formativas."
     >
       <RoleGuard roles={["ADMIN"]}>
         <section className="grid gap-6">
           <div className="grid gap-6 xl:grid-cols-4">
-            <DataPanel title="Area tecnica">
+            <DataPanel title="Nueva area tecnica">
               <form className="grid gap-4" onSubmit={createArea}>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="slug" value={areaForm.slug} onChange={(event)=>setAreaForm((prev)=>({...prev,slug:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Nombre ES" value={areaForm.nameEs} onChange={(event)=>setAreaForm((prev)=>({...prev,nameEs:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Name EN" value={areaForm.nameEn} onChange={(event)=>setAreaForm((prev)=>({...prev,nameEn:event.target.value}))}/>
-                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Crear area</button>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Identificador" value={areaForm.slug} onChange={(event)=>setAreaForm((prev)=>({...prev,slug:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Nombre en espanol" value={areaForm.nameEs} onChange={(event)=>setAreaForm((prev)=>({...prev,nameEs:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Nombre en ingles" value={areaForm.nameEn} onChange={(event)=>setAreaForm((prev)=>({...prev,nameEn:event.target.value}))}/>
+                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Guardar area</button>
               </form>
             </DataPanel>
 
-            <DataPanel title="Curso">
+            <DataPanel title="Nuevo curso">
               <form className="grid gap-4" onSubmit={createCourse}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={courseForm.technicalAreaId} onChange={(event)=>setCourseForm((prev)=>({...prev,technicalAreaId:event.target.value}))}>
-                  <option value="">Selecciona area</option>
+                  <option value="">Selecciona un area</option>
                   {technicalAreas.map((area)=>(
                     <option key={area.id} value={area.id}>{area.nameEs}</option>
                   ))}
                 </select>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="slug" value={courseForm.slug} onChange={(event)=>setCourseForm((prev)=>({...prev,slug:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo ES" value={courseForm.titleEs} onChange={(event)=>setCourseForm((prev)=>({...prev,titleEs:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Title EN" value={courseForm.titleEn} onChange={(event)=>setCourseForm((prev)=>({...prev,titleEn:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Identificador" value={courseForm.slug} onChange={(event)=>setCourseForm((prev)=>({...prev,slug:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en espanol" value={courseForm.titleEs} onChange={(event)=>setCourseForm((prev)=>({...prev,titleEs:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en ingles" value={courseForm.titleEn} onChange={(event)=>setCourseForm((prev)=>({...prev,titleEn:event.target.value}))}/>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={courseForm.courseKind} onChange={(event)=>setCourseForm((prev)=>({...prev,courseKind:event.target.value}))}>
-                  <option value="STANDARD">STANDARD</option>
-                  <option value="PRECONFIGURED">PRECONFIGURED</option>
+                  <option value="STANDARD">Curso regular</option>
+                  <option value="PRECONFIGURED">Curso preconfigurado</option>
                 </select>
                 <label className="flex items-center gap-3 text-sm text-slate-700">
                   <input checked={courseForm.isPublished} onChange={(event)=>setCourseForm((prev)=>({...prev,isPublished:event.target.checked}))} type="checkbox"/>
                   Publicado
                 </label>
-                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Crear curso</button>
+                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Guardar curso</button>
               </form>
             </DataPanel>
 
-            <DataPanel title="Ruta formativa">
+            <DataPanel title="Nueva ruta formativa">
               <form className="grid gap-4" onSubmit={createPath}>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="slug" value={pathForm.slug} onChange={(event)=>setPathForm((prev)=>({...prev,slug:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo ES" value={pathForm.titleEs} onChange={(event)=>setPathForm((prev)=>({...prev,titleEs:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Title EN" value={pathForm.titleEn} onChange={(event)=>setPathForm((prev)=>({...prev,titleEn:event.target.value}))}/>
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Codigo de nivel" value={pathForm.levelCode} onChange={(event)=>setPathForm((prev)=>({...prev,levelCode:event.target.value}))}/>
-                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Crear ruta</button>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Identificador" value={pathForm.slug} onChange={(event)=>setPathForm((prev)=>({...prev,slug:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en espanol" value={pathForm.titleEs} onChange={(event)=>setPathForm((prev)=>({...prev,titleEs:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Titulo en ingles" value={pathForm.titleEn} onChange={(event)=>setPathForm((prev)=>({...prev,titleEn:event.target.value}))}/>
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Nivel recomendado" value={pathForm.levelCode} onChange={(event)=>setPathForm((prev)=>({...prev,levelCode:event.target.value}))}/>
+                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Guardar ruta</button>
               </form>
             </DataPanel>
 
-            <DataPanel title="Mapear curso a ruta">
+            <DataPanel title="Agregar curso a una ruta">
               <form className="grid gap-4" onSubmit={addCourseToPath}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={pathCourseForm.learningPathId} onChange={(event)=>setPathCourseForm((prev)=>({...prev,learningPathId:event.target.value}))}>
-                  <option value="">Selecciona ruta</option>
+                  <option value="">Selecciona una ruta</option>
                   {learningPaths.map((path)=>(
                     <option key={path.id} value={path.id}>{path.titleEs}</option>
                   ))}
                 </select>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={pathCourseForm.courseId} onChange={(event)=>setPathCourseForm((prev)=>({...prev,courseId:event.target.value}))}>
-                  <option value="">Selecciona curso</option>
+                  <option value="">Selecciona un curso</option>
                   {courses.map((course)=>(
                     <option key={course.id} value={course.id}>{course.titleEs}</option>
                   ))}
@@ -211,7 +211,7 @@ export default function AcademicAdminPage() {
                   <input checked={pathCourseForm.isRequired} onChange={(event)=>setPathCourseForm((prev)=>({...prev,isRequired:event.target.checked}))} type="checkbox"/>
                   Curso requerido
                 </label>
-                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Agregar a ruta</button>
+                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Agregar curso</button>
               </form>
             </DataPanel>
           </div>

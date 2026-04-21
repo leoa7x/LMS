@@ -95,14 +95,14 @@ export default function InstitutionsAdminPage() {
 
   return (
     <PortalShell
-      eyebrow="Contexto institucional"
+      eyebrow="Institucion"
       title="Institucion, sedes y laboratorios"
-      description="Vista institucional para operar sedes y laboratorios del LMS dentro del contexto activo y multi-sede."
+      description="Administra las sedes y laboratorios disponibles para la operacion academica."
     >
       <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
           <div className="grid gap-6">
-            <DataPanel title="Crear sede">
+            <DataPanel title="Nueva sede">
               <form className="grid gap-4" onSubmit={createCampus}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={campusForm.institutionId} onChange={(event)=>setCampusForm((prev)=>({...prev,institutionId:event.target.value}))}>
                   <option value="">Selecciona institucion</option>
@@ -117,7 +117,7 @@ export default function InstitutionsAdminPage() {
               </form>
             </DataPanel>
 
-            <DataPanel title="Crear laboratorio">
+            <DataPanel title="Nuevo laboratorio">
               <form className="grid gap-4" onSubmit={createLaboratory}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={laboratoryForm.campusId} onChange={(event)=>setLaboratoryForm((prev)=>({...prev,campusId:event.target.value}))}>
                   <option value="">Selecciona sede</option>

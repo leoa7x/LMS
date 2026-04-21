@@ -51,20 +51,20 @@ export default function TeacherPage() {
 
   return (
     <PortalShell
-      eyebrow="Dashboard docente"
-      title="Seguimiento academico por alcance"
-      description="Vista del docente para operar cursos, contenidos y estudiantes segun nivel y alcance asignado."
+      eyebrow="Docente"
+      title="Panel principal"
+      description="Consulta el estado de tus cursos, el avance de tus estudiantes y las actividades que requieren atencion."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <MetricCard label="Estudiantes" value={summary.trackedStudents} hint="Estudiantes visibles dentro de tu alcance." />
-          <MetricCard label="Cursos" value={summary.trackedCourses} hint="Cursos bajo gestion docente." />
-          <MetricCard label="Progreso promedio" value={`${summary.averageProgress.toFixed(1)}%`} hint="Promedio consolidado de matriculas visibles." />
-          <MetricCard label="Practicas pendientes" value={summary.pendingPracticeReviews} hint="Practicas enviadas que requieren seguimiento." />
+          <MetricCard label="Estudiantes" value={summary.trackedStudents} hint="Estudiantes asignados a tus cursos." />
+          <MetricCard label="Cursos" value={summary.trackedCourses} hint="Cursos a tu cargo." />
+          <MetricCard label="Progreso promedio" value={`${summary.averageProgress.toFixed(1)}%`} hint="Promedio general de avance en tus grupos." />
+          <MetricCard label="Practicas pendientes" value={summary.pendingPracticeReviews} hint="Practicas que requieren revision." />
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <SectionCard title="Alertas academicas" description="Lectura operativa para evitar seguimiento generico.">
+          <SectionCard title="Atencion prioritaria" description="Identifica rapidamente los casos que requieren seguimiento.">
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
                 Estudiantes con progreso bajo: {summary.lowProgressStudents}
@@ -78,7 +78,7 @@ export default function TeacherPage() {
             </ul>
           </SectionCard>
 
-          <SectionCard title="Cursos priorizados" description="Cursos con estudiantes y progreso activo dentro de tu alcance.">
+          <SectionCard title="Cursos destacados" description="Resumen de los cursos con actividad reciente en tu gestion.">
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
               {summary.courseBreakdown.slice(0, 5).map((course) => (
                 <li key={course.courseId} className="rounded-2xl border border-slate-200 px-4 py-3">

@@ -34,7 +34,7 @@ export default function StudentContentPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Contenidos y glosario"
-      description="Vista de consumo tecnico con bilinguismo visible sobre los recursos habilitados para el estudiante."
+      description="Consulta los recursos de aprendizaje y los terminos tecnicos disponibles en tus cursos."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <section className="mb-6 flex items-center justify-end">
@@ -51,7 +51,7 @@ export default function StudentContentPage() {
                 { key: "type", header: "Tipo", render: (item) => item.type },
               ]}
               rows={resources}
-              emptyLabel="No hay recursos visibles."
+              emptyLabel="No hay recursos disponibles."
             />
           </DataPanel>
           <DataPanel title="Glosario">
@@ -61,7 +61,7 @@ export default function StudentContentPage() {
                 { key: "definition", header: "Definicion", render: (item) => item.localizedDefinition ?? "-" },
               ]}
               rows={glossary}
-              emptyLabel="No hay terminos visibles."
+              emptyLabel="No hay terminos disponibles."
             />
           </DataPanel>
         </section>

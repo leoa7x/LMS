@@ -180,20 +180,20 @@ export default function AdminSupportPage() {
   return (
     <PortalShell
       eyebrow="Soporte"
-      title="Tickets y SLA operativo"
-      description="Vista administrativa consolidada para tickets, vencimientos de SLA y seguimiento operativo institucional."
+      title="Soporte y tiempos de atencion"
+      description="Gestiona solicitudes, revisa tiempos de respuesta y da seguimiento a la atencion institucional."
     >
       <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <DataPanel title="Tickets abiertos">
             <p className="text-3xl font-semibold text-slate-950">{summary.openTickets}</p>
           </DataPanel>
-          <DataPanel title="SLA vencido">
+          <DataPanel title="Fuera de tiempo">
             <p className="text-3xl font-semibold text-slate-950">
               {summary.responseBreached + summary.resolutionBreached}
             </p>
           </DataPanel>
-          <DataPanel title="Proximos a vencer">
+          <DataPanel title="Por vencer">
             <p className="text-3xl font-semibold text-slate-950">
               {summary.responseDueSoon + summary.resolutionDueSoon}
             </p>
@@ -267,7 +267,7 @@ export default function AdminSupportPage() {
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-2">
-          <DataPanel title="Operacion sobre ticket">
+          <DataPanel title="Gestion del caso">
             {selectedTicket ? (
               <div className="grid gap-5">
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
@@ -293,7 +293,7 @@ export default function AdminSupportPage() {
                   </button>
                 </form>
                 <form className="grid gap-4" onSubmit={addComment}>
-                  <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Comentario interno" value={commentBody} onChange={(event)=>setCommentBody(event.target.value)} />
+                  <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Agregar comentario" value={commentBody} onChange={(event)=>setCommentBody(event.target.value)} />
                   <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">
                     Agregar comentario
                   </button>
@@ -310,17 +310,17 @@ export default function AdminSupportPage() {
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                Selecciona un ticket para operarlo.
+                Selecciona un ticket para revisar su detalle.
               </div>
             )}
           </DataPanel>
 
-          <DataPanel title="Politicas SLA">
+          <DataPanel title="Politicas de atencion">
             <form className="mb-5 grid gap-4" onSubmit={createPolicy}>
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Nombre de la politica" value={slaForm.name} onChange={(event)=>setSlaForm((prev)=>({...prev,name:event.target.value}))} />
               <div className="grid gap-3 md:grid-cols-2">
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" type="number" min={1} placeholder="Horas de respuesta" value={slaForm.responseHours} onChange={(event)=>setSlaForm((prev)=>({...prev,responseHours:event.target.value}))} />
-                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" type="number" min={1} placeholder="Horas de resolucion" value={slaForm.resolutionHours} onChange={(event)=>setSlaForm((prev)=>({...prev,resolutionHours:event.target.value}))} />
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" type="number" min={1} placeholder="Horas para primera respuesta" value={slaForm.responseHours} onChange={(event)=>setSlaForm((prev)=>({...prev,responseHours:event.target.value}))} />
+                <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" type="number" min={1} placeholder="Horas para resolucion" value={slaForm.resolutionHours} onChange={(event)=>setSlaForm((prev)=>({...prev,resolutionHours:event.target.value}))} />
               </div>
               <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">
                 Crear politica
@@ -334,7 +334,7 @@ export default function AdminSupportPage() {
                 { key: "isActive", header: "Activa", render: (item) => (item.isActive ? "Si" : "No") },
               ]}
               rows={policies}
-              emptyLabel="No hay politicas SLA visibles."
+                emptyLabel="No hay politicas registradas."
             />
           </DataPanel>
         </section>

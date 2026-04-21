@@ -47,13 +47,13 @@ export default function AdminAuditPage() {
 
   return (
     <PortalShell
-      eyebrow="Auditoria"
-      title="Trazabilidad operativa"
-      description="Vista consolidada para acciones academicas, administrativas y eventos de acceso del LMS."
+      eyebrow="Actividad"
+      title="Actividad y accesos"
+      description="Consulta movimientos relevantes de la plataforma y revisa los accesos registrados."
     >
       <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-6 xl:grid-cols-2">
-          <DataPanel title="Acciones del sistema">
+          <DataPanel title="Actividad reciente">
             <SimpleTable
               columns={[
                 { key: "action", header: "Accion", render: (item) => item.action },
@@ -66,11 +66,11 @@ export default function AdminAuditPage() {
                 },
               ]}
               rows={auditRows}
-              emptyLabel="No hay eventos de auditoria visibles."
+              emptyLabel="No hay actividad registrada."
             />
           </DataPanel>
 
-          <DataPanel title="Eventos de acceso">
+          <DataPanel title="Accesos registrados">
             <SimpleTable
               columns={[
                 { key: "eventType", header: "Evento", render: (item) => item.eventType },
@@ -84,7 +84,7 @@ export default function AdminAuditPage() {
                 },
               ]}
               rows={accessEvents}
-              emptyLabel="No hay eventos de acceso visibles."
+              emptyLabel="No hay accesos registrados."
             />
           </DataPanel>
         </section>

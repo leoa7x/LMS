@@ -63,7 +63,7 @@ export default function TeacherProgressPage() {
     <PortalShell
       eyebrow="Docente"
       title="Progreso por estudiante"
-      description="Seguimiento consolidado por estudiante dentro del alcance docente."
+      description="Consulta el avance de tus estudiantes y revisa el detalle de sus cursos activos."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
         <DataPanel title="Resumen del estudiante">
@@ -87,7 +87,7 @@ export default function TeacherProgressPage() {
                     { metric: "Practicas", value: summary.totals.practiceAttempts },
                     { metric: "Simuladores", value: summary.totals.completedSimulatorSessions },
                   ]}
-                  emptyLabel="Sin datos"
+                  emptyLabel="No hay informacion disponible."
                 />
                 <SimpleTable
                   columns={[
@@ -97,7 +97,7 @@ export default function TeacherProgressPage() {
                     { key: "status", header: "Estado", render: (item) => item.status },
                   ]}
                   rows={summary.enrollments}
-                  emptyLabel="Sin matriculas"
+                  emptyLabel="No hay cursos activos."
                 />
               </>
             ) : null}

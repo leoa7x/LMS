@@ -15,19 +15,21 @@ export function Shell({ children }: ShellProps) {
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-copper">
                 Instituto Profesional y Tecnico de Veraguas
               </p>
-              <h1 className="text-3xl font-semibold text-ink">LMS Tecnico</h1>
+              <h1 className="text-3xl font-semibold text-ink">
+                Plataforma de formacion tecnica
+              </h1>
             </div>
             <nav className="flex gap-3 text-sm text-steel">
               <Link href="/">Inicio</Link>
-              <Link href="/login">Login</Link>
-              <Link href="/admin">Admin</Link>
+              <Link href="/login">Ingresar</Link>
+              <Link href="/admin">Administracion</Link>
               <Link href="/teacher">Docente</Link>
               <Link href="/student">Estudiante</Link>
             </nav>
           </div>
           <p className="max-w-3xl text-sm leading-6 text-slate-600">
-            Plataforma academica tecnica con contenidos especializados, evaluaciones y
-            estructura de simuladores integrados.
+            Espacio institucional para gestionar aprendizaje, evaluaciones, practicas
+            y simuladores en un solo portal.
           </p>
         </header>
         {children}

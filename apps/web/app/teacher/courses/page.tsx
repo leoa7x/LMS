@@ -43,8 +43,8 @@ export default function TeacherCoursesPage() {
   return (
     <PortalShell
       eyebrow="Docente"
-      title="Cursos y rutas visibles"
-      description="Lectura academica filtrada por alcance docente sobre cursos y rutas del LMS."
+      title="Cursos y rutas"
+      description="Consulta los cursos y rutas formativas que tienes a cargo."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
         <section className="grid gap-6 xl:grid-cols-2">
@@ -57,7 +57,7 @@ export default function TeacherCoursesPage() {
                 { key: "published", header: "Publicacion", render: (item) => (item.isPublished ? "Publicado" : "Borrador") },
               ]}
               rows={courses}
-              emptyLabel="No hay cursos visibles."
+              emptyLabel="No hay cursos disponibles."
             />
           </DataPanel>
           <DataPanel title="Rutas">
@@ -68,7 +68,7 @@ export default function TeacherCoursesPage() {
                 { key: "courses", header: "Cursos", render: (item) => item.courses?.length ?? 0 },
               ]}
               rows={paths}
-              emptyLabel="No hay rutas visibles."
+              emptyLabel="No hay rutas disponibles."
             />
           </DataPanel>
         </section>

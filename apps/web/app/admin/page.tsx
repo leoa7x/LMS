@@ -50,9 +50,9 @@ export default function AdminPage() {
 
   return (
     <PortalShell
-      eyebrow="Dashboard administrativo"
-      title="Operacion institucional del LMS"
-      description="Vista institucional para controlar acceso, matriculas, cursos publicados, progreso, soporte y actividad general de la plataforma."
+      eyebrow="Administracion"
+      title="Panel principal"
+      description="Supervisa el acceso a la plataforma, la actividad academica, el soporte y el uso general de la institucion."
     >
       <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -81,7 +81,7 @@ export default function AdminPage() {
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
           <SectionCard
             description="Indicadores institucionales sobre acceso, soporte y uso operativo del LMS."
-            title="Estado operativo"
+            title="Estado general"
           >
             <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
@@ -136,18 +136,18 @@ export default function AdminPage() {
           </SectionCard>
 
           <SectionCard
-            description="Focos de trabajo del MVP visual construidos sobre backend ya estable."
-            title="Bloques activos"
+            description="Accesos rapidos a las areas mas utilizadas de la gestion institucional."
+            title="Tareas destacadas"
           >
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Acceso operativo, usuarios y administracion institucional
+                Gestion de usuarios y accesos institucionales
               </li>
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Cursos, rutas preconfiguradas y contenidos tecnicos
+                Administracion de cursos, rutas y contenidos
               </li>
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Progreso, simuladores, soporte y trazabilidad
+                Seguimiento academico, simuladores y soporte
               </li>
             </ul>
           </SectionCard>

@@ -68,13 +68,13 @@ export default function EnrollmentsAdminPage() {
 
   return (
     <AdminShell
-      description="Panel inicial para inscripcion de estudiantes en cursos, alineado con el MVP del LMS."
-      eyebrow="Matriculas"
+      description="Asigna estudiantes a cursos y consulta el estado de sus inscripciones."
+      eyebrow="Inscripciones"
       title="Asignacion academica"
     >
       <AdminGuard>
         <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-          <DataPanel title="Crear matricula">
+          <DataPanel title="Nueva inscripcion">
             <form className="grid gap-4" onSubmit={handleSubmit}>
               <select
                 className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
@@ -127,7 +127,7 @@ export default function EnrollmentsAdminPage() {
             </form>
           </DataPanel>
 
-          <DataPanel title="Matriculas registradas">
+          <DataPanel title="Inscripciones registradas">
             <SimpleTable
               columns={[
                 {
@@ -154,7 +154,7 @@ export default function EnrollmentsAdminPage() {
                   render: (item) => item.status,
                 },
               ]}
-              emptyLabel="No hay matriculas registradas."
+              emptyLabel="No hay inscripciones registradas."
               rows={enrollments}
             />
           </DataPanel>

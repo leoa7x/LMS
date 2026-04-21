@@ -75,7 +75,7 @@ export default function TeacherResultsPage() {
     <PortalShell
       eyebrow="Docente"
       title="Resultados consolidados"
-      description="Consulta de resultados por matricula y exportacion PDF por modulo para seguimiento docente."
+      description="Revisa el desempeno por curso y genera constancias por modulo cuando sea necesario."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
         <DataPanel title="Resultado por matricula">
@@ -106,11 +106,11 @@ export default function TeacherResultsPage() {
                     { metric: "Score final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
                     { metric: "Base final", value: result.consolidatedResult.finalDecision.basedOn },
                   ]}
-                  emptyLabel="Sin datos"
+                  emptyLabel="No hay informacion disponible."
                 />
                 <div className="grid gap-3 md:grid-cols-[1fr_auto]">
                   <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedModuleId} onChange={(event)=>setSelectedModuleId(event.target.value)}>
-                    <option value="">Selecciona modulo para PDF</option>
+                    <option value="">Selecciona un modulo</option>
                     {moduleOptions.map((module)=>(
                       <option key={module.id} value={module.id}>{module.titleEs}</option>
                     ))}

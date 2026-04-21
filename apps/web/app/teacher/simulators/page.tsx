@@ -57,12 +57,12 @@ export default function TeacherSimulatorsPage() {
   return (
     <PortalShell
       eyebrow="Docente"
-      title="Simuladores del alcance docente"
-      description="Lectura de simuladores visibles, practicas asociadas y sesiones ejecutadas por estudiantes dentro del alcance docente."
+      title="Simuladores"
+      description="Consulta los simuladores disponibles en tus cursos y revisa la actividad reciente de los estudiantes."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
         <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-          <DataPanel title="Simuladores visibles">
+          <DataPanel title="Simuladores disponibles">
             <SimpleTable
               columns={[
                 { key: "name", header: "Simulador", render: (item) => item.name },
@@ -84,7 +84,7 @@ export default function TeacherSimulatorsPage() {
                 },
               ]}
               rows={simulators}
-              emptyLabel="No hay simuladores visibles."
+              emptyLabel="No hay simuladores disponibles."
             />
           </DataPanel>
 
@@ -118,7 +118,7 @@ export default function TeacherSimulatorsPage() {
                 },
               ]}
               rows={sessions}
-              emptyLabel="No hay sesiones visibles."
+              emptyLabel="No hay sesiones registradas."
             />
           </DataPanel>
         </section>

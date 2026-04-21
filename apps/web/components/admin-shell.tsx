@@ -2,13 +2,13 @@ import Link from "next/link";
 import { ReactNode } from "react";
 
 const navigation = [
-  { href: "/admin", label: "Resumen" },
-  { href: "/admin/academic", label: "Academico" },
-  { href: "/admin/content", label: "Contenido" },
-  { href: "/admin/enrollments", label: "Matriculas" },
+  { href: "/admin", label: "Panel principal" },
+  { href: "/admin/academic", label: "Oferta academica" },
+  { href: "/admin/content", label: "Recursos de aprendizaje" },
+  { href: "/admin/enrollments", label: "Inscripciones" },
   { href: "/admin/users", label: "Usuarios" },
   { href: "/admin/simulators", label: "Simuladores" },
-  { href: "/admin/audit", label: "Auditoria" },
+  { href: "/admin/audit", label: "Actividad y accesos" },
 ];
 
 type AdminShellProps = {
@@ -33,11 +33,11 @@ export function AdminShell({
               Instituto Profesional y Tecnico de Veraguas
             </p>
             <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950">
-              LMS Admin
+              Gestion institucional
             </h1>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              Operacion academica, seguimiento, evaluacion y simuladores en una sola
-              consola.
+              Administra usuarios, oferta academica, inscripciones y seguimiento
+              desde un solo lugar.
             </p>
           </div>
 
@@ -55,11 +55,11 @@ export function AdminShell({
 
           <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-              Alcance
+              Vista general
             </p>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              El dashboard prioriza usuarios, cursos, progreso, quizzes, simuladores y
-              trazabilidad academica.
+              Aqui puedes supervisar el acceso a la plataforma, la actividad academica
+              y la operacion institucional.
             </p>
           </div>
         </aside>
@@ -83,13 +83,13 @@ export function AdminShell({
                   href="/"
                   className="rounded-full border border-slate-300 px-4 py-2 font-medium text-slate-700"
                 >
-                  Ir al portal
+                  Ir al inicio
                 </Link>
                 <Link
                   href="/login"
                   className="rounded-full bg-slate-950 px-4 py-2 font-medium text-white"
                 >
-                  Login
+                  Ingresar
                 </Link>
               </div>
             </div>

@@ -45,9 +45,9 @@ export default function StudentPage() {
 
   return (
     <PortalShell
-      eyebrow="Dashboard estudiante"
-      title="Ruta de aprendizaje activa"
-      description="Vista del estudiante para seguir cursos, progreso, contenidos y actividad de simuladores dentro del portal."
+      eyebrow="Estudiante"
+      title="Panel principal"
+      description="Revisa tus cursos, tu avance y las actividades disponibles en tu proceso de formacion."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -58,7 +58,7 @@ export default function StudentPage() {
         </section>
 
         <section className="mt-6">
-          <SectionCard title="Mis cursos" description="Cursos y nivel asignado dentro del contexto academico actual.">
+          <SectionCard title="Mis cursos" description="Consulta el avance y el estado de tus cursos activos.">
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
               {summary.currentCourses.map((course) => (
                 <li key={course.enrollmentId} className="rounded-2xl border border-slate-200 px-4 py-3">

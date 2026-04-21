@@ -1706,3 +1706,37 @@ Volver util el historial de accesos para operacion institucional, soporte y cont
 ### Efecto practico
 
 El LMS ya permite revisar sesiones activas, revocadas o expiradas, navegar historial de acceso por ventana temporal y obtener un resumen operativo real para administracion y soporte.
+
+## 2026-04-20 - Auditoria y correccion de copy visible en frontend
+
+### Objetivo
+
+Eliminar del portal cualquier lenguaje orientado al equipo de desarrollo y reemplazarlo por copy de producto terminado, claro para cliente final y usuarios por rol.
+
+### Cambios aplicados
+
+- se audito el copy visible en:
+  - inicio
+  - ingreso
+  - navegacion
+  - shells
+  - pantallas de administrador
+  - pantallas de docente
+  - pantallas de estudiante
+- se reemplazaron textos que hablaban de:
+  - MVP
+  - backend
+  - alcance tecnico
+  - demo
+  - bloques activos
+  - taxonomias y trazabilidad presentadas como lenguaje de usuario
+- se quitaron credenciales de ejemplo precargadas en login
+- se ajustaron placeholders y mensajes vacios para que suenen a uso real del sistema
+
+### Validacion
+
+- `npm run build:web` correcto
+
+### Efecto practico
+
+El frontend ahora se presenta como una plataforma institucional terminada y no como una demostracion tecnica pensada para el equipo que la construye.

@@ -25,14 +25,14 @@ export function RoleGuard({ children, roles }: RoleGuardProps) {
       <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8 shadow-sm">
         <p className="text-sm font-semibold text-amber-900">Sesion requerida</p>
         <p className="mt-2 text-sm leading-6 text-amber-800">
-          Debes iniciar sesion para acceder a este modulo del LMS.
+          Debes iniciar sesion para continuar en esta seccion.
         </p>
         <div className="mt-5 flex gap-3">
           <Link
             href="/login"
             className="rounded-full bg-slate-950 px-4 py-2 text-sm font-medium text-white"
           >
-            Ir a login
+            Ir a ingreso
           </Link>
         </div>
       </div>
@@ -46,7 +46,7 @@ export function RoleGuard({ children, roles }: RoleGuardProps) {
       <div className="rounded-3xl border border-rose-200 bg-rose-50 p-8 shadow-sm">
         <p className="text-sm font-semibold text-rose-900">Acceso restringido</p>
         <p className="mt-2 text-sm leading-6 text-rose-800">
-          Tu rol actual no tiene permisos para esta vista dentro del LMS.
+          Tu perfil no tiene permisos para acceder a esta seccion.
         </p>
       </div>
     );

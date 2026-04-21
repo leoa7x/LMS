@@ -71,7 +71,7 @@ export default function StudentEvaluationsPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Evaluaciones activas"
-      description="Vista del estudiante para responder quizzes visibles por curso, modulo y nivel."
+      description="Responde las evaluaciones disponibles en tus cursos y revisa tu avance."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <section className="mb-6 flex items-center justify-end">
@@ -81,14 +81,14 @@ export default function StudentEvaluationsPage() {
           </select>
         </section>
         <section className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
-          <DataPanel title="Quizzes visibles">
+          <DataPanel title="Evaluaciones disponibles">
             <SimpleTable
               columns={[
                 { key: "title", header: "Quiz", render: (item) => item.localizedTitle ?? item.titleEs },
                 { key: "kind", header: "Tipo", render: (item) => item.kind },
               ]}
               rows={quizzes}
-              emptyLabel="No hay quizzes visibles."
+              emptyLabel="No hay evaluaciones disponibles."
             />
             <select className="mt-4 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedQuizId} onChange={(event)=>{setSelectedQuizId(event.target.value); setSelectedAnswers({}); setResultMessage(null);}}>
               <option value="">Selecciona quiz</option>
@@ -97,7 +97,7 @@ export default function StudentEvaluationsPage() {
               ))}
             </select>
           </DataPanel>
-          <DataPanel title="Resolver quiz">
+          <DataPanel title="Responder evaluacion">
             {selectedQuiz ? (
               <form className="grid gap-5" onSubmit={submitQuiz}>
                 {(selectedQuiz.questions ?? []).map((question) => (
