@@ -35,7 +35,7 @@ export function PortalShell({
         <aside className="border-r border-white/10 bg-navy px-6 py-8 text-white">
           <div className="mb-10">
             <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-sky-200">
-              Instituto Profesional y Tecnico de Veraguas
+              El ecosistema definitivo de simulacion y E-Learning tecnico
             </p>
             <div className="mt-4">
               <BrandMark compact theme="dark" />

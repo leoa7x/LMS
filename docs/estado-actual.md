@@ -4,6 +4,14 @@
 
 `NOVOMEDIAlms`
 
+## Identidad visible actual
+
+- Nombre visible del producto: `NOVOMEDIAlms`
+- Documento de identidad visual:
+  - `docs/identidad-visual-novomedialms.md`
+- Mensaje superior visible en portada y shells:
+  - `El ecosistema definitivo de simulacion y E-Learning tecnico`
+
 ## Repo
 
 - Local: `~/LMS`

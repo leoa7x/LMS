@@ -14,7 +14,7 @@ export function Shell({ children }: ShellProps) {
           <div className="flex items-center justify-between gap-4">
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-copper">
-                Instituto Profesional y Tecnico de Veraguas
+                El ecosistema definitivo de simulacion y E-Learning tecnico
               </p>
               <BrandMark compact />
             </div>

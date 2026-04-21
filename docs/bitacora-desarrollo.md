@@ -9,6 +9,8 @@
 - Se aplico el nombre `NOVOMEDIAlms` al frontend.
 - Se incorporaron tokens base de color, un isotipo simple reutilizable y favicon.
 - Se actualizaron portada, login y shells principales para reflejar la marca sin afectar la logica funcional.
+- Se reemplazo la leyenda superior visible por:
+  - `El ecosistema definitivo de simulacion y E-Learning tecnico`
 
 ## 2026-04-18
 
