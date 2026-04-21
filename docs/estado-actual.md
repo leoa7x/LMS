@@ -2,7 +2,7 @@
 
 ## Nombre
 
-`NOVATECHLMS`
+`NOVOMEDIAlms`
 
 ## Repo
 

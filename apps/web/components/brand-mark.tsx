@@ -31,7 +31,7 @@ export function BrandMark({
       </div>
       <div>
         <p className={`text-xl font-semibold tracking-[0.08em] ${titleClasses}`}>
-          NOVATECHLMS
+          NOVOMEDIAlms
         </p>
         {!compact ? (
           <p className={`text-sm leading-6 ${subtitleClasses}`}>{subtitle}</p>

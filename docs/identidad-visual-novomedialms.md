@@ -1,7 +1,7 @@
-# Identidad Visual Base - NOVATECHLMS
+# Identidad Visual Base - NOVOMEDIAlms
 
 ## Objetivo
-Definir la identidad visual base de `NOVATECHLMS` para que el producto se perciba como una plataforma seria de formacion tecnica e institucional, sin caer en apariencia infantil ni de startup fintech.
+Definir la identidad visual base de `NOVOMEDIAlms` para que el producto se perciba como una plataforma seria de formacion tecnica e institucional, sin caer en apariencia infantil ni de startup fintech.
 
 ## Direcciones creativas evaluadas
 
@@ -70,7 +70,7 @@ Personalidad:
 ## Paleta final
 
 ### Colores principales
-- `Novatech Navy`: `#123B5D`
+- `NovoMedia Navy`: `#123B5D`
 - `Steel Blue`: `#2F5D7E`
 - `Slate`: `#44515F`
 - `Cloud`: `#D9E1E8`
@@ -111,11 +111,11 @@ La marca parte de un isotipo simple:
 
 El logotipo recomendado combina:
 - isotipo `N` modular
-- wordmark `NOVATECHLMS` en mayusculas
+- wordmark `NOVOMEDIAlms`
 
 ## Isotipo y favicon
 El favicon recomendado usa:
-- fondo `Novatech Navy`
+- fondo `NovoMedia Navy`
 - `N` modular en blanco humo
 - esquinas redondeadas
 
@@ -132,11 +132,11 @@ Esto permite reutilizar la marca en:
 - fondo claro y limpio
 - tarjeta blanca con borde `Cloud`
 - marca visible arriba del formulario
-- boton principal en `Novatech Navy`
+- boton principal en `NovoMedia Navy`
 - texto breve y orientado a uso institucional
 
 ### Dashboard
-- sidebar estable en `Novatech Navy`
+- sidebar estable en `NovoMedia Navy`
 - contenido sobre `Mist White`
 - paneles blancos con borde `Cloud`
 - badges y estados con colores funcionales
@@ -151,7 +151,7 @@ Esto permite reutilizar la marca en:
 
 ## Aplicacion inicial en el producto
 La identidad base ya se aplico en:
-- nombre visible del producto: `NOVATECHLMS`
+- nombre visible del producto: `NOVOMEDIAlms`
 - metadata principal del frontend
 - favicon
 - shell institucional

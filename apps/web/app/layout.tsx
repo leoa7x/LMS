@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { AuthProvider } from "../components/auth-provider";
 
 export const metadata: Metadata = {
-  title: "NOVATECHLMS",
+  title: "NOVOMEDIAlms",
   description: "Plataforma institucional de formacion tecnica y simulacion.",
 };
 

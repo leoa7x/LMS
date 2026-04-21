@@ -2,11 +2,11 @@
 
 ## 2026-04-21
 
-### Identidad visual base de NOVATECHLMS
+### Identidad visual base de NOVOMEDIAlms
 
-- Se documento la identidad visual base del producto en `docs/identidad-visual-novatechlms.md`.
+- Se documento la identidad visual base del producto en `docs/identidad-visual-novomedialms.md`.
 - Se adopto la direccion `Institucional Tecnica` como linea visual recomendada.
-- Se aplico el nombre `NOVATECHLMS` al frontend.
+- Se aplico el nombre `NOVOMEDIAlms` al frontend.
 - Se incorporaron tokens base de color, un isotipo simple reutilizable y favicon.
 - Se actualizaron portada, login y shells principales para reflejar la marca sin afectar la logica funcional.
 
