@@ -11,6 +11,7 @@
 - Se actualizaron portada, login y shells principales para reflejar la marca sin afectar la logica funcional.
 - Se reemplazo la leyenda superior visible por:
   - `El ecosistema definitivo de simulacion y E-Learning tecnico`
+- Se actualizo el nombre de institucion cargado por seed para que el frontend no vuelva a mostrar `Instituto Profesional y Tecnico de Veraguas` en vistas alimentadas por datos reales.
 
 ## 2026-04-18
 

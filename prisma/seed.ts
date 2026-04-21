@@ -91,9 +91,11 @@ async function main() {
 
   const institution = await prisma.institution.upsert({
     where: { slug: "ipt-veraguas" },
-    update: {},
+    update: {
+      name: "El ecosistema definitivo de simulacion y E-Learning tecnico",
+    },
     create: {
-      name: "Instituto Profesional y Tecnico de Veraguas",
+      name: "El ecosistema definitivo de simulacion y E-Learning tecnico",
       slug: "ipt-veraguas",
       status: EntityStatus.ACTIVE,
     },
