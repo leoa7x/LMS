@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Shell } from "../../components/shell";
 import { useAuth } from "../../components/auth-provider";
+import { BrandMark } from "../../components/brand-mark";
 import { defaultRouteByRole, getPrimaryRole } from "../../lib/role-navigation";
 import { SessionUser } from "../../lib/session";
 
@@ -60,7 +61,10 @@ export default function LoginPage() {
 
   return (
     <Shell>
-      <section className="mx-auto max-w-xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <section className="mx-auto max-w-xl rounded-3xl border border-cloud bg-white p-8 shadow-sm">
+        <div className="mb-8 border-b border-cloud pb-6">
+          <BrandMark subtitle="Plataforma institucional de formacion tecnica y simulacion." />
+        </div>
         <h2 className="mb-2 text-2xl font-semibold text-ink">Acceso al portal</h2>
         <p className="mb-8 text-sm leading-6 text-slate-600">
           Ingresa con tu cuenta institucional para acceder a tus funciones y
@@ -71,7 +75,7 @@ export default function LoginPage() {
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-slate-700">Correo</span>
             <input
-              className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-copper"
+              className="w-full rounded-2xl border border-cloud px-4 py-3 outline-none transition focus:border-navy"
               onChange={(event) => setEmail(event.target.value)}
               placeholder="correo@institucion.edu"
               type="email"
@@ -82,7 +86,7 @@ export default function LoginPage() {
           <label className="block">
             <span className="mb-2 block text-sm font-medium text-slate-700">Clave</span>
             <input
-              className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-copper"
+              className="w-full rounded-2xl border border-cloud px-4 py-3 outline-none transition focus:border-navy"
               onChange={(event) => setPassword(event.target.value)}
               placeholder="********"
               type="password"
@@ -97,7 +101,7 @@ export default function LoginPage() {
           ) : null}
 
           <button
-            className="rounded-full bg-copper px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
             disabled={isSubmitting}
             type="submit"
           >

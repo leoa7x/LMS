@@ -2,7 +2,7 @@
 
 ## Nombre
 
-`LMS`
+`NOVATECHLMS`
 
 ## Repo
 

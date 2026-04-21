@@ -1,5 +1,15 @@
 # Bitacora de desarrollo
 
+## 2026-04-21
+
+### Identidad visual base de NOVATECHLMS
+
+- Se documento la identidad visual base del producto en `docs/identidad-visual-novatechlms.md`.
+- Se adopto la direccion `Institucional Tecnica` como linea visual recomendada.
+- Se aplico el nombre `NOVATECHLMS` al frontend.
+- Se incorporaron tokens base de color, un isotipo simple reutilizable y favicon.
+- Se actualizaron portada, login y shells principales para reflejar la marca sin afectar la logica funcional.
+
 ## 2026-04-18
 
 ### Contexto

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { BrandMark } from "./brand-mark";
 
 type ShellProps = {
   children: ReactNode;
@@ -9,15 +10,13 @@ export function Shell({ children }: ShellProps) {
   return (
     <main className="min-h-screen px-6 py-10">
       <div className="mx-auto max-w-6xl">
-        <header className="mb-10 flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm backdrop-blur">
+        <header className="mb-10 flex flex-col gap-4 rounded-3xl border border-cloud bg-white/90 p-6 shadow-sm backdrop-blur">
           <div className="flex items-center justify-between gap-4">
-            <div>
+            <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-copper">
                 Instituto Profesional y Tecnico de Veraguas
               </p>
-              <h1 className="text-3xl font-semibold text-ink">
-                Plataforma de formacion tecnica
-              </h1>
+              <BrandMark compact />
             </div>
             <nav className="flex gap-3 text-sm text-steel">
               <Link href="/">Inicio</Link>
@@ -28,8 +27,8 @@ export function Shell({ children }: ShellProps) {
             </nav>
           </div>
           <p className="max-w-3xl text-sm leading-6 text-slate-600">
-            Espacio institucional para gestionar aprendizaje, evaluaciones, practicas
-            y simuladores en un solo portal.
+            Accede a cursos, evaluaciones, practicas, simuladores y seguimiento
+            academico desde una sola plataforma institucional.
           </p>
         </header>
         {children}

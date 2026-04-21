@@ -4,8 +4,8 @@ import { ReactNode } from "react";
 import { AuthProvider } from "../components/auth-provider";
 
 export const metadata: Metadata = {
-  title: "Plataforma de Formacion Tecnica",
-  description: "Portal institucional de aprendizaje, evaluacion y simulacion.",
+  title: "NOVATECHLMS",
+  description: "Plataforma institucional de formacion tecnica y simulacion.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

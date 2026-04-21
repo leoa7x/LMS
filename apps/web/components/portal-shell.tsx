@@ -9,6 +9,7 @@ import {
   navigationByRole,
   roleLabels,
 } from "../lib/role-navigation";
+import { BrandMark } from "./brand-mark";
 
 type PortalShellProps = {
   title: string;
@@ -29,30 +30,30 @@ export function PortalShell({
   const navigation = navigationByRole[role];
 
   return (
-    <main className="min-h-screen bg-[#f4f1ea] text-slate-900">
+    <main className="min-h-screen bg-mist text-slate-900">
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
-        <aside className="border-r border-slate-200 bg-[#fbfaf6] px-6 py-8">
+        <aside className="border-r border-white/10 bg-navy px-6 py-8 text-white">
           <div className="mb-10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-sky-700">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-sky-200">
               Instituto Profesional y Tecnico de Veraguas
             </p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950">
-              Plataforma de formacion tecnica
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
+            <div className="mt-4">
+              <BrandMark compact theme="dark" />
+            </div>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
               Consulta cursos, contenidos, evaluaciones, progreso y practicas desde
               una experiencia unificada.
             </p>
           </div>
 
-          <div className="mb-8 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+          <div className="mb-8 rounded-3xl border border-white/10 bg-white/5 p-5 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-100">
               Rol activo
             </p>
-            <p className="mt-3 text-lg font-semibold text-slate-950">
+            <p className="mt-3 text-lg font-semibold text-white">
               {roleLabels[role]}
             </p>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{user?.email}</p>
+            <p className="mt-2 text-sm leading-6 text-slate-300">{user?.email}</p>
           </div>
 
           <nav className="space-y-2">
@@ -65,8 +66,8 @@ export function PortalShell({
                   href={item.href}
                   className={`block rounded-2xl border px-4 py-3 text-sm font-medium transition ${
                     isActive
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-transparent text-slate-700 hover:border-slate-200 hover:bg-white hover:text-slate-950"
+                      ? "border-white/15 bg-white text-navy"
+                      : "border-transparent text-slate-200 hover:border-white/10 hover:bg-white/5 hover:text-white"
                   }`}
                 >
                   {item.label}
@@ -78,12 +79,12 @@ export function PortalShell({
           <div className="mt-8 flex flex-wrap gap-3 text-sm">
             <Link
               href="/"
-              className="rounded-full border border-slate-300 px-4 py-2 font-medium text-slate-700"
+              className="rounded-full border border-white/20 px-4 py-2 font-medium text-slate-100"
             >
               Inicio
             </Link>
             <button
-              className="rounded-full bg-slate-950 px-4 py-2 font-medium text-white"
+              className="rounded-full bg-copper px-4 py-2 font-medium text-white"
               onClick={logout}
               type="button"
             >
@@ -93,8 +94,8 @@ export function PortalShell({
         </aside>
 
         <section className="px-6 py-8 lg:px-10">
-          <header className="mb-8 rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-sky-700">
+          <header className="mb-8 rounded-3xl border border-cloud bg-white px-6 py-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-navy">
               {eyebrow}
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">

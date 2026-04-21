@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { BrandMark } from "./brand-mark";
 
 const navigation = [
   { href: "/admin", label: "Panel principal" },
@@ -25,17 +26,17 @@ export function AdminShell({
   children,
 }: AdminShellProps) {
   return (
-    <main className="min-h-screen bg-[#f3efe8] text-slate-900">
+    <main className="min-h-screen bg-mist text-slate-900">
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
-        <aside className="border-r border-slate-200 bg-[#fcfbf8] px-6 py-8">
+        <aside className="border-r border-white/10 bg-navy px-6 py-8 text-white">
           <div className="mb-10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-amber-700">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-sky-200">
               Instituto Profesional y Tecnico de Veraguas
             </p>
-            <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-950">
-              Gestion institucional
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
+            <div className="mt-4">
+              <BrandMark compact theme="dark" />
+            </div>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
               Administra usuarios, oferta academica, inscripciones y seguimiento
               desde un solo lugar.
             </p>
@@ -46,18 +47,18 @@ export function AdminShell({
               <Link
                 key={item.href}
                 href={item.href}
-                className="block rounded-2xl border border-transparent px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-200 hover:bg-white hover:text-slate-950"
+                className="block rounded-2xl border border-transparent px-4 py-3 text-sm font-medium text-slate-200 transition hover:border-white/10 hover:bg-white/5 hover:text-white"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          <div className="mt-10 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+          <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sky-100">
               Vista general
             </p>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
+            <p className="mt-3 text-sm leading-6 text-slate-300">
               Aqui puedes supervisar el acceso a la plataforma, la actividad academica
               y la operacion institucional.
             </p>
@@ -65,8 +66,8 @@ export function AdminShell({
         </aside>
 
         <section className="px-6 py-8 lg:px-10">
-          <header className="mb-8 rounded-3xl border border-slate-200 bg-white px-6 py-6 shadow-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-700">
+          <header className="mb-8 rounded-3xl border border-cloud bg-white px-6 py-6 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-navy">
               {eyebrow}
             </p>
             <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
@@ -81,13 +82,13 @@ export function AdminShell({
               <div className="flex gap-3 text-sm">
                 <Link
                   href="/"
-                  className="rounded-full border border-slate-300 px-4 py-2 font-medium text-slate-700"
+                  className="rounded-full border border-cloud px-4 py-2 font-medium text-steel"
                 >
                   Ir al inicio
                 </Link>
                 <Link
                   href="/login"
-                  className="rounded-full bg-slate-950 px-4 py-2 font-medium text-white"
+                  className="rounded-full bg-navy px-4 py-2 font-medium text-white"
                 >
                   Ingresar
                 </Link>

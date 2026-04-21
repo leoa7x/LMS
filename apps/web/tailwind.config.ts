@@ -5,10 +5,17 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0f172a",
-        sand: "#f6f3ed",
-        copper: "#b45309",
-        steel: "#334155",
+        ink: "#1f2a33",
+        sand: "#f7f9fb",
+        copper: "#b8743c",
+        steel: "#44515f",
+        navy: "#123b5d",
+        cloud: "#d9e1e8",
+        mist: "#eef3f7",
+        success: "#2f7a4e",
+        warning: "#c7922f",
+        danger: "#b64545",
+        info: "#2e6ea6",
       },
     },
   },
