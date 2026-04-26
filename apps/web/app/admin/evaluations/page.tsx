@@ -37,6 +37,18 @@ type RetakeGrantRow = {
   quiz?: { titleEs?: string | null } | null;
 };
 
+const quizKindLabels: Record<string, string> = {
+  PRE_COURSE: "Diagnostico inicial",
+  PRE_MODULE: "Preparacion de modulo",
+  POST_COURSE: "Cierre de curso",
+  PRACTICE_CHECK: "Verificacion de practica",
+};
+
+const attemptSourceLabels: Record<string, string> = {
+  STANDARD: "Intento regular",
+  RETAKE_OVERRIDE: "Intento autorizado",
+};
+
 export default function AdminEvaluationsPage() {
   const { accessToken, user } = useAuth();
   const [lang, setLang] = useState("es");
@@ -100,11 +112,19 @@ export default function AdminEvaluationsPage() {
             <DataPanel title="Evaluaciones disponibles">
               <SimpleTable
                 columns={[
-                  { key: "title", header: "Quiz", render: (item) => item.localizedTitle ?? item.titleEs },
-                  { key: "kind", header: "Tipo", render: (item) => item.kind },
+                  {
+                    key: "title",
+                    header: "Evaluacion",
+                    render: (item) => item.localizedTitle ?? item.titleEs,
+                  },
+                  {
+                    key: "kind",
+                    header: "Tipo",
+                    render: (item) => quizKindLabels[item.kind] ?? "Evaluacion academica",
+                  },
                   { key: "scope", header: "Contexto", render: (item) => item.course?.localizedTitle ?? item.course?.titleEs ?? item.module?.localizedTitle ?? item.module?.titleEs ?? "-" },
                   { key: "maxAttempts", header: "Intentos", render: (item) => item.maxAttempts },
-                  { key: "passingScore", header: "Score", render: (item) => item.passingScore },
+                  { key: "passingScore", header: "Puntaje minimo", render: (item) => item.passingScore },
                 ]}
                 rows={quizzes}
                 emptyLabel="No hay evaluaciones disponibles."
@@ -113,7 +133,7 @@ export default function AdminEvaluationsPage() {
             <DataPanel title="Autorizar nueva oportunidad">
               <form className="grid gap-4" onSubmit={createRetakeGrant}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={grantForm.quizId} onChange={(event)=>setGrantForm((prev)=>({...prev,quizId:event.target.value}))}>
-                  <option value="">Selecciona quiz</option>
+                  <option value="">Selecciona una evaluacion</option>
                   {quizzes.map((quiz)=>(
                     <option key={quiz.id} value={quiz.id}>{quiz.localizedTitle ?? quiz.titleEs}</option>
                   ))}
@@ -135,11 +155,15 @@ export default function AdminEvaluationsPage() {
             <DataPanel title="Intentos">
               <SimpleTable
                 columns={[
-                  { key: "quiz", header: "Quiz", render: (item) => item.quiz?.titleEs ?? "-" },
+                  { key: "quiz", header: "Evaluacion", render: (item) => item.quiz?.titleEs ?? "-" },
                   { key: "user", header: "Usuario", render: (item) => item.user?.email ?? "-" },
                   { key: "attemptNumber", header: "#", render: (item) => item.attemptNumber },
-                  { key: "score", header: "Score", render: (item) => item.score ?? "-" },
-                  { key: "attemptSource", header: "Fuente", render: (item) => item.attemptSource },
+                  { key: "score", header: "Puntaje", render: (item) => item.score ?? "-" },
+                  {
+                    key: "attemptSource",
+                    header: "Origen",
+                    render: (item) => attemptSourceLabels[item.attemptSource] ?? item.attemptSource,
+                  },
                 ]}
                 rows={attempts}
                 emptyLabel="No hay intentos visibles."
@@ -148,7 +172,7 @@ export default function AdminEvaluationsPage() {
             <DataPanel title="Autorizaciones activas">
               <SimpleTable
                 columns={[
-                  { key: "quiz", header: "Quiz", render: (item) => item.quiz?.titleEs ?? "-" },
+                  { key: "quiz", header: "Evaluacion", render: (item) => item.quiz?.titleEs ?? "-" },
                   { key: "student", header: "Estudiante", render: (item) => item.student?.email ?? "-" },
                   { key: "maxExtraAttempts", header: "Extra", render: (item) => item.maxExtraAttempts },
                   { key: "reason", header: "Motivo", render: (item) => item.reason },

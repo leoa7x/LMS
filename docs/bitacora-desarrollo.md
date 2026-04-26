@@ -1753,3 +1753,40 @@ Eliminar del portal cualquier lenguaje orientado al equipo de desarrollo y reemp
 ### Efecto practico
 
 El frontend ahora se presenta como una plataforma institucional terminada y no como una demostracion tecnica pensada para el equipo que la construye.
+
+## 2026-04-22 - Fase 1 de cierre de producto en frontend
+
+### Objetivo
+
+Corregir incoherencias funcionales visibles y terminar de limpiar el lenguaje del portal antes de cualquier aplicacion futura de imagen corporativa oficial.
+
+### Cambios aplicados
+
+- se corrigio el desajuste funcional entre frontend y backend en soporte:
+  - prioridad `URGENT` reemplazada por `CRITICAL`
+- se ajustaron formularios y tablas de soporte en:
+  - administrador
+  - docente
+  - estudiante
+- se reemplazaron labels crudos del sistema por copy de producto en:
+  - soporte
+  - evaluaciones
+  - resultados
+  - progreso
+  - simuladores
+- se corrigieron textos visibles como:
+  - `Cargando sesion del LMS...`
+  - `Quiz`
+  - `Score`
+  - estados tecnicos sin traducir
+  - categorias y eventos de simulador expuestos como codigos internos
+- se normalizo la experiencia administrativa de inscripciones para usar el mismo shell principal del portal
+- se mantuvo el naming visible bajo `NOVOMEDIAlms`
+
+### Validacion
+
+- `npm run build:web` correcto
+
+### Efecto practico
+
+El frontend quedo mas coherente como producto terminado: ya no expone desajustes evidentes con backend en soporte y redujo la presencia de copy tecnico o codigos internos visibles para cliente final.

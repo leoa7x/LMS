@@ -46,6 +46,20 @@ type SimulatorSessionRow = {
   enrollment?: { course?: { titleEs?: string | null } | null } | null;
 };
 
+const simulatorKindLabels: Record<string, string> = {
+  EMBEDDABLE_EXISTING: "Integrado existente",
+  THIRD_PARTY_ADAPTER: "Adaptacion externa",
+  NATIVE_BASIC: "Propio basico",
+  NATIVE_ADVANCED: "Propio avanzado",
+};
+
+const simulatorSessionStatusLabels: Record<string, string> = {
+  STARTED: "En curso",
+  COMPLETED: "Completada",
+  FAILED: "No completada",
+  ABANDONED: "Abandonada",
+};
+
 export default function AdminSimulatorsPage() {
   const { accessToken } = useAuth();
   const [simulators, setSimulators] = useState<SimulatorRow[]>([]);
@@ -87,7 +101,11 @@ export default function AdminSimulatorsPage() {
               <SimpleTable
                 columns={[
                   { key: "name", header: "Simulador", render: (item) => item.name },
-                  { key: "kind", header: "Categoria", render: (item) => item.kind },
+                  {
+                    key: "kind",
+                    header: "Categoria",
+                    render: (item) => simulatorKindLabels[item.kind] ?? item.kind,
+                  },
                   {
                     key: "trackable",
                     header: "Seguimiento",
@@ -172,8 +190,12 @@ export default function AdminSimulatorsPage() {
                   header: "Curso",
                   render: (item) => item.enrollment?.course?.titleEs ?? "-",
                 },
-                { key: "status", header: "Estado", render: (item) => item.status },
-                { key: "score", header: "Score", render: (item) => item.score ?? "-" },
+                {
+                  key: "status",
+                  header: "Estado",
+                  render: (item) => simulatorSessionStatusLabels[item.status] ?? item.status,
+                },
+                { key: "score", header: "Puntaje", render: (item) => item.score ?? "-" },
                 {
                   key: "startedAt",
                   header: "Inicio",

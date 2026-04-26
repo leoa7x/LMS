@@ -19,6 +19,13 @@ type StudentSummary = {
   enrollments: Array<{ courseTitleEs: string; progressPct: number; assignedLevelCode?: string | null; status: string }>;
 };
 
+const enrollmentStatusLabels: Record<string, string> = {
+  ACTIVE: "Activa",
+  COMPLETED: "Completada",
+  SUSPENDED: "Suspendida",
+  CANCELLED: "Cancelada",
+};
+
 export default function TeacherProgressPage() {
   const { accessToken } = useAuth();
   const [enrollments, setEnrollments] = useState<EnrollmentRow[]>([]);
@@ -83,7 +90,7 @@ export default function TeacherProgressPage() {
                   ]}
                   rows={[
                     { metric: "Progreso promedio", value: `${summary.totals.averageProgress.toFixed(1)}%` },
-                    { metric: "Quizzes aprobados", value: summary.totals.quizzesPassed },
+                    { metric: "Evaluaciones aprobadas", value: summary.totals.quizzesPassed },
                     { metric: "Practicas", value: summary.totals.practiceAttempts },
                     { metric: "Simuladores", value: summary.totals.completedSimulatorSessions },
                   ]}
@@ -94,7 +101,11 @@ export default function TeacherProgressPage() {
                     { key: "courseTitleEs", header: "Curso", render: (item) => item.courseTitleEs },
                     { key: "progressPct", header: "Progreso", render: (item) => `${item.progressPct.toFixed(1)}%` },
                     { key: "assignedLevelCode", header: "Nivel", render: (item) => item.assignedLevelCode ?? "-" },
-                    { key: "status", header: "Estado", render: (item) => item.status },
+                    {
+                      key: "status",
+                      header: "Estado",
+                      render: (item) => enrollmentStatusLabels[item.status] ?? item.status,
+                    },
                   ]}
                   rows={summary.enrollments}
                   emptyLabel="No hay cursos activos."

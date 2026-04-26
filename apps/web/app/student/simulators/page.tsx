@@ -52,6 +52,18 @@ type SessionContext = {
   }>;
 };
 
+const simulatorEventLabels: Record<string, string> = {
+  STEP_COMPLETED: "Paso completado",
+  COMPONENT_INTERACTION: "Interaccion con componente",
+  FAULT_TRIGGERED: "Registro de falla",
+};
+
+const simulatorSessionStatusLabels: Record<string, string> = {
+  COMPLETED: "Completada",
+  FAILED: "No completada",
+  ABANDONED: "Abandonada",
+};
+
 export default function StudentSimulatorsPage() {
   const { accessToken, user } = useAuth();
   const [simulators, setSimulators] = useState<SimulatorRow[]>([]);
@@ -113,7 +125,7 @@ export default function StudentSimulatorsPage() {
     );
 
     setActiveContext(context);
-    setFeedback("Sesion de simulador creada y contexto academico cargado.");
+    setFeedback("El simulador quedo listo y vinculado a tu actividad academica.");
     await loadData();
   }
 
@@ -129,7 +141,7 @@ export default function StudentSimulatorsPage() {
         faultCode: eventForm.faultCode || undefined,
       }),
     });
-    setFeedback("Evento de simulacion registrado.");
+    setFeedback("La actividad del simulador fue registrada correctamente.");
   }
 
   async function completeSession() {
@@ -142,7 +154,7 @@ export default function StudentSimulatorsPage() {
         score: Number(completion.score),
       }),
     });
-    setFeedback("Sesion completada y trazada en progreso.");
+    setFeedback("La sesion fue finalizada y su avance quedo guardado.");
     setActiveContext(null);
     await loadData();
   }
@@ -242,9 +254,13 @@ export default function StudentSimulatorsPage() {
                       setEventForm((prev) => ({ ...prev, eventType: event.target.value }))
                     }
                   >
-                    <option value="STEP_COMPLETED">STEP_COMPLETED</option>
-                    <option value="COMPONENT_INTERACTION">COMPONENT_INTERACTION</option>
-                    <option value="FAULT_TRIGGERED">FAULT_TRIGGERED</option>
+                    <option value="STEP_COMPLETED">{simulatorEventLabels.STEP_COMPLETED}</option>
+                    <option value="COMPONENT_INTERACTION">
+                      {simulatorEventLabels.COMPONENT_INTERACTION}
+                    </option>
+                    <option value="FAULT_TRIGGERED">
+                      {simulatorEventLabels.FAULT_TRIGGERED}
+                    </option>
                   </select>
                 </div>
                 <button
@@ -262,9 +278,9 @@ export default function StudentSimulatorsPage() {
                       setCompletion((prev) => ({ ...prev, status: event.target.value }))
                     }
                   >
-                    <option value="COMPLETED">COMPLETED</option>
-                    <option value="FAILED">FAILED</option>
-                    <option value="ABANDONED">ABANDONED</option>
+                    <option value="COMPLETED">{simulatorSessionStatusLabels.COMPLETED}</option>
+                    <option value="FAILED">{simulatorSessionStatusLabels.FAILED}</option>
+                    <option value="ABANDONED">{simulatorSessionStatusLabels.ABANDONED}</option>
                   </select>
                   <input
                     className="rounded-2xl border border-slate-300 px-4 py-3 text-sm"
@@ -307,8 +323,12 @@ export default function StudentSimulatorsPage() {
                   header: "Curso",
                   render: (item) => item.enrollment?.course?.titleEs ?? "-",
                 },
-                { key: "status", header: "Estado", render: (item) => item.status },
-                { key: "score", header: "Score", render: (item) => item.score ?? "-" },
+                {
+                  key: "status",
+                  header: "Estado",
+                  render: (item) => simulatorSessionStatusLabels[item.status] ?? item.status,
+                },
+                { key: "score", header: "Puntaje", render: (item) => item.score ?? "-" },
                 {
                   key: "startedAt",
                   header: "Inicio",

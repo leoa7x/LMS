@@ -11,6 +11,13 @@ import { apiRequest } from "../../../lib/client-api";
 type QuizRow = { id: string; localizedTitle?: string; titleEs: string; kind: string };
 type RetakeGrantRow = { quiz?: { titleEs?: string | null } | null; student?: { email?: string | null } | null; reason: string; maxExtraAttempts: number };
 
+const quizKindLabels: Record<string, string> = {
+  PRE_COURSE: "Diagnostico inicial",
+  PRE_MODULE: "Preparacion de modulo",
+  POST_COURSE: "Cierre de curso",
+  PRACTICE_CHECK: "Verificacion de practica",
+};
+
 export default function TeacherEvaluationsPage() {
   const { accessToken, user } = useAuth();
   const [lang, setLang] = useState("es");
@@ -69,8 +76,16 @@ export default function TeacherEvaluationsPage() {
           <DataPanel title="Evaluaciones disponibles">
             <SimpleTable
               columns={[
-                { key: "title", header: "Quiz", render: (item) => item.localizedTitle ?? item.titleEs },
-                { key: "kind", header: "Tipo", render: (item) => item.kind },
+                {
+                  key: "title",
+                  header: "Evaluacion",
+                  render: (item) => item.localizedTitle ?? item.titleEs,
+                },
+                {
+                  key: "kind",
+                  header: "Tipo",
+                  render: (item) => quizKindLabels[item.kind] ?? "Evaluacion academica",
+                },
               ]}
               rows={quizzes}
               emptyLabel="No hay evaluaciones disponibles."
@@ -79,7 +94,7 @@ export default function TeacherEvaluationsPage() {
           <DataPanel title="Autorizar nueva oportunidad">
             <form className="grid gap-4" onSubmit={createRetakeGrant}>
               <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={grantForm.quizId} onChange={(event)=>setGrantForm((prev)=>({...prev,quizId:event.target.value}))}>
-                <option value="">Selecciona quiz</option>
+                <option value="">Selecciona una evaluacion</option>
                 {quizzes.map((quiz)=>(
                   <option key={quiz.id} value={quiz.id}>{quiz.localizedTitle ?? quiz.titleEs}</option>
                 ))}
@@ -100,7 +115,7 @@ export default function TeacherEvaluationsPage() {
           <DataPanel title="Autorizaciones activas">
             <SimpleTable
               columns={[
-                { key: "quiz", header: "Quiz", render: (item) => item.quiz?.titleEs ?? "-" },
+                { key: "quiz", header: "Evaluacion", render: (item) => item.quiz?.titleEs ?? "-" },
                 { key: "student", header: "Estudiante", render: (item) => item.student?.email ?? "-" },
                 { key: "maxExtraAttempts", header: "Extra", render: (item) => item.maxExtraAttempts },
                 { key: "reason", header: "Motivo", render: (item) => item.reason },

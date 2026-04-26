@@ -47,7 +47,11 @@ export default function StudentProgressPage() {
               { key: "progress", header: "Progreso", render: (item) => `${(item.progress?.[0]?.progressPct ?? 0).toFixed(1)}%` },
               { key: "lessons", header: "Lecciones", render: (item) => item.progress?.[0]?.lessonsDone ?? 0 },
               { key: "practices", header: "Practicas", render: (item) => item.progress?.[0]?.practicesDone ?? 0 },
-              { key: "quizzes", header: "Quizzes", render: (item) => item.progress?.[0]?.quizzesPassed ?? 0 },
+              {
+                key: "quizzes",
+                header: "Evaluaciones aprobadas",
+                render: (item) => item.progress?.[0]?.quizzesPassed ?? 0,
+              },
               { key: "simulators", header: "Simuladores", render: (item) => item.progress?.[0]?.simulatorsDone ?? 0 },
             ]}
             rows={rows}

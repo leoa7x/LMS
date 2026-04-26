@@ -832,6 +832,27 @@ Documentacion rectora del modulo:
 - validacion reciente:
   - `npm run build:web` correcto
 
+## Estado de cierre de producto en frontend - Fase 1
+
+- se corrigio el desajuste funcional visible de soporte:
+  - el frontend ya usa `CRITICAL` en lugar de `URGENT`
+- se unifico mejor la experiencia administrativa de inscripciones sobre el shell principal del portal
+- se limpiaron labels crudos o tecnicos visibles en:
+  - soporte
+  - evaluaciones
+  - progreso
+  - resultados
+  - simuladores
+- se reemplazaron terminos como:
+  - `Quiz`
+  - `Score`
+  - estados crudos de simulador
+  - codigos internos de eventos
+  por copy institucional y operativo
+- `NOVOMEDIAlms` sigue siendo el nombre visible del producto
+- validacion reciente:
+  - `npm run build:web` correcto
+
 ## Instruccion para retomarlo
 
 Si una sesion nueva necesita retomar el proyecto, la instruccion corta debe ser:

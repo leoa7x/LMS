@@ -25,6 +25,14 @@ type QuizRow = {
   }>;
 };
 
+const quizKindLabels: Record<string, string> = {
+  PRE_COURSE: "Diagnostico inicial",
+  PRE_MODULE: "Preparacion de modulo",
+  POST_COURSE: "Cierre de curso",
+  MODULE_CHECKPOINT: "Comprobacion de modulo",
+  PRACTICE_CHECK: "Verificacion de practica",
+};
+
 export default function StudentEvaluationsPage() {
   const { accessToken, user } = useAuth();
   const [lang, setLang] = useState("es");
@@ -63,7 +71,9 @@ export default function StudentEvaluationsPage() {
     );
 
     setResultMessage(
-      `Score ${response.score}. ${response.isPassed ? "Aprobado" : "No aprobado"}.`,
+      `Resultado: ${response.score} puntos. ${
+        response.isPassed ? "Evaluacion aprobada." : "Evaluacion no aprobada."
+      }`,
     );
   }
 
@@ -84,14 +94,22 @@ export default function StudentEvaluationsPage() {
           <DataPanel title="Evaluaciones disponibles">
             <SimpleTable
               columns={[
-                { key: "title", header: "Quiz", render: (item) => item.localizedTitle ?? item.titleEs },
-                { key: "kind", header: "Tipo", render: (item) => item.kind },
+                {
+                  key: "title",
+                  header: "Evaluacion",
+                  render: (item) => item.localizedTitle ?? item.titleEs,
+                },
+                {
+                  key: "kind",
+                  header: "Tipo",
+                  render: (item) => quizKindLabels[item.kind] ?? "Evaluacion academica",
+                },
               ]}
               rows={quizzes}
               emptyLabel="No hay evaluaciones disponibles."
             />
             <select className="mt-4 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedQuizId} onChange={(event)=>{setSelectedQuizId(event.target.value); setSelectedAnswers({}); setResultMessage(null);}}>
-              <option value="">Selecciona quiz</option>
+              <option value="">Selecciona una evaluacion</option>
               {quizzes.map((quiz)=>(
                 <option key={quiz.id} value={quiz.id}>{quiz.localizedTitle ?? quiz.titleEs}</option>
               ))}
@@ -136,7 +154,7 @@ export default function StudentEvaluationsPage() {
               </form>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                Selecciona un quiz visible para responderlo.
+                Selecciona una evaluacion disponible para responderla.
               </div>
             )}
           </DataPanel>

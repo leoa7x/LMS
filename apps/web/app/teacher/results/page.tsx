@@ -26,6 +26,14 @@ type EnrollmentResult = {
   };
 };
 
+const resultStatusLabels: Record<string, string> = {
+  NOT_STARTED: "No iniciado",
+  IN_PROGRESS: "En progreso",
+  FAILED: "No aprobado",
+  PASSED: "Aprobado",
+  COMPLETED: "Completado",
+};
+
 export default function TeacherResultsPage() {
   const { accessToken } = useAuth();
   const [enrollments, setEnrollments] = useState<EnrollmentOption[]>([]);
@@ -98,13 +106,13 @@ export default function TeacherResultsPage() {
                   rows={[
                     { metric: "Estudiante", value: result.enrollment.student.name },
                     { metric: "Curso", value: result.enrollment.course.titleEs },
-                    { metric: "Estado", value: result.consolidatedResult.resultStatus },
+                    { metric: "Estado", value: resultStatusLabels[result.consolidatedResult.resultStatus] ?? result.consolidatedResult.resultStatus },
                     { metric: "Progreso", value: `${result.consolidatedResult.progress.progressPct.toFixed(1)}%` },
                     { metric: "Practicas", value: result.consolidatedResult.progress.practicesDone },
-                    { metric: "Quizzes", value: result.consolidatedResult.progress.quizzesPassed },
+                    { metric: "Evaluaciones aprobadas", value: result.consolidatedResult.progress.quizzesPassed },
                     { metric: "Simuladores", value: result.consolidatedResult.progress.simulatorsDone },
-                    { metric: "Score final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
-                    { metric: "Base final", value: result.consolidatedResult.finalDecision.basedOn },
+                    { metric: "Puntaje final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
+                    { metric: "Criterio final", value: result.consolidatedResult.finalDecision.basedOn },
                   ]}
                   emptyLabel="No hay informacion disponible."
                 />

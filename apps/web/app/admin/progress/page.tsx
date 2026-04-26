@@ -63,7 +63,11 @@ export default function AdminProgressPage() {
               { key: "lessonsDone", header: "Lecciones", render: (item) => item.lessonsDone },
               { key: "segmentsDone", header: "Segmentos", render: (item) => item.segmentsDone },
               { key: "practicesDone", header: "Practicas", render: (item) => item.practicesDone },
-              { key: "quizzesPassed", header: "Quizzes", render: (item) => item.quizzesPassed },
+              {
+                key: "quizzesPassed",
+                header: "Evaluaciones aprobadas",
+                render: (item) => item.quizzesPassed,
+              },
               { key: "simulatorsDone", header: "Simuladores", render: (item) => item.simulatorsDone },
             ]}
             rows={rows}

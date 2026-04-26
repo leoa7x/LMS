@@ -10,7 +10,7 @@ export function AdminGuard({ children }: { children: ReactNode }) {
   if (!isReady) {
     return (
       <div className="rounded-3xl border border-slate-200 bg-white p-8 text-sm text-slate-600 shadow-sm">
-        Cargando sesion del LMS...
+        Cargando informacion de acceso...
       </div>
     );
   }

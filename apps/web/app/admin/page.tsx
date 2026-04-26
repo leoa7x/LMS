@@ -80,7 +80,7 @@ export default function AdminPage() {
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
           <SectionCard
-            description="Indicadores institucionales sobre acceso, soporte y uso operativo del LMS."
+            description="Indicadores institucionales sobre acceso, soporte y uso general de la plataforma."
             title="Estado general"
           >
             <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
@@ -94,7 +94,7 @@ export default function AdminPage() {
               </div>
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                  Tickets abiertos
+                  Solicitudes abiertas
                 </p>
                 <p className="mt-3 text-3xl font-semibold text-slate-950">
                   {summary.openSupportTickets}

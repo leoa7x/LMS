@@ -70,7 +70,7 @@ export default function TeacherPage() {
                 Estudiantes con progreso bajo: {summary.lowProgressStudents}
               </li>
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Intentos fallidos sin reintento: {summary.failedQuizAttemptsWithoutRetake}
+                Evaluaciones reprobadas sin nueva oportunidad: {summary.failedQuizAttemptsWithoutRetake}
               </li>
               <li className="rounded-2xl border border-slate-200 px-4 py-3">
                 Simuladores completados: {summary.completedSimulatorSessions}

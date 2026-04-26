@@ -41,6 +41,14 @@ type LearningPathResult = {
   };
 };
 
+const resultStatusLabels: Record<string, string> = {
+  NOT_STARTED: "No iniciado",
+  IN_PROGRESS: "En progreso",
+  FAILED: "No aprobado",
+  PASSED: "Aprobado",
+  COMPLETED: "Completado",
+};
+
 export default function AdminResultsPage() {
   const { accessToken } = useAuth();
   const [enrollments, setEnrollments] = useState<EnrollmentOption[]>([]);
@@ -133,7 +141,7 @@ export default function AdminResultsPage() {
                 {enrollmentResult ? (
                   <div className="grid gap-4">
                     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-                      {enrollmentResult.enrollment.student.name} · {enrollmentResult.enrollment.course.titleEs} · {enrollmentResult.consolidatedResult.resultStatus}
+                      {enrollmentResult.enrollment.student.name} · {enrollmentResult.enrollment.course.titleEs} · {resultStatusLabels[enrollmentResult.consolidatedResult.resultStatus] ?? enrollmentResult.consolidatedResult.resultStatus}
                     </div>
                     <SimpleTable
                       columns={[
@@ -144,10 +152,10 @@ export default function AdminResultsPage() {
                         { metric: "Progreso", value: `${enrollmentResult.consolidatedResult.progress.progressPct.toFixed(1)}%` },
                         { metric: "Lecciones", value: enrollmentResult.consolidatedResult.progress.lessonsDone },
                         { metric: "Practicas", value: enrollmentResult.consolidatedResult.progress.practicesDone },
-                        { metric: "Quizzes", value: enrollmentResult.consolidatedResult.progress.quizzesPassed },
+                        { metric: "Evaluaciones aprobadas", value: enrollmentResult.consolidatedResult.progress.quizzesPassed },
                         { metric: "Simuladores", value: enrollmentResult.consolidatedResult.progress.simulatorsDone },
-                        { metric: "Score final", value: enrollmentResult.consolidatedResult.finalDecision.finalScore ?? "-" },
-                        { metric: "Base final", value: enrollmentResult.consolidatedResult.finalDecision.basedOn },
+                        { metric: "Puntaje final", value: enrollmentResult.consolidatedResult.finalDecision.finalScore ?? "-" },
+                        { metric: "Criterio final", value: enrollmentResult.consolidatedResult.finalDecision.basedOn },
                       ]}
                       emptyLabel="Sin datos"
                     />
@@ -185,11 +193,11 @@ export default function AdminResultsPage() {
                     ]}
                     rows={[
                       { metric: "Ruta", value: learningPathResult.assignment.learningPath.titleEs },
-                      { metric: "Estado", value: learningPathResult.consolidatedResult.resultStatus },
+                      { metric: "Estado", value: resultStatusLabels[learningPathResult.consolidatedResult.resultStatus] ?? learningPathResult.consolidatedResult.resultStatus },
                       { metric: "Cursos totales", value: learningPathResult.consolidatedResult.totals.totalCourses },
                       { metric: "Cursos requeridos aprobados", value: learningPathResult.consolidatedResult.totals.passedRequiredCourses },
                       { metric: "Progreso promedio", value: `${learningPathResult.consolidatedResult.totals.averageProgress.toFixed(1)}%` },
-                      { metric: "Score promedio", value: learningPathResult.consolidatedResult.totals.averageFinalScore ?? "-" },
+                      { metric: "Puntaje promedio", value: learningPathResult.consolidatedResult.totals.averageFinalScore ?? "-" },
                     ]}
                     emptyLabel="Sin datos"
                   />

@@ -60,6 +60,20 @@ const defaultSummary: OperationsSummary = {
   resolutionDueSoon: 0,
 };
 
+const priorityLabels: Record<string, string> = {
+  LOW: "Baja",
+  MEDIUM: "Media",
+  HIGH: "Alta",
+  CRITICAL: "Critica",
+};
+
+const statusLabels: Record<string, string> = {
+  OPEN: "Abierta",
+  IN_PROGRESS: "En atencion",
+  RESOLVED: "Resuelta",
+  CLOSED: "Cerrada",
+};
+
 export default function AdminSupportPage() {
   const { accessToken } = useAuth();
   const [tickets, setTickets] = useState<TicketRow[]>([]);
@@ -185,7 +199,7 @@ export default function AdminSupportPage() {
     >
       <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <DataPanel title="Tickets abiertos">
+          <DataPanel title="Solicitudes abiertas">
             <p className="text-3xl font-semibold text-slate-950">{summary.openTickets}</p>
           </DataPanel>
           <DataPanel title="Fuera de tiempo">
@@ -201,13 +215,21 @@ export default function AdminSupportPage() {
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-          <DataPanel title="Tickets">
+          <DataPanel title="Solicitudes">
             <SimpleTable
               columns={[
                 { key: "subject", header: "Asunto", render: (item) => item.subject },
                 { key: "requester", header: "Solicitante", render: (item) => item.requester?.email ?? "-" },
-                { key: "status", header: "Estado", render: (item) => item.status },
-                { key: "priority", header: "Prioridad", render: (item) => item.priority },
+                {
+                  key: "status",
+                  header: "Estado",
+                  render: (item) => statusLabels[item.status] ?? item.status,
+                },
+                {
+                  key: "priority",
+                  header: "Prioridad",
+                  render: (item) => priorityLabels[item.priority] ?? item.priority,
+                },
                 {
                   key: "sla",
                   header: "SLA",
@@ -218,33 +240,33 @@ export default function AdminSupportPage() {
                 },
               ]}
               rows={tickets}
-              emptyLabel="No hay tickets visibles."
+              emptyLabel="No hay solicitudes visibles."
             />
             <select
               className="mt-4 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm"
               value={selectedTicketId}
               onChange={(event) => setSelectedTicketId(event.target.value)}
             >
-              <option value="">Selecciona ticket</option>
+              <option value="">Selecciona una solicitud</option>
               {tickets.map((ticket) => (
                 <option key={ticket.id} value={ticket.id}>
-                  {ticket.subject} · {ticket.status}
+                  {ticket.subject} · {statusLabels[ticket.status] ?? ticket.status}
                 </option>
               ))}
             </select>
           </DataPanel>
 
-          <DataPanel title="Crear ticket">
+          <DataPanel title="Registrar solicitud">
             <form className="grid gap-4" onSubmit={createTicket}>
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Asunto" value={ticketForm.subject} onChange={(event)=>setTicketForm((prev)=>({...prev,subject:event.target.value}))} />
               <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Descripcion" value={ticketForm.description} onChange={(event)=>setTicketForm((prev)=>({...prev,description:event.target.value}))} />
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Categoria" value={ticketForm.category} onChange={(event)=>setTicketForm((prev)=>({...prev,category:event.target.value}))} />
               <div className="grid gap-3 md:grid-cols-3">
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={ticketForm.priority} onChange={(event)=>setTicketForm((prev)=>({...prev,priority:event.target.value}))}>
-                  <option value="LOW">LOW</option>
-                  <option value="MEDIUM">MEDIUM</option>
-                  <option value="HIGH">HIGH</option>
-                  <option value="URGENT">URGENT</option>
+                  <option value="LOW">Baja</option>
+                  <option value="MEDIUM">Media</option>
+                  <option value="HIGH">Alta</option>
+                  <option value="CRITICAL">Critica</option>
                 </select>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={ticketForm.campusId} onChange={(event)=>setTicketForm((prev)=>({...prev,campusId:event.target.value}))}>
                   <option value="">Sede</option>
@@ -260,7 +282,7 @@ export default function AdminSupportPage() {
                 </select>
               </div>
               <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">
-                Crear ticket
+                Registrar solicitud
               </button>
             </form>
           </DataPanel>
@@ -276,20 +298,20 @@ export default function AdminSupportPage() {
                 <form className="grid gap-4" onSubmit={updateTicket}>
                   <div className="grid gap-3 md:grid-cols-2">
                     <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={updateForm.status} onChange={(event)=>setUpdateForm((prev)=>({...prev,status:event.target.value}))}>
-                      <option value="OPEN">OPEN</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="RESOLVED">RESOLVED</option>
-                      <option value="CLOSED">CLOSED</option>
+                      <option value="OPEN">Abierta</option>
+                      <option value="IN_PROGRESS">En atencion</option>
+                      <option value="RESOLVED">Resuelta</option>
+                      <option value="CLOSED">Cerrada</option>
                     </select>
                     <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={updateForm.priority} onChange={(event)=>setUpdateForm((prev)=>({...prev,priority:event.target.value}))}>
-                      <option value="LOW">LOW</option>
-                      <option value="MEDIUM">MEDIUM</option>
-                      <option value="HIGH">HIGH</option>
-                      <option value="URGENT">URGENT</option>
+                      <option value="LOW">Baja</option>
+                      <option value="MEDIUM">Media</option>
+                      <option value="HIGH">Alta</option>
+                      <option value="CRITICAL">Critica</option>
                     </select>
                   </div>
                   <button className="rounded-full border border-slate-300 px-4 py-3 text-sm font-medium text-slate-700" type="submit">
-                    Actualizar ticket
+                    Actualizar solicitud
                   </button>
                 </form>
                 <form className="grid gap-4" onSubmit={addComment}>
@@ -310,7 +332,7 @@ export default function AdminSupportPage() {
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                Selecciona un ticket para revisar su detalle.
+                Selecciona una solicitud para revisar su detalle.
               </div>
             )}
           </DataPanel>

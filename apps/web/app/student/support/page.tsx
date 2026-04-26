@@ -21,6 +21,20 @@ type TicketRow = {
   }> | null;
 };
 
+const priorityLabels: Record<string, string> = {
+  LOW: "Baja",
+  MEDIUM: "Media",
+  HIGH: "Alta",
+  CRITICAL: "Critica",
+};
+
+const statusLabels: Record<string, string> = {
+  OPEN: "Abierta",
+  IN_PROGRESS: "En atencion",
+  RESOLVED: "Resuelta",
+  CLOSED: "Cerrada",
+};
+
 export default function StudentSupportPage() {
   const { accessToken } = useAuth();
   const [tickets, setTickets] = useState<TicketRow[]>([]);
@@ -78,18 +92,26 @@ export default function StudentSupportPage() {
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-          <DataPanel title="Mis tickets">
+          <DataPanel title="Mis solicitudes">
             <SimpleTable
               columns={[
                 { key: "subject", header: "Asunto", render: (item) => item.subject },
-                { key: "status", header: "Estado", render: (item) => item.status },
-                { key: "priority", header: "Prioridad", render: (item) => item.priority },
+                {
+                  key: "status",
+                  header: "Estado",
+                  render: (item) => statusLabels[item.status] ?? item.status,
+                },
+                {
+                  key: "priority",
+                  header: "Prioridad",
+                  render: (item) => priorityLabels[item.priority] ?? item.priority,
+                },
               ]}
               rows={tickets}
               emptyLabel="No hay solicitudes registradas."
             />
             <select className="mt-4 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedTicketId} onChange={(event)=>setSelectedTicketId(event.target.value)}>
-              <option value="">Selecciona ticket</option>
+              <option value="">Selecciona una solicitud</option>
               {tickets.map((ticket)=>(
                 <option key={ticket.id} value={ticket.id}>{ticket.subject}</option>
               ))}
@@ -102,13 +124,13 @@ export default function StudentSupportPage() {
               <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Describe la situacion" value={ticketForm.description} onChange={(event)=>setTicketForm((prev)=>({...prev,description:event.target.value}))} />
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Categoria" value={ticketForm.category} onChange={(event)=>setTicketForm((prev)=>({...prev,category:event.target.value}))} />
               <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={ticketForm.priority} onChange={(event)=>setTicketForm((prev)=>({...prev,priority:event.target.value}))}>
-                <option value="LOW">LOW</option>
-                <option value="MEDIUM">MEDIUM</option>
-                <option value="HIGH">HIGH</option>
-                <option value="URGENT">URGENT</option>
+                <option value="LOW">Baja</option>
+                <option value="MEDIUM">Media</option>
+                <option value="HIGH">Alta</option>
+                <option value="CRITICAL">Critica</option>
               </select>
               <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">
-                Crear ticket
+                Registrar solicitud
               </button>
             </form>
           </DataPanel>
@@ -136,7 +158,7 @@ export default function StudentSupportPage() {
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                Selecciona un ticket para ver y comentar.
+                Selecciona una solicitud para ver y comentar.
               </div>
             )}
           </DataPanel>

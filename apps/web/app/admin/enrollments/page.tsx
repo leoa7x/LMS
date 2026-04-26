@@ -1,8 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { AdminGuard } from "../../../components/admin-guard";
-import { AdminShell } from "../../../components/admin-shell";
+import { PortalShell } from "../../../components/portal-shell";
+import { RoleGuard } from "../../../components/role-guard";
 import { DataPanel } from "../../../components/data-panel";
 import { SimpleTable } from "../../../components/simple-table";
 import { useAuth } from "../../../components/auth-provider";
@@ -67,12 +67,12 @@ export default function EnrollmentsAdminPage() {
   }
 
   return (
-    <AdminShell
+    <PortalShell
       description="Asigna estudiantes a cursos y consulta el estado de sus inscripciones."
       eyebrow="Inscripciones"
       title="Asignacion academica"
     >
-      <AdminGuard>
+      <RoleGuard roles={["ADMIN", "SUPPORT"]}>
         <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
           <DataPanel title="Nueva inscripcion">
             <form className="grid gap-4" onSubmit={handleSubmit}>
@@ -122,7 +122,7 @@ export default function EnrollmentsAdminPage() {
                 className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white"
                 type="submit"
               >
-                Crear matricula
+                Crear inscripcion
               </button>
             </form>
           </DataPanel>
@@ -159,7 +159,7 @@ export default function EnrollmentsAdminPage() {
             />
           </DataPanel>
         </section>
-      </AdminGuard>
-    </AdminShell>
+      </RoleGuard>
+    </PortalShell>
   );
 }
