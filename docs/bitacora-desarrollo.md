@@ -1790,3 +1790,33 @@ Corregir incoherencias funcionales visibles y terminar de limpiar el lenguaje de
 ### Efecto practico
 
 El frontend quedo mas coherente como producto terminado: ya no expone desajustes evidentes con backend en soporte y redujo la presencia de copy tecnico o codigos internos visibles para cliente final.
+
+## 2026-04-26 - Auditoria de preparacion para imagen corporativa oficial
+
+### Objetivo
+
+Preparar el terreno para la Fase 2 de imagen corporativa oficial sin inventar una marca nueva ni tocar la logica funcional del LMS.
+
+### Cambios aplicados
+
+- se audito la capa visual actual del frontend
+- se identificaron como puntos de entrada de marca:
+  - `BrandMark`
+  - `Shell`
+  - `PortalShell`
+  - `AdminShell`
+  - `layout`
+  - `globals.css`
+  - `tailwind.config.ts`
+  - `icon.svg`
+- se documento que:
+  - el logo actual sigue siendo provisional
+  - la paleta actual sigue siendo provisional
+  - el eslogan visible esta repetido en varios shells
+  - la Fase 2 debe atacar componentes centrales antes que pantallas sueltas
+- se dejo la auditoria formal en:
+  - `docs/auditoria-fase-2-imagen-corporativa.md`
+
+### Efecto practico
+
+El proyecto ya tiene una ruta clara para aplicar el manual de marca oficial cuando llegue, sin mezclar branding con cambios funcionales ni tocar pantallas al azar.

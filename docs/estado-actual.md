@@ -9,6 +9,8 @@
 - Nombre visible del producto: `NOVOMEDIAlms`
 - Documento de identidad visual:
   - `docs/identidad-visual-novomedialms.md`
+- Auditoria de preparacion para la imagen oficial:
+  - `docs/auditoria-fase-2-imagen-corporativa.md`
 - Mensaje superior visible en portada y shells:
   - `El ecosistema definitivo de simulacion y E-Learning tecnico`
 
@@ -852,6 +854,26 @@ Documentacion rectora del modulo:
 - `NOVOMEDIAlms` sigue siendo el nombre visible del producto
 - validacion reciente:
   - `npm run build:web` correcto
+
+## Estado de preparacion para Fase 2 de imagen corporativa
+
+- la marca visible actual ya usa `NOVOMEDIAlms`
+- existe un `BrandMark` reusable
+- favicon actual existente en `apps/web/app/icon.svg`
+- la paleta visual actual vive en:
+  - `apps/web/app/globals.css`
+  - `apps/web/tailwind.config.ts`
+- los puntos principales de aplicacion visual son:
+  - `Shell`
+  - `PortalShell`
+  - `AdminShell`
+  - portada
+  - login
+- sigue pendiente reemplazar la identidad provisional por:
+  - logo oficial
+  - isotipo oficial
+  - favicon oficial
+  - colores y tipografias del manual
 
 ## Instruccion para retomarlo
 
