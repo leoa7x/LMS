@@ -1,10 +1,10 @@
-# LMS
+# NOVOMEDIAlms
 
-Repositorio base para el desarrollo de un LMS orientado a formacion tecnica con e-learning y simuladores virtuales.
+Repositorio base para el desarrollo de `NOVOMEDIAlms`, una plataforma orientada a formacion tecnica con e-learning y simuladores virtuales.
 
 ## Objetivo
 
-Construir un LMS que tome como documento rector el manual de contenido y requisitos entregado para el Instituto Profesional y Tecnico de Veraguas.
+Construir `NOVOMEDIAlms` tomando como documento rector el manual de contenido y requisitos del sistema de e-learning tecnico con simuladores virtuales usado como base del proyecto.
 
 ## Base documental
 
@@ -69,6 +69,7 @@ Construir un LMS que tome como documento rector el manual de contenido y requisi
 El repositorio ya tiene:
 
 - backend base del LMS alineado con el pliego y compilando
+- backend base de `NOVOMEDIAlms` alineado con el pliego y compilando
 - frontend MVP Oleada 1 cerrada
 - frontend MVP Oleada 2 cerrada
 - frontend MVP Oleada 3 cerrada

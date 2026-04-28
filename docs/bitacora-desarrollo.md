@@ -112,7 +112,7 @@ El documento fuente cargado al repo se establecio como la biblia funcional y aca
 - Contenedor PostgreSQL levantado por `docker compose`
 - Migracion `init` aplicada
 - Usuario administrador inicial creado:
-  - correo: `admin@lms.local`
+  - definido por variables de entorno de desarrollo local
 
 ### Avance Fase 2
 
@@ -1820,3 +1820,23 @@ Preparar el terreno para la Fase 2 de imagen corporativa oficial sin inventar un
 ### Efecto practico
 
 El proyecto ya tiene una ruta clara para aplicar el manual de marca oficial cuando llegue, sin mezclar branding con cambios funcionales ni tocar pantallas al azar.
+
+## 2026-04-28 - Limpieza basica de seguridad y documentacion
+
+### Objetivo
+
+Reducir exposicion innecesaria de credenciales demo y alinear mejor la documentacion publica del repo con el nombre real del producto.
+
+### Cambios aplicados
+
+- `README.md` ya usa `NOVOMEDIAlms` como nombre principal del proyecto
+- se ajusto la descripcion del repositorio para que deje de presentarse como un `LMS` generico
+- se eliminaron referencias explicitas a credenciales demo antiguas en la bitacora
+- se cambiaron defaults locales de administrador en:
+  - `prisma/seed.ts`
+  - `docker-compose.yml`
+- los valores de desarrollo local ahora usan placeholders menos expuestos
+
+### Efecto practico
+
+El repositorio queda mas presentable para revision tecnica y reduce la mala practica de dejar demasiado visibles credenciales demo antiguas o naming generico en la documentacion principal.

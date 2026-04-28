@@ -131,8 +131,8 @@ async function main() {
     },
   });
 
-  const email = process.env.ADMIN_EMAIL ?? "admin@lms.local";
-  const password = process.env.ADMIN_PASSWORD ?? "Admin12345!";
+  const email = process.env.ADMIN_EMAIL ?? "admin@local.example";
+  const password = process.env.ADMIN_PASSWORD ?? "ChangeMe-Local-Only!";
   const passwordHash = await hash(password, 10);
 
   const admin = await prisma.user.upsert({

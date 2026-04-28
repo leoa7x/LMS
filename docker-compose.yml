@@ -32,8 +32,8 @@ services:
       JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
       APP_PORT: 4000
       WEB_ORIGIN: http://localhost:${WEB_PORT:-3000}
-      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@lms.local}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin12345!}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@local.example}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe-Local-Only!}
     ports:
       - "${APP_PORT:-4000}:4000"
     healthcheck:

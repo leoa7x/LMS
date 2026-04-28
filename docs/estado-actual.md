@@ -19,6 +19,12 @@
 - Local: `~/LMS`
 - GitHub: `https://github.com/leoa7x/LMS`
 
+## Estado basico de seguridad documental
+
+- se inicio una limpieza de credenciales demo visibles en documentacion y defaults locales
+- `README.md` ya se esta alineando al nombre real `NOVOMEDIAlms`
+- los valores de administrador local en `seed` y `docker-compose` ya no usan los defaults demo anteriores
+
 ## Estado funcional
 
 Ya quedaron definidos y documentados:
