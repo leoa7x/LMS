@@ -1905,3 +1905,26 @@ Sustituir la identidad provisional del frontend por la marca oficial de `NOVOMED
 ### Efecto practico
 
 El portal ya no depende de la identidad visual provisional. Login, portada, navegacion principal y favicon ya reflejan la marca oficial de `NOVOMEDIAlms` con colores y tratamiento institucional coherentes con el manual.
+
+## 2026-04-29 - Ajuste de acceso publico y logo en login
+
+### Objetivo
+
+Cerrar dos detalles visibles del acceso publico:
+
+- evitar que la raiz del portal muestre menu de software antes de autenticacion
+- retirar el borde visual no deseado alrededor del logo en claro
+
+### Cambios aplicados
+
+- `/` ahora redirige directamente a `/login`
+- el `Shell` publico ya soporta modo sin navegacion
+- la vista de login ya usa ese modo para mostrar solo acceso institucional
+- `BrandMark` en tema claro ya no envuelve el logo en un contenedor con borde
+- validacion reciente:
+  - `npm run build:web` correcto
+  - `docker compose up -d --build web` correcto
+
+### Efecto practico
+
+La primera pantalla del producto ahora se comporta como acceso institucional limpio y el logo deja de verse encerrado en un marco visual impropio.

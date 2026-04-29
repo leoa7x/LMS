@@ -60,7 +60,7 @@ export default function LoginPage() {
   }
 
   return (
-    <Shell>
+    <Shell compactHeader showNavigation={false}>
       <section className="mx-auto max-w-xl rounded-3xl border border-cloud bg-white p-8 shadow-sm">
         <div className="mb-8 border-b border-cloud pb-6">
           <BrandMark subtitle="Ingreso institucional para administradores, docentes, estudiantes y equipos de soporte." />

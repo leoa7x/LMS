@@ -889,6 +889,10 @@ Documentacion rectora del modulo:
   - portada
   - login
   - componentes base de tarjetas y paneles
+- el acceso publico ya fue simplificado:
+  - `/` redirige a `/login`
+  - login sin menu publico
+  - logo en claro sin contenedor con borde
 - validacion reciente:
   - `npm run build:web` correcto
 

@@ -13,8 +13,8 @@ export function BrandMark({
 }: BrandMarkProps) {
   const isDark = theme === "dark";
   const wrapperClasses = isDark
-    ? "inline-flex rounded-[28px] bg-white px-5 py-4 shadow-lg shadow-black/15 ring-1 ring-white/15"
-    : "inline-flex rounded-[28px] bg-white px-4 py-3 shadow-sm ring-1 ring-cloud";
+    ? "inline-flex rounded-[24px] bg-white px-4 py-3 shadow-sm"
+    : "inline-flex";
   const subtitleClasses = isDark ? "text-slate-300" : "text-slate-600";
   const width = compact ? 184 : 264;
   const height = compact ? 68 : 98;
