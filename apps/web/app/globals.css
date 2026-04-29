@@ -4,18 +4,20 @@
 
 :root {
   color-scheme: light;
-  --nv-navy: #123b5d;
-  --nv-steel: #2f5d7e;
-  --nv-slate: #44515f;
-  --nv-cloud: #d9e1e8;
-  --nv-mist: #f7f9fb;
-  --nv-copper: #b8743c;
-  --nv-sand: #e8ddd2;
+  --nv-navy: #182b45;
+  --nv-steel: #50657f;
+  --nv-cyan: #81b2d3;
+  --nv-cloud: #d4dde6;
+  --nv-mist: #f4f6f8;
+  --nv-orange: #e37f3a;
+  --nv-sand: #e8edf2;
   --nv-success: #2f7a4e;
   --nv-warning: #c7922f;
   --nv-danger: #b64545;
-  --nv-info: #2e6ea6;
-  --nv-ink: #1f2a33;
+  --nv-info: #2f6ea0;
+  --nv-ink: #223246;
+  --nv-font-display: "Montserrat", "Segoe UI", Arial, sans-serif;
+  --nv-font-body: "Open Sans", "Segoe UI", Arial, sans-serif;
 }
 
 * {
@@ -28,13 +30,21 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(184, 116, 60, 0.12), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(47, 93, 126, 0.08), transparent 28%),
-    linear-gradient(180deg, #f7f9fb 0%, #edf2f6 100%);
+    radial-gradient(circle at top left, rgba(227, 127, 58, 0.1), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(129, 178, 211, 0.15), transparent 30%),
+    linear-gradient(180deg, #f4f6f8 0%, #ebeff3 100%);
   color: var(--nv-ink);
-  font-family:
-    Inter, "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--nv-font-body);
   min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--nv-font-display);
 }
 
 a {
@@ -43,6 +53,6 @@ a {
 }
 
 ::selection {
-  background: rgba(18, 59, 93, 0.18);
+  background: rgba(24, 43, 69, 0.16);
   color: var(--nv-ink);
 }

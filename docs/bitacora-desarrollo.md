@@ -1866,3 +1866,42 @@ Cualquier nueva sesion ya puede reconstruir con rapidez:
 - que bloques ya se cerraron
 - que sigue despues
 - que archivos mandan para continuar
+
+## 2026-04-29 - Fase 2 de imagen corporativa oficial
+
+### Objetivo
+
+Sustituir la identidad provisional del frontend por la marca oficial de `NOVOMEDIAlms`, usando el logo y el manual corporativo ya versionados en `corpo/`.
+
+### Cambios aplicados
+
+- se leyo el manual corporativo y se aplicaron sus reglas base en frontend:
+  - color principal `#182B45`
+  - acento `#E37F3A`
+  - apoyo `#81B2D3`
+  - tipografias objetivo:
+    - `Montserrat`
+    - `Open Sans`
+- se reemplazo la marca provisional por activos oficiales en:
+  - `apps/web/public/brand/novomedialms-logo.png`
+  - `apps/web/public/brand/novomedialms-isotipo.png`
+  - `apps/web/app/icon.png`
+- se retiro el favicon provisional anterior:
+  - `apps/web/app/icon.svg`
+- se actualizo la capa base visual en:
+  - `apps/web/app/globals.css`
+  - `apps/web/tailwind.config.ts`
+- se actualizo el `BrandMark` reusable para usar el logo oficial
+- se aplico la marca oficial en puntos de alto impacto:
+  - `Shell`
+  - `PortalShell`
+  - `AdminShell`
+  - portada
+  - login
+  - componentes base de tarjetas y paneles
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+El portal ya no depende de la identidad visual provisional. Login, portada, navegacion principal y favicon ya reflejan la marca oficial de `NOVOMEDIAlms` con colores y tratamiento institucional coherentes con el manual.

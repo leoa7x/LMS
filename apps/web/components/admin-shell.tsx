@@ -30,11 +30,11 @@ export function AdminShell({
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
         <aside className="border-r border-white/10 bg-navy px-6 py-8 text-white">
           <div className="mb-10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-sky-200">
-              El ecosistema definitivo de simulacion y E-Learning tecnico
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-cyan">
+              Gestion institucional y academica
             </p>
             <div className="mt-4">
-              <BrandMark compact theme="dark" />
+              <BrandMark compact subtitle="Administracion" theme="dark" />
             </div>
             <p className="mt-3 text-sm leading-6 text-slate-300">
               Administra usuarios, oferta academica, inscripciones y seguimiento
@@ -72,7 +72,7 @@ export function AdminShell({
             </p>
             <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h2 className="text-3xl font-semibold tracking-tight text-slate-950">
+                <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-950">
                   {title}
                 </h2>
                 <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">

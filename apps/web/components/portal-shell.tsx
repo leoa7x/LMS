@@ -34,15 +34,15 @@ export function PortalShell({
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
         <aside className="border-r border-white/10 bg-navy px-6 py-8 text-white">
           <div className="mb-10">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-sky-200">
-              El ecosistema definitivo de simulacion y E-Learning tecnico
+            <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-cyan">
+              Entorno institucional de formacion tecnica
             </p>
             <div className="mt-4">
-              <BrandMark compact theme="dark" />
+              <BrandMark compact subtitle="Portal" theme="dark" />
             </div>
             <p className="mt-3 text-sm leading-6 text-slate-300">
-              Consulta cursos, contenidos, evaluaciones, progreso y practicas desde
-              una experiencia unificada.
+              Accede a cursos, contenidos, progreso, evaluaciones y simuladores
+              desde una misma plataforma.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export function PortalShell({
                   href={item.href}
                   className={`block rounded-2xl border px-4 py-3 text-sm font-medium transition ${
                     isActive
-                      ? "border-white/15 bg-white text-navy"
+                      ? "border-cyan/20 bg-white text-navy shadow-sm"
                       : "border-transparent text-slate-200 hover:border-white/10 hover:bg-white/5 hover:text-white"
                   }`}
                 >
@@ -84,7 +84,7 @@ export function PortalShell({
               Inicio
             </Link>
             <button
-              className="rounded-full bg-copper px-4 py-2 font-medium text-white"
+              className="rounded-full bg-copper px-4 py-2 font-medium text-white shadow-sm"
               onClick={logout}
               type="button"
             >
@@ -98,7 +98,7 @@ export function PortalShell({
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-navy">
               {eyebrow}
             </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950">
+            <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight text-slate-950">
               {title}
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">

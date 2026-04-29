@@ -63,9 +63,11 @@ export default function LoginPage() {
     <Shell>
       <section className="mx-auto max-w-xl rounded-3xl border border-cloud bg-white p-8 shadow-sm">
         <div className="mb-8 border-b border-cloud pb-6">
-          <BrandMark subtitle="Plataforma institucional de formacion tecnica y simulacion." />
+          <BrandMark subtitle="Ingreso institucional para administradores, docentes, estudiantes y equipos de soporte." />
         </div>
-        <h2 className="mb-2 text-2xl font-semibold text-ink">Acceso al portal</h2>
+        <h2 className="mb-2 font-display text-2xl font-semibold text-ink">
+          Acceso al portal
+        </h2>
         <p className="mb-8 text-sm leading-6 text-slate-600">
           Ingresa con tu cuenta institucional para acceder a tus funciones y
           servicios disponibles.
@@ -101,7 +103,7 @@ export default function LoginPage() {
           ) : null}
 
           <button
-            className="rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white shadow-sm disabled:opacity-60"
             disabled={isSubmitting}
             type="submit"
           >

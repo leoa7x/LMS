@@ -5,7 +5,8 @@ import { AuthProvider } from "../components/auth-provider";
 
 export const metadata: Metadata = {
   title: "NOVOMEDIAlms",
-  description: "Plataforma institucional de formacion tecnica y simulacion.",
+  description:
+    "Plataforma institucional de formacion tecnica, evaluacion, seguimiento y simulacion.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

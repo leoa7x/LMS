@@ -866,23 +866,31 @@ Documentacion rectora del modulo:
 
 ## Estado de preparacion para Fase 2 de imagen corporativa
 
-- la marca visible actual ya usa `NOVOMEDIAlms`
-- existe un `BrandMark` reusable
-- favicon actual existente en `apps/web/app/icon.svg`
-- la paleta visual actual vive en:
+## Estado de imagen corporativa oficial
+
+- ya se aplico la identidad oficial de `NOVOMEDIAlms` en frontend usando el material de `corpo/`
+- activos oficiales ya integrados en:
+  - `apps/web/public/brand/novomedialms-logo.png`
+  - `apps/web/public/brand/novomedialms-isotipo.png`
+  - `apps/web/app/icon.png`
+- favicon provisional anterior retirado:
+  - `apps/web/app/icon.svg`
+- colores oficiales ya aterrizados en la capa base:
   - `apps/web/app/globals.css`
   - `apps/web/tailwind.config.ts`
-- los puntos principales de aplicacion visual son:
+- tipografias objetivo ya declaradas para interfaz:
+  - `Montserrat`
+  - `Open Sans`
+- la marca oficial ya esta aplicada en:
+  - `BrandMark`
   - `Shell`
   - `PortalShell`
   - `AdminShell`
   - portada
   - login
-- sigue pendiente reemplazar la identidad provisional por:
-  - logo oficial
-  - isotipo oficial
-  - favicon oficial
-  - colores y tipografias del manual
+  - componentes base de tarjetas y paneles
+- validacion reciente:
+  - `npm run build:web` correcto
 
 ## Instruccion para retomarlo
 

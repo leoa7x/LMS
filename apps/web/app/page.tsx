@@ -14,18 +14,18 @@ export default function HomePage() {
     <Shell>
       <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
         <article className="rounded-3xl border border-cloud bg-white p-8 shadow-sm">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.25em] text-copper">
-            Acceso institucional
+          <p className="mb-4 text-sm font-medium uppercase tracking-[0.25em] text-navy">
+            Plataforma institucional
           </p>
           <div className="mb-6">
-            <BrandMark subtitle="Entorno academico para cursos, evaluacion, seguimiento y simulacion." />
+            <BrandMark subtitle="Formacion tecnica, seguimiento academico y simulacion en una sola plataforma." />
           </div>
-          <h2 className="mb-4 text-4xl font-semibold leading-tight text-ink">
-            Aprende, gestiona y supervisa desde una sola plataforma.
+          <h2 className="mb-4 font-display text-4xl font-semibold leading-tight text-ink">
+            Gestion academica y aprendizaje tecnico con identidad institucional.
           </h2>
           <p className="mb-6 max-w-2xl text-base leading-7 text-slate-600">
-            Accede a cursos, contenidos, evaluaciones, progreso y practicas de
-            simulacion desde una sola plataforma institucional.
+            Organiza la oferta academica, acompana el progreso del estudiante y
+            accede a practicas de simulacion desde un entorno unificado.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
@@ -43,10 +43,13 @@ export default function HomePage() {
           </div>
         </article>
         <aside className="rounded-3xl border border-navy bg-navy p-8 text-slate-100 shadow-sm">
-          <h3 className="mb-5 text-lg font-semibold">Servicios disponibles</h3>
+          <h3 className="mb-5 font-display text-lg font-semibold">Servicios disponibles</h3>
           <ul className="space-y-4 text-sm leading-6 text-slate-300">
             {pillars.map((item) => (
-              <li key={item} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <li
+                key={item}
+                className="rounded-2xl border border-white/10 bg-white/5 p-4"
+              >
                 {item}
               </li>
             ))}
