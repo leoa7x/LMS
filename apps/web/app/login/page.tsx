@@ -77,13 +77,13 @@ export default function LoginPage() {
           </p>
           <div className="mt-8 grid gap-3 text-sm text-slate-200">
             <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-              Administracion academica y operativa en un solo portal.
+              Consulta tus recursos, actividades y servicios desde un solo acceso institucional.
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-              Acceso por rol para administradores, docentes, estudiantes y soporte.
+              Ingresa con el perfil asignado a tus funciones dentro de la plataforma.
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-              Seguimiento, evaluacion y simulacion dentro de la misma plataforma.
+              Mantén continuidad en tu trabajo académico y técnico desde un entorno unificado.
             </div>
           </div>
         </section>

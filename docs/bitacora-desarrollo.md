@@ -1972,3 +1972,23 @@ Eliminar la sensacion generica del acceso y evitar la repeticion innecesaria de 
 ### Efecto practico
 
 La pantalla de ingreso ya no se ve como un portal generico con cabecera duplicada. Ahora funciona como acceso institucional dedicado y con mejor jerarquia visual.
+
+## 2026-04-29 - Ajuste de copy institucional en login
+
+### Objetivo
+
+Eliminar frases del acceso que todavia sonaban a descripcion interna del sistema y no a lenguaje de producto para usuario final.
+
+### Cambios aplicados
+
+- se reemplazaron mensajes del bloque lateral del login por copy mas institucional y orientado al usuario
+- se evitó lenguaje tipo:
+  - definicion de sistema
+  - descripcion tecnica de roles
+  - explicacion funcional pensada para desarrollo
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+La pantalla de acceso ahora habla mejor como producto terminado y reduce la sensacion de estar leyendo notas de implementacion.
