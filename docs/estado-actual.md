@@ -18,6 +18,9 @@
 
 - Local: `~/LMS`
 - GitHub: `https://github.com/leoa7x/LMS`
+- Ultimo commit publicado: `43a8ddb`
+- Handoff actual:
+  - `SESSION_HANDOFF.md`
 
 ## Estado basico de seguridad documental
 
@@ -885,4 +888,4 @@ Documentacion rectora del modulo:
 
 Si una sesion nueva necesita retomar el proyecto, la instruccion corta debe ser:
 
-`Lee docs/flujo-de-trabajo.md, docs/estado-actual.md y prompts/main-prompt.md, y continua el LMS desde ahi.`
+`Lee docs/flujo-de-trabajo.md, docs/estado-actual.md, docs/bitacora-desarrollo.md, docs/matriz-trazabilidad-modulos.md y SESSION_HANDOFF.md, y continua NOVOMEDIAlms desde ahi.`

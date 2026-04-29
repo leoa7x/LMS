@@ -1840,3 +1840,29 @@ Reducir exposicion innecesaria de credenciales demo y alinear mejor la documenta
 ### Efecto practico
 
 El repositorio queda mas presentable para revision tecnica y reduce la mala practica de dejar demasiado visibles credenciales demo antiguas o naming generico en la documentacion principal.
+
+## 2026-04-29 - Cierre de sesion y handoff
+
+### Objetivo
+
+Dejar el proyecto documentado para retomar desde una nueva sesion sin depender de la memoria del chat.
+
+### Cambios aplicados
+
+- se creo un archivo de handoff en la raiz:
+  - `SESSION_HANDOFF.md`
+- se dejo resumido:
+  - ultimo commit publicado
+  - estado funcional real
+  - documentos obligatorios para retomar
+  - rutas siguientes validas
+  - reglas de trabajo vigentes
+
+### Efecto practico
+
+Cualquier nueva sesion ya puede reconstruir con rapidez:
+
+- donde quedo el proyecto
+- que bloques ya se cerraron
+- que sigue despues
+- que archivos mandan para continuar
