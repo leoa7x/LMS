@@ -1928,3 +1928,26 @@ Cerrar dos detalles visibles del acceso publico:
 ### Efecto practico
 
 La primera pantalla del producto ahora se comporta como acceso institucional limpio y el logo deja de verse encerrado en un marco visual impropio.
+
+## 2026-04-29 - Sincronizacion del logo oficial actualizado
+
+### Objetivo
+
+Actualizar los activos visuales derivados del frontend despues del reemplazo manual del archivo fuente en `corpo/`.
+
+### Cambios aplicados
+
+- se sincronizo el nuevo archivo fuente:
+  - `corpo/LOGO NOVOMEDIALMS.png`
+- se regeneraron los activos usados por el frontend:
+  - `apps/web/public/brand/novomedialms-logo.png`
+  - `apps/web/public/brand/novomedialms-isotipo.png`
+  - `apps/web/public/brand/novomedialms-isotipo-512.png`
+  - `apps/web/app/icon.png`
+- se ajustaron las proporciones del `BrandMark` para adaptarlo a la nueva relacion de aspecto del logo
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+El portal, el isotipo y el favicon ya usan la version mas reciente del logo oficial sin depender de activos desactualizados.

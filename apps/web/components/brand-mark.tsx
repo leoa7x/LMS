@@ -16,8 +16,8 @@ export function BrandMark({
     ? "inline-flex rounded-[24px] bg-white px-4 py-3 shadow-sm"
     : "inline-flex";
   const subtitleClasses = isDark ? "text-slate-300" : "text-slate-600";
-  const width = compact ? 184 : 264;
-  const height = compact ? 68 : 98;
+  const width = compact ? 168 : 224;
+  const height = compact ? 118 : 157;
 
   return (
     <div className="space-y-3">

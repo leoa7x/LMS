@@ -893,6 +893,7 @@ Documentacion rectora del modulo:
   - `/` redirige a `/login`
   - login sin menu publico
   - logo en claro sin contenedor con borde
+- los activos visuales oficiales ya fueron resincronizados desde el archivo fuente actualizado en `corpo/`
 - validacion reciente:
   - `npm run build:web` correcto
 
