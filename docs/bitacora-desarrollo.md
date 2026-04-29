@@ -1951,3 +1951,24 @@ Actualizar los activos visuales derivados del frontend despues del reemplazo man
 ### Efecto practico
 
 El portal, el isotipo y el favicon ya usan la version mas reciente del logo oficial sin depender de activos desactualizados.
+
+## 2026-04-29 - Replanteamiento visual del login
+
+### Objetivo
+
+Eliminar la sensacion generica del acceso y evitar la repeticion innecesaria de la marca en la misma pantalla.
+
+### Cambios aplicados
+
+- la pantalla de `login` dejo de reutilizar el `Shell` publico
+- se construyo una composicion propia de acceso con dos bloques:
+  - bloque institucional de contexto
+  - bloque de autenticacion
+- se dejo una sola presencia clara de marca en la pantalla
+- el formulario paso a ser el foco principal de uso
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+La pantalla de ingreso ya no se ve como un portal generico con cabecera duplicada. Ahora funciona como acceso institucional dedicado y con mejor jerarquia visual.

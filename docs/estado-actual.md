@@ -894,6 +894,7 @@ Documentacion rectora del modulo:
   - login sin menu publico
   - logo en claro sin contenedor con borde
 - los activos visuales oficiales ya fueron resincronizados desde el archivo fuente actualizado en `corpo/`
+- el login ya usa una composicion dedicada y no un encabezado publico repetido
 - validacion reciente:
   - `npm run build:web` correcto
 
