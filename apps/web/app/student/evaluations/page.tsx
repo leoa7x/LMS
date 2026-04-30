@@ -26,11 +26,11 @@ type QuizRow = {
 };
 
 const quizKindLabels: Record<string, string> = {
-  PRE_COURSE: "Diagnostico inicial",
-  PRE_MODULE: "Preparacion de modulo",
-  POST_COURSE: "Cierre de curso",
-  MODULE_CHECKPOINT: "Comprobacion de modulo",
-  PRACTICE_CHECK: "Verificacion de practica",
+  PRE_COURSE: "Prueba de entrada",
+  PRE_MODULE: "Antes de iniciar el modulo",
+  POST_COURSE: "Cierre del curso",
+  MODULE_CHECKPOINT: "Comprobacion del modulo",
+  PRACTICE_CHECK: "Comprobacion de practica",
 };
 
 export default function StudentEvaluationsPage() {
@@ -71,8 +71,8 @@ export default function StudentEvaluationsPage() {
     );
 
     setResultMessage(
-      `Resultado: ${response.score} puntos. ${
-        response.isPassed ? "Evaluacion aprobada." : "Evaluacion no aprobada."
+      `Resultado obtenido: ${response.score} puntos. ${
+        response.isPassed ? "Actividad aprobada." : "Actividad no aprobada."
       }`,
     );
   }
@@ -81,7 +81,7 @@ export default function StudentEvaluationsPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Evaluaciones activas"
-      description="Responde las evaluaciones disponibles en tus cursos y revisa tu avance."
+      description="Responde las evaluaciones disponibles en tus cursos y consulta el resultado de cada intento."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <section className="mb-6 flex items-center justify-end">
@@ -149,12 +149,12 @@ export default function StudentEvaluationsPage() {
                   </div>
                 ) : null}
                 <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">
-                  Enviar intento
+                  Enviar respuestas
                 </button>
               </form>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                Selecciona una evaluacion disponible para responderla.
+                Selecciona una evaluacion disponible para comenzar.
               </div>
             )}
           </DataPanel>

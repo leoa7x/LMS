@@ -215,7 +215,7 @@ export default function AdminSupportPage() {
         </section>
 
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-          <DataPanel title="Solicitudes">
+          <DataPanel title="Solicitudes registradas">
             <SimpleTable
               columns={[
                 { key: "subject", header: "Asunto", render: (item) => item.subject },
@@ -260,7 +260,7 @@ export default function AdminSupportPage() {
             <form className="grid gap-4" onSubmit={createTicket}>
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Asunto" value={ticketForm.subject} onChange={(event)=>setTicketForm((prev)=>({...prev,subject:event.target.value}))} />
               <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Descripcion" value={ticketForm.description} onChange={(event)=>setTicketForm((prev)=>({...prev,description:event.target.value}))} />
-              <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Categoria" value={ticketForm.category} onChange={(event)=>setTicketForm((prev)=>({...prev,category:event.target.value}))} />
+              <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Categoria o tipo de solicitud" value={ticketForm.category} onChange={(event)=>setTicketForm((prev)=>({...prev,category:event.target.value}))} />
               <div className="grid gap-3 md:grid-cols-3">
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={ticketForm.priority} onChange={(event)=>setTicketForm((prev)=>({...prev,priority:event.target.value}))}>
                   <option value="LOW">Baja</option>
@@ -324,7 +324,7 @@ export default function AdminSupportPage() {
                   columns={[
                     { key: "author", header: "Autor", render: (item) => item.authorUser?.email ?? "-" },
                     { key: "body", header: "Comentario", render: (item) => item.body },
-                    { key: "internal", header: "Interno", render: (item) => (item.isInternal ? "Si" : "No") },
+                    { key: "internal", header: "Visibilidad", render: (item) => (item.isInternal ? "Interna" : "Compartida") },
                   ]}
                   rows={selectedTicket.comments ?? []}
                   emptyLabel="No hay comentarios."
@@ -356,7 +356,7 @@ export default function AdminSupportPage() {
                 { key: "isActive", header: "Activa", render: (item) => (item.isActive ? "Si" : "No") },
               ]}
               rows={policies}
-                emptyLabel="No hay politicas registradas."
+              emptyLabel="No hay politicas registradas."
             />
           </DataPanel>
         </section>

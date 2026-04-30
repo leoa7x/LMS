@@ -66,13 +66,13 @@ export default function TeacherPage() {
         <section className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
           <SectionCard title="Atencion prioritaria" description="Identifica rapidamente los casos que requieren seguimiento.">
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
-              <li className="rounded-2xl border border-slate-200 px-4 py-3">
+              <li className="rounded-2xl border border-cloud px-4 py-3">
                 Estudiantes con progreso bajo: {summary.lowProgressStudents}
               </li>
-              <li className="rounded-2xl border border-slate-200 px-4 py-3">
-                Evaluaciones reprobadas sin nueva oportunidad: {summary.failedQuizAttemptsWithoutRetake}
+              <li className="rounded-2xl border border-cloud px-4 py-3">
+                Evaluaciones no aprobadas sin nueva oportunidad: {summary.failedQuizAttemptsWithoutRetake}
               </li>
-              <li className="rounded-2xl border border-slate-200 px-4 py-3">
+              <li className="rounded-2xl border border-cloud px-4 py-3">
                 Simuladores completados: {summary.completedSimulatorSessions}
               </li>
             </ul>
@@ -81,7 +81,7 @@ export default function TeacherPage() {
           <SectionCard title="Cursos destacados" description="Resumen de los cursos con actividad reciente en tu gestion.">
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
               {summary.courseBreakdown.slice(0, 5).map((course) => (
-                <li key={course.courseId} className="rounded-2xl border border-slate-200 px-4 py-3">
+                <li key={course.courseId} className="rounded-2xl border border-cloud px-4 py-3">
                   {course.titleEs} · {course.students} estudiantes · {course.averageProgress.toFixed(1)}%
                 </li>
               ))}

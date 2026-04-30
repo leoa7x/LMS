@@ -38,10 +38,10 @@ type RetakeGrantRow = {
 };
 
 const quizKindLabels: Record<string, string> = {
-  PRE_COURSE: "Diagnostico inicial",
-  PRE_MODULE: "Preparacion de modulo",
-  POST_COURSE: "Cierre de curso",
-  PRACTICE_CHECK: "Verificacion de practica",
+  PRE_COURSE: "Prueba de entrada",
+  PRE_MODULE: "Antes de iniciar el modulo",
+  POST_COURSE: "Cierre del curso",
+  PRACTICE_CHECK: "Comprobacion de practica",
 };
 
 const attemptSourceLabels: Record<string, string> = {
@@ -97,8 +97,8 @@ export default function AdminEvaluationsPage() {
   return (
     <PortalShell
       eyebrow="Evaluaciones"
-      title="Evaluaciones e intentos"
-      description="Consulta las evaluaciones disponibles, revisa intentos y autoriza nuevas oportunidades cuando corresponda."
+      title="Evaluaciones y oportunidades adicionales"
+      description="Consulta las evaluaciones disponibles, revisa los intentos registrados y habilita nuevas oportunidades cuando sea necesario."
     >
       <RoleGuard roles={["ADMIN", "TEACHER"]}>
         <section className="mb-6 flex items-center justify-end">
@@ -123,14 +123,14 @@ export default function AdminEvaluationsPage() {
                     render: (item) => quizKindLabels[item.kind] ?? "Evaluacion academica",
                   },
                   { key: "scope", header: "Contexto", render: (item) => item.course?.localizedTitle ?? item.course?.titleEs ?? item.module?.localizedTitle ?? item.module?.titleEs ?? "-" },
-                  { key: "maxAttempts", header: "Intentos", render: (item) => item.maxAttempts },
-                  { key: "passingScore", header: "Puntaje minimo", render: (item) => item.passingScore },
+                  { key: "maxAttempts", header: "Intentos permitidos", render: (item) => item.maxAttempts },
+                  { key: "passingScore", header: "Puntaje requerido", render: (item) => item.passingScore },
                 ]}
                 rows={quizzes}
                 emptyLabel="No hay evaluaciones disponibles."
               />
             </DataPanel>
-            <DataPanel title="Autorizar nueva oportunidad">
+            <DataPanel title="Habilitar una nueva oportunidad">
               <form className="grid gap-4" onSubmit={createRetakeGrant}>
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={grantForm.quizId} onChange={(event)=>setGrantForm((prev)=>({...prev,quizId:event.target.value}))}>
                   <option value="">Selecciona una evaluacion</option>
@@ -144,21 +144,21 @@ export default function AdminEvaluationsPage() {
                     <option key={item.id} value={item.id}>{item.email}</option>
                   ))}
                 </select>
-                <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Motivo de la autorizacion" value={grantForm.reason} onChange={(event)=>setGrantForm((prev)=>({...prev,reason:event.target.value}))}/>
+                <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Indica el motivo de esta habilitacion" value={grantForm.reason} onChange={(event)=>setGrantForm((prev)=>({...prev,reason:event.target.value}))}/>
                 <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" type="number" min={1} value={grantForm.maxExtraAttempts} onChange={(event)=>setGrantForm((prev)=>({...prev,maxExtraAttempts:Number(event.target.value)}))}/>
-                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Crear autorizacion</button>
+                <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Guardar habilitacion</button>
               </form>
             </DataPanel>
           </div>
 
           <div className="grid gap-6 xl:grid-cols-2">
-            <DataPanel title="Intentos">
+            <DataPanel title="Intentos registrados">
               <SimpleTable
                 columns={[
                   { key: "quiz", header: "Evaluacion", render: (item) => item.quiz?.titleEs ?? "-" },
                   { key: "user", header: "Usuario", render: (item) => item.user?.email ?? "-" },
                   { key: "attemptNumber", header: "#", render: (item) => item.attemptNumber },
-                  { key: "score", header: "Puntaje", render: (item) => item.score ?? "-" },
+                  { key: "score", header: "Resultado", render: (item) => item.score ?? "-" },
                   {
                     key: "attemptSource",
                     header: "Origen",
@@ -169,16 +169,16 @@ export default function AdminEvaluationsPage() {
                 emptyLabel="No hay intentos visibles."
               />
             </DataPanel>
-            <DataPanel title="Autorizaciones activas">
+            <DataPanel title="Habilitaciones activas">
               <SimpleTable
                 columns={[
                   { key: "quiz", header: "Evaluacion", render: (item) => item.quiz?.titleEs ?? "-" },
                   { key: "student", header: "Estudiante", render: (item) => item.student?.email ?? "-" },
-                  { key: "maxExtraAttempts", header: "Extra", render: (item) => item.maxExtraAttempts },
+                  { key: "maxExtraAttempts", header: "Intentos extra", render: (item) => item.maxExtraAttempts },
                   { key: "reason", header: "Motivo", render: (item) => item.reason },
                 ]}
                 rows={retakeGrants}
-                emptyLabel="No hay autorizaciones activas."
+                emptyLabel="No hay habilitaciones activas."
               />
             </DataPanel>
           </div>

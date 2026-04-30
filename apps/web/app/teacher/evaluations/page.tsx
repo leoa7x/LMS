@@ -12,10 +12,10 @@ type QuizRow = { id: string; localizedTitle?: string; titleEs: string; kind: str
 type RetakeGrantRow = { quiz?: { titleEs?: string | null } | null; student?: { email?: string | null } | null; reason: string; maxExtraAttempts: number };
 
 const quizKindLabels: Record<string, string> = {
-  PRE_COURSE: "Diagnostico inicial",
-  PRE_MODULE: "Preparacion de modulo",
-  POST_COURSE: "Cierre de curso",
-  PRACTICE_CHECK: "Verificacion de practica",
+  PRE_COURSE: "Prueba de entrada",
+  PRE_MODULE: "Antes de iniciar el modulo",
+  POST_COURSE: "Cierre del curso",
+  PRACTICE_CHECK: "Comprobacion de practica",
 };
 
 export default function TeacherEvaluationsPage() {
@@ -62,8 +62,8 @@ export default function TeacherEvaluationsPage() {
   return (
     <PortalShell
       eyebrow="Docente"
-      title="Evaluaciones y nuevas oportunidades"
-      description="Consulta las evaluaciones de tus cursos y autoriza nuevos intentos cuando sea necesario."
+      title="Evaluaciones y oportunidades adicionales"
+      description="Consulta las evaluaciones de tus cursos y habilita nuevas oportunidades cuando sea necesario."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
         <section className="mb-6 flex items-center justify-end">
@@ -91,7 +91,7 @@ export default function TeacherEvaluationsPage() {
               emptyLabel="No hay evaluaciones disponibles."
             />
           </DataPanel>
-          <DataPanel title="Autorizar nueva oportunidad">
+          <DataPanel title="Habilitar una nueva oportunidad">
             <form className="grid gap-4" onSubmit={createRetakeGrant}>
               <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={grantForm.quizId} onChange={(event)=>setGrantForm((prev)=>({...prev,quizId:event.target.value}))}>
                 <option value="">Selecciona una evaluacion</option>
@@ -105,23 +105,23 @@ export default function TeacherEvaluationsPage() {
                   <option key={item.id} value={item.id}>{item.email}</option>
                 ))}
               </select>
-              <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Motivo de la autorizacion" value={grantForm.reason} onChange={(event)=>setGrantForm((prev)=>({...prev,reason:event.target.value}))}/>
+              <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Indica el motivo de esta habilitacion" value={grantForm.reason} onChange={(event)=>setGrantForm((prev)=>({...prev,reason:event.target.value}))}/>
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" type="number" min={1} value={grantForm.maxExtraAttempts} onChange={(event)=>setGrantForm((prev)=>({...prev,maxExtraAttempts:Number(event.target.value)}))}/>
-              <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Autorizar</button>
+              <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white" type="submit">Guardar habilitacion</button>
             </form>
           </DataPanel>
         </section>
         <section className="mt-6">
-          <DataPanel title="Autorizaciones activas">
+          <DataPanel title="Habilitaciones activas">
             <SimpleTable
               columns={[
                 { key: "quiz", header: "Evaluacion", render: (item) => item.quiz?.titleEs ?? "-" },
                 { key: "student", header: "Estudiante", render: (item) => item.student?.email ?? "-" },
-                { key: "maxExtraAttempts", header: "Extra", render: (item) => item.maxExtraAttempts },
+                { key: "maxExtraAttempts", header: "Intentos extra", render: (item) => item.maxExtraAttempts },
                 { key: "reason", header: "Motivo", render: (item) => item.reason },
               ]}
               rows={retakeGrants}
-              emptyLabel="No hay autorizaciones activas."
+              emptyLabel="No hay habilitaciones activas."
             />
           </DataPanel>
         </section>

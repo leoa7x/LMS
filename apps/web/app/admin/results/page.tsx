@@ -123,15 +123,15 @@ export default function AdminResultsPage() {
     <PortalShell
       eyebrow="Resultados"
       title="Resultados y constancias"
-      description="Consulta el desempeno por curso o ruta y genera constancias por modulo cuando sea necesario."
+      description="Consulta el avance por curso o ruta y descarga constancias por modulo cuando corresponda."
     >
       <RoleGuard roles={["ADMIN", "TEACHER"]}>
         <section className="grid gap-6">
           <div className="grid gap-6 xl:grid-cols-2">
-            <DataPanel title="Resultado por matricula">
+            <DataPanel title="Resultado por inscripcion">
               <div className="grid gap-4">
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedEnrollmentId} onChange={(event)=>setSelectedEnrollmentId(event.target.value)}>
-                  <option value="">Selecciona matricula</option>
+                  <option value="">Selecciona una inscripcion</option>
                   {enrollments.map((enrollment)=>(
                     <option key={enrollment.id} value={enrollment.id}>
                       {`${enrollment.student?.firstName ?? ""} ${enrollment.student?.lastName ?? ""}`.trim() || enrollment.student?.email} · {enrollment.course?.titleEs}
@@ -145,7 +145,7 @@ export default function AdminResultsPage() {
                     </div>
                     <SimpleTable
                       columns={[
-                        { key: "metric", header: "Metrica", render: (item) => item.metric },
+                        { key: "metric", header: "Indicador", render: (item) => item.metric },
                         { key: "value", header: "Valor", render: (item) => item.value },
                       ]}
                       rows={[
@@ -154,8 +154,8 @@ export default function AdminResultsPage() {
                         { metric: "Practicas", value: enrollmentResult.consolidatedResult.progress.practicesDone },
                         { metric: "Evaluaciones aprobadas", value: enrollmentResult.consolidatedResult.progress.quizzesPassed },
                         { metric: "Simuladores", value: enrollmentResult.consolidatedResult.progress.simulatorsDone },
-                        { metric: "Puntaje final", value: enrollmentResult.consolidatedResult.finalDecision.finalScore ?? "-" },
-                        { metric: "Criterio final", value: enrollmentResult.consolidatedResult.finalDecision.basedOn },
+                        { metric: "Resultado final", value: enrollmentResult.consolidatedResult.finalDecision.finalScore ?? "-" },
+                        { metric: "Criterio aplicado", value: enrollmentResult.consolidatedResult.finalDecision.basedOn },
                       ]}
                       emptyLabel="Sin datos"
                     />
@@ -167,7 +167,7 @@ export default function AdminResultsPage() {
                         ))}
                       </select>
                       <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white disabled:opacity-50" disabled={!selectedModuleId} onClick={handleDownloadPdf} type="button">
-                        Descargar PDF
+                        Descargar constancia
                       </button>
                     </div>
                   </div>
@@ -178,7 +178,7 @@ export default function AdminResultsPage() {
             <DataPanel title="Resultado por ruta">
               <div className="grid gap-4">
                 <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedAssignmentId} onChange={(event)=>setSelectedAssignmentId(event.target.value)}>
-                  <option value="">Selecciona ruta asignada</option>
+                  <option value="">Selecciona una ruta asignada</option>
                   {assignments.map((assignment)=>(
                     <option key={assignment.id} value={assignment.id}>
                       {`${assignment.student?.firstName ?? ""} ${assignment.student?.lastName ?? ""}`.trim() || assignment.student?.email} · {assignment.learningPath?.titleEs}
@@ -188,7 +188,7 @@ export default function AdminResultsPage() {
                 {learningPathResult ? (
                   <SimpleTable
                     columns={[
-                      { key: "metric", header: "Metrica", render: (item) => item.metric },
+                      { key: "metric", header: "Indicador", render: (item) => item.metric },
                       { key: "value", header: "Valor", render: (item) => item.value },
                     ]}
                     rows={[

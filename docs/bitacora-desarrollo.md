@@ -1992,3 +1992,49 @@ Eliminar frases del acceso que todavia sonaban a descripcion interna del sistema
 ### Efecto practico
 
 La pantalla de acceso ahora habla mejor como producto terminado y reduce la sensacion de estar leyendo notas de implementacion.
+
+## 2026-04-29 - Cierre de frontend en evaluaciones, resultados, soporte y dashboards
+
+### Objetivo
+
+Dejar mas redondas las vistas visibles del portal para que queden pendientes sobre todo `contenidos` y `simuladores`.
+
+### Cambios aplicados
+
+- se pulio `evaluaciones` para:
+  - admin
+  - docente
+  - estudiante
+- se ajustaron labels como:
+  - `Prueba de entrada`
+  - `Antes de iniciar el modulo`
+  - `Resultado final`
+  - `Intentos permitidos`
+  - `Habilitaciones activas`
+- se pulio `resultados` para:
+  - admin
+  - docente
+  - estudiante
+- se cambio el tono de:
+  - `Resultado por matricula` a `Resultado por inscripcion`
+  - `Descargar PDF` a `Descargar constancia`
+  - `Metrica` a `Indicador`
+- se pulio `soporte` para:
+  - admin
+  - docente
+  - estudiante
+- se mejoraron textos de:
+  - categoria o tipo de solicitud
+  - seguimiento de solicitud
+  - visibilidad de comentarios
+- se ajustaron dashboards de:
+  - admin
+  - docente
+  - estudiante
+- se eliminaron algunos estados crudos o demasiado funcionales en vista estudiante
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+El frontend ya se siente mas consistente como producto institucional en bloques que antes seguian mas parciales. A este punto, las areas que quedan mas claramente por madurar son `contenidos` y `simuladores`.

@@ -896,6 +896,7 @@ Documentacion rectora del modulo:
 - los activos visuales oficiales ya fueron resincronizados desde el archivo fuente actualizado en `corpo/`
 - el login ya usa una composicion dedicada y no un encabezado publico repetido
 - el bloque informativo del login ya usa copy institucional y no lenguaje interno de sistema
+- evaluaciones, resultados, soporte y dashboards ya pasaron por una nueva ronda de pulido de producto
 - validacion reciente:
   - `npm run build:web` correcto
 

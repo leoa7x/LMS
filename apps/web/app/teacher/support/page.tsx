@@ -88,7 +88,7 @@ export default function TeacherSupportPage() {
     <PortalShell
       eyebrow="Docente"
       title="Soporte"
-      description="Reporta incidencias, revisa el estado de tus solicitudes y agrega comentarios cuando sea necesario."
+      description="Reporta incidencias, consulta el estado de tus solicitudes y agrega comentarios cuando sea necesario."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
         <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
@@ -118,11 +118,11 @@ export default function TeacherSupportPage() {
             </select>
           </DataPanel>
 
-          <DataPanel title="Nueva solicitud">
+          <DataPanel title="Registrar solicitud">
             <form className="grid gap-4" onSubmit={createTicket}>
               <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Asunto" value={ticketForm.subject} onChange={(event)=>setTicketForm((prev)=>({...prev,subject:event.target.value}))} />
               <textarea className="min-h-28 rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Describe la situacion" value={ticketForm.description} onChange={(event)=>setTicketForm((prev)=>({...prev,description:event.target.value}))} />
-              <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Categoria" value={ticketForm.category} onChange={(event)=>setTicketForm((prev)=>({...prev,category:event.target.value}))} />
+              <input className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" placeholder="Categoria o tipo de solicitud" value={ticketForm.category} onChange={(event)=>setTicketForm((prev)=>({...prev,category:event.target.value}))} />
               <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={ticketForm.priority} onChange={(event)=>setTicketForm((prev)=>({...prev,priority:event.target.value}))}>
                 <option value="LOW">Baja</option>
                 <option value="MEDIUM">Media</option>
@@ -158,7 +158,7 @@ export default function TeacherSupportPage() {
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-slate-300 px-4 py-6 text-sm text-slate-500">
-                Selecciona una solicitud para ver y comentar.
+                Selecciona una solicitud para ver el seguimiento y agregar comentarios.
               </div>
             )}
           </DataPanel>

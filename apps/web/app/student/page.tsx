@@ -23,6 +23,13 @@ type StudentSummary = {
   }>;
 };
 
+const courseStatusLabels: Record<string, string> = {
+  ACTIVE: "Activo",
+  COMPLETED: "Completado",
+  PAUSED: "En pausa",
+  CANCELLED: "Cancelado",
+};
+
 const emptySummary: StudentSummary = {
   enrollments: 0,
   averageProgress: 0,
@@ -61,8 +68,8 @@ export default function StudentPage() {
           <SectionCard title="Mis cursos" description="Consulta el avance y el estado de tus cursos activos.">
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
               {summary.currentCourses.map((course) => (
-                <li key={course.enrollmentId} className="rounded-2xl border border-slate-200 px-4 py-3">
-                  {course.titleEs} · {course.progressPct.toFixed(1)}% · {course.assignedLevelCode ?? "Sin nivel"} · {course.status}
+                <li key={course.enrollmentId} className="rounded-2xl border border-cloud px-4 py-3">
+                  {course.titleEs} · {course.progressPct.toFixed(1)}% · {course.assignedLevelCode ?? "Sin nivel"} · {courseStatusLabels[course.status] ?? course.status}
                 </li>
               ))}
             </ul>

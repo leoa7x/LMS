@@ -84,51 +84,51 @@ export default function AdminPage() {
             title="Estado general"
           >
             <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-4">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="rounded-2xl border border-cloud bg-sand p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-steel">
                   Cursos publicados
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                <p className="mt-3 font-display text-3xl font-semibold text-slate-950">
                   {summary.publishedCourses}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="rounded-2xl border border-cloud bg-sand p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-steel">
                   Solicitudes abiertas
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                <p className="mt-3 font-display text-3xl font-semibold text-slate-950">
                   {summary.openSupportTickets}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="rounded-2xl border border-cloud bg-sand p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-steel">
                   Sesiones activas
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                <p className="mt-3 font-display text-3xl font-semibold text-slate-950">
                   {summary.activeSessions}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="rounded-2xl border border-cloud bg-sand p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-steel">
                   Vigencias por vencer
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                <p className="mt-3 font-display text-3xl font-semibold text-slate-950">
                   {summary.expiringMemberships}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="rounded-2xl border border-cloud bg-sand p-4 md:col-span-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-steel">
                   Simuladores completados
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                <p className="mt-3 font-display text-3xl font-semibold text-slate-950">
                   {summary.completedSimulatorSessions}
                 </p>
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 md:col-span-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="rounded-2xl border border-cloud bg-sand p-4 md:col-span-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-steel">
                   Progreso promedio
                 </p>
-                <p className="mt-3 text-3xl font-semibold text-slate-950">
+                <p className="mt-3 font-display text-3xl font-semibold text-slate-950">
                   {summary.averageProgress.toFixed(1)}%
                 </p>
               </div>
@@ -140,13 +140,13 @@ export default function AdminPage() {
             title="Tareas destacadas"
           >
             <ul className="space-y-3 text-sm leading-6 text-slate-700">
-              <li className="rounded-2xl border border-slate-200 px-4 py-3">
+              <li className="rounded-2xl border border-cloud px-4 py-3">
                 Gestion de usuarios y accesos institucionales
               </li>
-              <li className="rounded-2xl border border-slate-200 px-4 py-3">
+              <li className="rounded-2xl border border-cloud px-4 py-3">
                 Administracion de cursos, rutas y contenidos
               </li>
-              <li className="rounded-2xl border border-slate-200 px-4 py-3">
+              <li className="rounded-2xl border border-cloud px-4 py-3">
                 Seguimiento academico, simuladores y soporte
               </li>
             </ul>

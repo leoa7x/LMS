@@ -87,7 +87,7 @@ export default function StudentResultsPage() {
     <PortalShell
       eyebrow="Estudiante"
       title="Mis resultados"
-      description="Consulta tus resultados por curso y descarga constancias por modulo cuando esten disponibles."
+      description="Consulta tu avance por curso y descarga constancias por modulo cuando esten disponibles."
     >
       <RoleGuard roles={["STUDENT", "ADMIN"]}>
         <DataPanel title="Resultado por curso">
@@ -104,7 +104,7 @@ export default function StudentResultsPage() {
               <>
                 <SimpleTable
                   columns={[
-                    { key: "metric", header: "Metrica", render: (item) => item.metric },
+                    { key: "metric", header: "Indicador", render: (item) => item.metric },
                     { key: "value", header: "Valor", render: (item) => item.value },
                   ]}
                   rows={[
@@ -114,7 +114,7 @@ export default function StudentResultsPage() {
                     { metric: "Practicas", value: result.consolidatedResult.progress.practicesDone },
                     { metric: "Evaluaciones aprobadas", value: result.consolidatedResult.progress.quizzesPassed },
                     { metric: "Simuladores", value: result.consolidatedResult.progress.simulatorsDone },
-                    { metric: "Puntaje final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
+                    { metric: "Resultado final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
                   ]}
                   emptyLabel="No hay informacion disponible."
                 />
@@ -126,7 +126,7 @@ export default function StudentResultsPage() {
                     ))}
                   </select>
                   <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white disabled:opacity-50" disabled={!selectedModuleId} onClick={handleDownloadPdf} type="button">
-                    Descargar PDF
+                    Descargar constancia
                   </button>
                 </div>
               </>

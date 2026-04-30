@@ -83,13 +83,13 @@ export default function TeacherResultsPage() {
     <PortalShell
       eyebrow="Docente"
       title="Resultados consolidados"
-      description="Revisa el desempeno por curso y genera constancias por modulo cuando sea necesario."
+      description="Revisa el avance por curso y descarga constancias por modulo cuando corresponda."
     >
       <RoleGuard roles={["TEACHER", "ADMIN"]}>
-        <DataPanel title="Resultado por matricula">
+        <DataPanel title="Resultado por inscripcion">
           <div className="grid gap-4">
             <select className="rounded-2xl border border-slate-300 px-4 py-3 text-sm" value={selectedEnrollmentId} onChange={(event)=>setSelectedEnrollmentId(event.target.value)}>
-              <option value="">Selecciona matricula</option>
+              <option value="">Selecciona una inscripcion</option>
               {enrollments.map((enrollment)=>(
                 <option key={enrollment.id} value={enrollment.id}>
                   {`${enrollment.student?.firstName ?? ""} ${enrollment.student?.lastName ?? ""}`.trim() || enrollment.student?.email} · {enrollment.course?.titleEs}
@@ -100,7 +100,7 @@ export default function TeacherResultsPage() {
               <>
                 <SimpleTable
                   columns={[
-                    { key: "metric", header: "Metrica", render: (item) => item.metric },
+                    { key: "metric", header: "Indicador", render: (item) => item.metric },
                     { key: "value", header: "Valor", render: (item) => item.value },
                   ]}
                   rows={[
@@ -111,8 +111,8 @@ export default function TeacherResultsPage() {
                     { metric: "Practicas", value: result.consolidatedResult.progress.practicesDone },
                     { metric: "Evaluaciones aprobadas", value: result.consolidatedResult.progress.quizzesPassed },
                     { metric: "Simuladores", value: result.consolidatedResult.progress.simulatorsDone },
-                    { metric: "Puntaje final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
-                    { metric: "Criterio final", value: result.consolidatedResult.finalDecision.basedOn },
+                    { metric: "Resultado final", value: result.consolidatedResult.finalDecision.finalScore ?? "-" },
+                    { metric: "Criterio aplicado", value: result.consolidatedResult.finalDecision.basedOn },
                   ]}
                   emptyLabel="No hay informacion disponible."
                 />
@@ -124,7 +124,7 @@ export default function TeacherResultsPage() {
                     ))}
                   </select>
                   <button className="rounded-full bg-slate-950 px-4 py-3 text-sm font-medium text-white disabled:opacity-50" disabled={!selectedModuleId} onClick={handleDownloadPdf} type="button">
-                    Descargar PDF
+                    Descargar constancia
                   </button>
                 </div>
               </>
