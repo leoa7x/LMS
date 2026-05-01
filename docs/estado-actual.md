@@ -956,6 +956,30 @@ Documentacion rectora del modulo:
 - validacion reciente:
   - `npm run build:web` correcto
 
+## Estado actual de progreso y resultados visibles
+
+- `student/progress` ya muestra:
+  - avance general
+  - avance por curso
+  - avance por modulo
+  - actividad reciente
+- `teacher/progress` ya muestra:
+  - seleccion de estudiante
+  - resumen individual
+  - avance por curso
+- `student/results` ya muestra:
+  - seleccion de curso
+  - resultado consolidado
+  - criterio aplicado
+  - descarga de constancia
+- `teacher/results` ya muestra:
+  - busqueda de inscripciones
+  - resultado consolidado por estudiante
+  - criterio aplicado
+  - descarga de constancia
+- validacion reciente:
+  - `npm run build:web` correcto
+
 ## Instruccion para retomarlo
 
 Si una sesion nueva necesita retomar el proyecto, la instruccion corta debe ser:

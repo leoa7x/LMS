@@ -2135,3 +2135,37 @@ Reducir la sensacion de modulo parcial en `contenidos` y `simuladores`, usando s
 ### Efecto practico
 
 `contenidos` y `simuladores` ya se ven mas cercanos a producto y menos a listas tecnicas o vistas intermedias. Siguen quedando espacios por madurar, pero el nivel visible del portal mejora de forma clara para admin, docente y estudiante.
+
+## 2026-05-01 - Cierre visible de progreso docente y resultados
+
+### Objetivo
+
+Mejorar la lectura funcional de seguimiento y resultados dentro del portal, usando solo endpoints existentes del backend y sin convertir estas pantallas en tablas planas.
+
+### Cambios aplicados
+
+- `teacher/progress` ahora muestra:
+  - busqueda de estudiantes
+  - seleccion directa de estudiante
+  - resumen del seguimiento individual
+  - avance por curso con barra de progreso
+- `student/results` ahora muestra:
+  - seleccion de curso con busqueda
+  - estado del resultado
+  - resultado final
+  - practicas, evaluaciones y simuladores aprobados
+  - criterio aplicado
+  - descarga de constancia por modulo
+- `teacher/results` ahora muestra:
+  - busqueda por estudiante o curso
+  - seleccion de inscripcion
+  - resumen consolidado del resultado
+  - avance total del curso
+  - criterio aplicado
+  - descarga de constancia por modulo
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+Las pantallas de seguimiento y resultados ya se sienten mas cercanas a operacion academica real y menos a listas de datos sin jerarquia. Esto mejora especialmente la utilidad para docente y estudiante dentro del alcance del sistema.
