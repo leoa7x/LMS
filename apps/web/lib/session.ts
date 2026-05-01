@@ -16,3 +16,5 @@ export type SessionState = {
 };
 
 export const AUTH_STORAGE_KEY = "lms-session";
+export const AUTH_REASON_STORAGE_KEY = "lms-auth-reason";
+export const LOGIN_LANG_STORAGE_KEY = "lms-login-lang";

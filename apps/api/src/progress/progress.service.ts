@@ -168,6 +168,282 @@ export class ProgressService {
     });
   }
 
+  async findStudentDetail(studentId: string) {
+    const enrollments = await this.prisma.studentEnrollment.findMany({
+      where: {
+        studentId,
+      },
+      include: {
+        course: {
+          include: {
+            modules: {
+              include: {
+                lessons: {
+                  include: {
+                    segments: true,
+                    practices: {
+                      include: {
+                        simulatorMappings: true,
+                      },
+                    },
+                  },
+                },
+                quizzes: true,
+              },
+              orderBy: {
+                sortOrder: "asc",
+              },
+            },
+            quizzes: true,
+          },
+        },
+        progress: true,
+        learningPathAssignment: {
+          include: {
+            learningPath: true,
+          },
+        },
+        lessonProgress: true,
+        lessonSegmentProgress: true,
+        practiceAttempts: true,
+        simulatorSessions: {
+          include: {
+            simulator: true,
+          },
+          orderBy: {
+            startedAt: "desc",
+          },
+        },
+      },
+      orderBy: {
+        enrolledAt: "desc",
+      },
+    });
+
+    const quizAttempts = await this.prisma.quizAttempt.findMany({
+      where: {
+        userId: studentId,
+      },
+      include: {
+        quiz: {
+          include: {
+            module: true,
+            course: true,
+          },
+        },
+      },
+      orderBy: {
+        submittedAt: "desc",
+      },
+    });
+
+    return enrollments.map((enrollment) => {
+      const modules = enrollment.course.modules;
+      const lessons = modules.flatMap((module) => module.lessons);
+      const segments = lessons.flatMap((lesson) => lesson.segments);
+      const practices = lessons.flatMap((lesson) => lesson.practices);
+      const courseQuizzes = enrollment.course.quizzes;
+      const simulatorTargets = practices.filter(
+        (practice) =>
+          practice.requiresSimulator || practice.simulatorMappings.length > 0,
+      );
+
+      const completedLessonIds = new Set(
+        enrollment.lessonProgress
+          .filter((item) => item.completedAt)
+          .map((item) => item.lessonId),
+      );
+      const completedSegmentIds = new Set(
+        enrollment.lessonSegmentProgress
+          .filter((item) => item.completedAt)
+          .map((item) => item.lessonSegmentId),
+      );
+      const passedPracticeIds = new Set(
+        enrollment.practiceAttempts
+          .filter((item) => item.status === PracticeAttemptStatus.PASSED)
+          .map((item) => item.practiceId),
+      );
+      const quizAttemptsForCourse = quizAttempts.filter((attempt) => {
+        if (attempt.quiz.courseId) {
+          return attempt.quiz.courseId === enrollment.courseId;
+        }
+
+        return attempt.quiz.module?.courseId === enrollment.courseId;
+      });
+
+      const passedCourseQuizIds = new Set(
+        quizAttemptsForCourse
+          .filter((attempt) => attempt.isPassed)
+          .map((attempt) => attempt.quizId),
+      );
+
+      const moduleSummaries = modules.map((module) => {
+        const moduleLessons = module.lessons;
+        const moduleSegments = moduleLessons.flatMap((lesson) => lesson.segments);
+        const modulePractices = moduleLessons.flatMap((lesson) => lesson.practices);
+        const moduleQuizzes = module.quizzes;
+
+        const lessonsCompleted = moduleLessons.filter((lesson) =>
+          completedLessonIds.has(lesson.id),
+        ).length;
+        const segmentsCompleted = moduleSegments.filter((segment) =>
+          completedSegmentIds.has(segment.id),
+        ).length;
+        const practicesCompleted = modulePractices.filter((practice) =>
+          passedPracticeIds.has(practice.id),
+        ).length;
+        const quizzesCompleted = moduleQuizzes.filter((quiz) =>
+          passedCourseQuizIds.has(quiz.id),
+        ).length;
+
+        return {
+          id: module.id,
+          titleEs: module.titleEs,
+          titleEn: module.titleEn,
+          lessonsTotal: moduleLessons.length,
+          lessonsCompleted,
+          segmentsTotal: moduleSegments.length,
+          segmentsCompleted,
+          practicesTotal: modulePractices.length,
+          practicesCompleted,
+          quizzesTotal: moduleQuizzes.length,
+          quizzesCompleted,
+        };
+      });
+
+      const recentActivity = [
+        ...enrollment.lessonProgress
+          .filter((item) => item.completedAt)
+          .map((item) => {
+            const lesson = lessons.find((entry) => entry.id === item.lessonId);
+            return {
+              id: item.id,
+              type: "LESSON",
+              title: lesson?.titleEs ?? "Leccion completada",
+              happenedAt: item.completedAt,
+              context: lesson?.moduleId
+                ? modules.find((module) => module.id === lesson.moduleId)?.titleEs
+                : null,
+            };
+          }),
+        ...enrollment.lessonSegmentProgress
+          .filter((item) => item.completedAt)
+          .map((item) => {
+            const segment = segments.find((entry) => entry.id === item.lessonSegmentId);
+            const lesson = lessons.find((entry) => entry.id === segment?.lessonId);
+            return {
+              id: item.id,
+              type: "SEGMENT",
+              title: segment?.titleEs ?? "Contenido completado",
+              happenedAt: item.completedAt,
+              context: lesson?.titleEs ?? null,
+            };
+          }),
+        ...enrollment.practiceAttempts.map((item) => {
+          const practice = practices.find((entry) => entry.id === item.practiceId);
+          return {
+            id: item.id,
+            type: "PRACTICE",
+            title: practice?.titleEs ?? "Practica registrada",
+            happenedAt: item.submittedAt,
+            context:
+              item.status === PracticeAttemptStatus.PASSED
+                ? "Completada"
+                : item.status === PracticeAttemptStatus.FAILED
+                  ? "Pendiente de mejora"
+                  : "En revision",
+          };
+        }),
+        ...quizAttemptsForCourse
+          .filter((item) => item.submittedAt)
+          .map((item) => ({
+            id: item.id,
+            type: "QUIZ",
+            title: item.quiz.titleEs,
+            happenedAt: item.submittedAt,
+            context: item.isPassed ? "Aprobada" : "No aprobada",
+          })),
+        ...enrollment.simulatorSessions.map((item) => ({
+          id: item.id,
+          type: "SIMULATOR",
+          title: item.simulator.name,
+          happenedAt: item.finishedAt ?? item.startedAt,
+          context: item.status === "COMPLETED" ? "Sesion completada" : "Sesion iniciada",
+        })),
+      ]
+        .filter((item) => item.happenedAt)
+        .sort(
+          (a, b) =>
+            new Date(b.happenedAt as Date).getTime() -
+            new Date(a.happenedAt as Date).getTime(),
+        )
+        .slice(0, 12);
+
+      return {
+        enrollmentId: enrollment.id,
+        assignedLevelCode: enrollment.assignedLevelCode,
+        status: enrollment.status,
+        enrolledAt: enrollment.enrolledAt,
+        course: {
+          id: enrollment.course.id,
+          titleEs: enrollment.course.titleEs,
+          titleEn: enrollment.course.titleEn,
+        },
+        learningPathAssignment: enrollment.learningPathAssignment
+          ? {
+              id: enrollment.learningPathAssignment.id,
+              learningPath: {
+                titleEs: enrollment.learningPathAssignment.learningPath.titleEs,
+                titleEn: enrollment.learningPathAssignment.learningPath.titleEn,
+              },
+            }
+          : null,
+        progress: enrollment.progress[0] ?? null,
+        totals: {
+          modules: modules.length,
+          lessons: lessons.length,
+          segments: segments.length,
+          practices: practices.length,
+          quizzes: courseQuizzes.length,
+          simulatorTargets: simulatorTargets.length,
+        },
+        componentProgress: {
+          lessonsPct:
+            lessons.length > 0
+              ? Number(((completedLessonIds.size / lessons.length) * 100).toFixed(1))
+              : 0,
+          segmentsPct:
+            segments.length > 0
+              ? Number(((completedSegmentIds.size / segments.length) * 100).toFixed(1))
+              : 0,
+          practicesPct:
+            practices.length > 0
+              ? Number(((passedPracticeIds.size / practices.length) * 100).toFixed(1))
+              : 0,
+          quizzesPct:
+            courseQuizzes.length > 0
+              ? Number(((passedCourseQuizIds.size / courseQuizzes.length) * 100).toFixed(1))
+              : 0,
+          simulatorsPct:
+            simulatorTargets.length > 0
+              ? Number(
+                  (
+                    (Math.min(
+                      enrollment.progress[0]?.simulatorsDone ?? 0,
+                      simulatorTargets.length,
+                    ) /
+                      simulatorTargets.length) *
+                    100
+                  ).toFixed(1),
+                )
+              : 0,
+        },
+        moduleSummaries,
+        recentActivity,
+      };
+    });
+  }
+
   async recalculateProgress(enrollmentId: string) {
     const enrollment = await this.prisma.studentEnrollment.findUnique({
       where: { id: enrollmentId },

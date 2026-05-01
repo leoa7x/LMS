@@ -1,6 +1,10 @@
 "use client";
 
-import { AUTH_STORAGE_KEY, SessionState } from "./session";
+import {
+  AUTH_REASON_STORAGE_KEY,
+  AUTH_STORAGE_KEY,
+  SessionState,
+} from "./session";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -38,11 +42,25 @@ function writeSession(session: SessionState | null) {
   window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
 }
 
+function markSessionExpired() {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.sessionStorage.setItem(AUTH_REASON_STORAGE_KEY, "expired");
+
+  if (window.location.pathname !== "/login") {
+    window.location.href = "/login?reason=expired";
+  }
+}
+
 async function refreshSession(): Promise<SessionState | null> {
   const currentSession = readSession();
 
   if (!currentSession?.refreshToken) {
     writeSession(null);
+    markSessionExpired();
     return null;
   }
 
@@ -58,6 +76,7 @@ async function refreshSession(): Promise<SessionState | null> {
 
   if (!response.ok) {
     writeSession(null);
+    markSessionExpired();
     return null;
   }
 
@@ -99,6 +118,8 @@ export async function apiRequest<T>(
 
     if (refreshed?.accessToken) {
       response = await performRequest(path, refreshed.accessToken, init);
+    } else {
+      markSessionExpired();
     }
   }
 
@@ -130,6 +151,8 @@ export async function downloadFile(
           Authorization: `Bearer ${refreshed.accessToken}`,
         },
       });
+    } else {
+      markSessionExpired();
     }
   }
 

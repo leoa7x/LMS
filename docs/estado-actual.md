@@ -900,6 +900,62 @@ Documentacion rectora del modulo:
 - validacion reciente:
   - `npm run build:web` correcto
 
+## Estado actual del dinamismo funcional en frontend
+
+- ya no se esta trabajando en dinamismo decorativo
+- el enfoque actual del lado cliente esta limitado a funciones alineadas al pliego
+- `login` ya soporta:
+  - validacion inmediata
+  - mostrar u ocultar clave
+  - indicador de carga
+  - mensajes claros segun restricciones reales del backend
+  - manejo de sesion expirada
+  - cambio de idioma `ES/EN`
+  - redireccion por rol
+- el cliente ya limpia y redirige cuando expira una sesion renovable
+- `student/progress` ya consume un endpoint de detalle real para mostrar:
+  - avance general
+  - avance por curso
+  - avance por modulo
+  - estado por practica, evaluacion y simulador
+  - actividad reciente del estudiante
+- backend ya expone:
+  - `GET /progress/student/:studentId/detail`
+- validacion reciente:
+  - `npm run build:api` correcto
+  - `npm run build:web` correcto
+
+## Siguiente foco funcional recomendado
+
+- seguir con dinamismo util en:
+  - `teacher/progress`
+  - `student/results`
+  - `teacher/results`
+- `contenidos` y `simuladores` ya recibieron una nueva ronda visible de cierre en frontend
+- siguen siendo areas importantes, pero ya no se presentan solo como tablas o vistas tecnicas
+
+## Estado actual de contenidos y simuladores en frontend
+
+- `contenidos` ahora expone mejor:
+  - recursos localizados
+  - glosario tecnico
+  - pistas de voz
+  - apoyos interactivos
+  - filtros y busqueda
+- `admin/content` ya soporta desde UI:
+  - crear recursos
+  - crear terminos de glosario
+  - crear pistas de voz
+  - crear apoyos interactivos
+- `teacher/simulators` y `admin/simulators` ya muestran:
+  - resumenes operativos
+  - filtros
+  - catalogo
+  - relaciones con practicas
+  - sesiones registradas
+- validacion reciente:
+  - `npm run build:web` correcto
+
 ## Instruccion para retomarlo
 
 Si una sesion nueva necesita retomar el proyecto, la instruccion corta debe ser:

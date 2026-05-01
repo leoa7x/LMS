@@ -24,6 +24,12 @@ export class ProgressController {
     return this.progressService.findStudentSummary(studentId);
   }
 
+  @Get("student/:studentId/detail")
+  @Roles("ADMIN", "TEACHER", "STUDENT", "SUPPORT")
+  findStudentDetail(@Param("studentId") studentId: string) {
+    return this.progressService.findStudentDetail(studentId);
+  }
+
   @Post("lessons/complete")
   @Roles("ADMIN", "TEACHER", "STUDENT")
   completeLesson(@Body() dto: CompleteLessonDto) {

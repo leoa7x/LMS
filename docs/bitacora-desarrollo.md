@@ -2038,3 +2038,100 @@ Dejar mas redondas las vistas visibles del portal para que queden pendientes sob
 ### Efecto practico
 
 El frontend ya se siente mas consistente como producto institucional en bloques que antes seguian mas parciales. A este punto, las areas que quedan mas claramente por madurar son `contenidos` y `simuladores`.
+
+## 2026-04-29 - Dinamismo funcional en acceso y avance del estudiante
+
+### Objetivo
+
+Incorporar dinamismo util del lado cliente, estrictamente alineado al pliego, empezando por:
+
+- acceso institucional
+- seguimiento individual del estudiante
+- visualizacion clara del progreso por curso, modulo, practica y evaluacion
+
+### Cambios aplicados
+
+- se reforzo el `login` con comportamiento dinamico util:
+  - validacion inmediata de correo
+  - validacion de clave
+  - mostrar u ocultar clave
+  - estado de carga al iniciar sesion
+  - mensajes claros ante:
+    - credenciales invalidas
+    - cuenta inactiva
+    - acceso restringido por vigencia o membresia
+    - limite de concurrencia
+    - limite de cupos por licencia
+    - sesion expirada
+  - selector de idioma `ES/EN` persistido en cliente
+  - redireccion por rol despues del acceso
+- se reforzo la capa cliente de sesion:
+  - al expirar el refresh token o fallar una renovacion, el portal limpia sesion y vuelve a `login`
+  - se deja razon de expiracion para informar al usuario final
+- se amplio `progress` en backend con:
+  - `GET /progress/student/:studentId/detail`
+- ese endpoint ahora entrega datos reales para frontend sobre:
+  - avance consolidado por inscripcion
+  - progreso por componente
+  - resumen por modulo
+  - actividad reciente del estudiante
+- la vista `student/progress` dejo de ser una tabla plana y ahora muestra:
+  - indicadores generales
+  - busqueda inmediata por curso, ruta o nivel
+  - seleccion de curso con seguimiento
+  - progreso por componente
+  - avance por modulo
+  - actividad reciente
+- validacion reciente:
+  - `npm run build:api` correcto
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+El acceso al portal y la vista de progreso del estudiante ya responden mejor al alcance funcional del sistema. El dinamismo agregado no es decorativo: mejora claridad de acceso, seguimiento individual y lectura operativa del avance academico.
+
+## 2026-04-29 - Cierre visible de contenidos y simuladores
+
+### Objetivo
+
+Reducir la sensacion de modulo parcial en `contenidos` y `simuladores`, usando solo datos reales del backend y sin agregar funciones fuera del alcance del proyecto.
+
+### Cambios aplicados
+
+- `student/content` dejo de ser una tabla plana y ahora muestra:
+  - recursos localizados por curso, modulo y leccion
+  - busqueda instantanea
+  - filtro por tipo de recurso
+  - glosario tecnico con relaciones visibles
+  - pistas de voz
+  - apoyos interactivos
+- `teacher/content` ahora muestra:
+  - resumen operativo de recursos, glosario, vocalizacion y apoyos interactivos
+  - filtros rapidos
+  - lectura mas clara de cobertura por curso
+- `admin/content` ahora concentra mejor la administracion del modulo:
+  - registro de recursos
+  - registro de terminos de glosario
+  - registro de pistas de voz
+  - registro de apoyos interactivos
+  - busqueda y filtros sobre el inventario visible
+- `teacher/simulators` dejo de ser tabla plana y ahora muestra:
+  - resumen del bloque
+  - simuladores visibles
+  - cursos cubiertos
+  - sesiones del grupo con filtros
+- `admin/simulators` ahora muestra:
+  - resumen institucional
+  - catalogo de simuladores
+  - relaciones con practicas
+  - sesiones registradas con filtros
+- se alinearon los enums visibles de `contenidos` con los valores reales del backend:
+  - tipos de recurso
+  - estados de vocalizacion
+  - tipos de apoyo interactivo
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+`contenidos` y `simuladores` ya se ven mas cercanos a producto y menos a listas tecnicas o vistas intermedias. Siguen quedando espacios por madurar, pero el nivel visible del portal mejora de forma clara para admin, docente y estudiante.
