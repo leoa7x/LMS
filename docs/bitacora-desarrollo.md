@@ -2169,3 +2169,32 @@ Mejorar la lectura funcional de seguimiento y resultados dentro del portal, usan
 ### Efecto practico
 
 Las pantallas de seguimiento y resultados ya se sienten mas cercanas a operacion academica real y menos a listas de datos sin jerarquia. Esto mejora especialmente la utilidad para docente y estudiante dentro del alcance del sistema.
+
+## 2026-05-01 - Cierre visible de progreso y resultados administrativos
+
+### Objetivo
+
+Mejorar la lectura institucional de seguimiento y resultados desde el rol administrativo, manteniendo el uso exclusivo de datos reales del backend.
+
+### Cambios aplicados
+
+- `admin/progress` ahora muestra:
+  - resumen de inscripciones y cursos visibles
+  - avance promedio
+  - filtro por curso
+  - busqueda por estudiante o curso
+  - tarjetas por inscripcion con progreso y componentes academicos
+- `admin/results` ahora muestra:
+  - busqueda por estudiante, curso o ruta
+  - seleccion visual de inscripcion
+  - resultado consolidado por inscripcion
+  - criterio aplicado
+  - descarga de constancia por modulo
+  - seleccion visual de ruta
+  - resultado consolidado por ruta
+- validacion reciente:
+  - `npm run build:web` correcto
+
+### Efecto practico
+
+Las vistas administrativas de seguimiento y resultados ya no dependen de tablas planas para leer el estado academico. Ahora ofrecen una lectura mas cercana a control institucional real dentro del alcance del proyecto.

@@ -977,6 +977,16 @@ Documentacion rectora del modulo:
   - resultado consolidado por estudiante
   - criterio aplicado
   - descarga de constancia
+- `admin/progress` ya muestra:
+  - filtros
+  - busqueda
+  - resumen institucional
+  - lectura por inscripcion
+- `admin/results` ya muestra:
+  - resultado consolidado por inscripcion
+  - resultado consolidado por ruta
+  - criterio aplicado
+  - descarga de constancia
 - validacion reciente:
   - `npm run build:web` correcto
 
